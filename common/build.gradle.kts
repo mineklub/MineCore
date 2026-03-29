@@ -42,11 +42,6 @@ tasks {
     withType<ShadowJar> {
         exclude("META-INF/**")
         minimize()
-        relocate("com.google.gson", "dk.minepay.gson")
-        relocate("com.google.errorprone", "dk.minepay.errorprone")
-        relocate("okhttp3", "dk.minepay.okhttp3")
-        relocate("okio", "dk.minepay.okio")
-        relocate("org.jspecify", "dk.minepay.jspecify")
     }
     java {
         withJavadocJar()
@@ -83,9 +78,9 @@ mavenPublishing {
             }
         }
         scm {
-            url = "https://github.com/mineklub/MinePay/"
-            connection = "scm:git:git://github.com/mineklub/MinePay.git"
-            developerConnection = "scm:git:ssh://git@github.com/mineklub/MinePay.git"
+            url = "https://github.com/mineklub/MineCore/"
+            connection = "scm:git:git://github.com/mineklub/MineCore.git"
+            developerConnection = "scm:git:ssh://git@github.com/mineklub/MineCore.git"
         }
     }
 }

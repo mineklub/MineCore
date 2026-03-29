@@ -1,4 +1,4 @@
-group = "dk.minepay"
+group = "dk.minecore"
 version = "0.0.4"
 
 repositories {
@@ -37,6 +37,5 @@ subprojects {
 
     tasks.build {
         dependsOn(tasks.spotlessCheck)
-        dependsOn(tasks.shadowJar)
     }
 }

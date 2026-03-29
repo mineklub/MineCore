@@ -1,7 +1,0 @@
-name: "GradleExample"
-main: "dk.mineclub.gradleExample.Main"
-version: "1.0.0"
-commands:
-    buyvip:
-        description: "A simple command"
-        usage: "/<command>"

@@ -1,27 +1,27 @@
 <a id="readme-top"></a>
 
-<h1 align="center">
+<h1>
   <br>
-  <a href="https://github.com/mineklub/MinePay/releases"><img src="./.github/MineClub_background_1920x1080.png" alt="MineClub Logo"></a>
+  <a href="https://github.com/mineklub/MineCore/releases"><img src="./.github/MineClub_background_1920x1080.png" alt="MineClub Logo"></a>
 </h1>
 
-<h2 align="center">MinePay.</h2>
+<h2 align="center">MineCore.</h2>
 
-<h4 align="center">Plugin til håndtering af betalinger med mønter på Mineclub.dk.</h4>
+<h4 align="center">Plugin til håndtering af betalinger, motd osv. på Mineclub.dk.</h4>
 
-<p align="center">
-    <a href="https://github.com/mineklub/MinePay/commits/main">
-    <img src="https://img.shields.io/github/last-commit/mineklub/MinePay.svg?style=flat-square&logo=github&logoColor=white"
+<p>
+    <a href="https://github.com/mineklub/MineCore/commits/main"></a>
+    <img src="https://img.shields.io/github/last-commit/mineklub/MineCore.svg?style=flat-square&logo=github&logoColor=white"
          alt="GitHub last commit">
-    <a href="https://github.com/mineklub/MinePay/issues">
-    <img src="https://img.shields.io/github/issues-raw/mineklub/MinePay.svg?style=flat-square&logo=github&logoColor=white"
+    <a href="https://github.com/mineklub/MineCore/issues"></a>
+    <img src="https://img.shields.io/github/issues-raw/mineklub/MineCore.svg?style=flat-square&logo=github&logoColor=white"
          alt="GitHub issues">
-    <a href="https://github.com/mineklub/MinePay/pulls">
-    <img src="https://img.shields.io/github/issues-pr-raw/mineklub/MinePay.svg?style=flat-square&logo=github&logoColor=white"
-         alt="GitHub pull requests">
+    <a href="https://github.com/mineklub/MineCore/pulls"></a>
+    <img src="https://img.shields.io/github/issues-pr-raw/mineklub/MineCore.svg?style=flat-square&logo=github&logoColor=white"
+         alt="GitHub pull requests" />
 </p>
 
-<p align="center">
+<p>
   <a href="#build">Build</a> •
   <a href="https://docs.mineclub.dk">Docs</a> •
   <a href="https://discord.gg/ePxVMN5ACh">Discord</a> •
@@ -31,13 +31,13 @@
 ---
 <a id="build"></a>
 ## Build
-Brug følgende Gradle-kommando til at bygge MinePay:
+Brug følgende Gradle-kommando til at bygge MineCore:
 
 ```gradle
 gradle build
 ```
 > [!NOTE]  
-> Den genererede MinePay-fil gemmes i mappen `build/libs/MinePay-Bukkit-{version}.jar`.
+> Den genererede MineCore-fil gemmes i mappen `build/libs/MineCore-Bukkit-{version}.jar`.
 >
 
 ## License

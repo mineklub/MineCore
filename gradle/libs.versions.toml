@@ -3,15 +3,11 @@ shadow = "8.3.8"
 spotless = "7.1.0"
 okhttp = "3.14.9"
 gson = "2.13.1"
-spigot = "1.8.8-R0.1-SNAPSHOT"
 socketclient = "2.1.2"
 lombok = "1.18.38"
-skript-old = "2.9.3"
-skript = "2.12.0"
 json = "20250517"
 okio = "1.17.6"
 jspecify = "1.0.0"
-configurate = "4.2.0"
 
 [plugins]
 shadow = {id = "com.gradleup.shadow", version.ref = "shadow"}
@@ -20,12 +16,8 @@ spotless = {id = "com.diffplug.spotless", version.ref = "spotless"}
 [libraries]
 okhttp = {group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp"}
 gson = {group = "com.google.code.gson", name = "gson", version.ref = "gson"}
-spigot = {group = "org.spigotmc", name = "spigot-api", version.ref = "spigot"}
 socketclient = {group = "io.socket", name = "socket.io-client", version.ref = "socketclient"}
 lombok = {group = "org.projectlombok", name = "lombok", version.ref = "lombok"}
-skript-old = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript-old"}
-skript = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript"}
 json = {group = "org.json", name = "json", version.ref = "json"}
 okio = {group = "com.squareup.okio", name = "okio", version.ref = "okio"}
 jspecify = {group = "org.jspecify", name = "jspecify", version.ref = "jspecify"}
-configurate-yaml = {group = "org.spongepowered", name = "configurate-yaml", version.ref = "configurate"}
