@@ -1,6 +1,6 @@
 [versions]
 shadow = "8.3.10"
-spotless = "7.2.1"
+spotless = "8.4.0"
 okhttp = "3.14.9"
 gson = "2.13.2"
 socketclient = "2.1.2"
