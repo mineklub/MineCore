@@ -5,16 +5,12 @@ import com.vanniktech.maven.publish.JavadocJar
 plugins {
     id("java-library")
     alias(libs.plugins.shadow)
-    id("com.vanniktech.maven.publish") version "0.36.0"
+    alias(libs.plugins.maven.publish)
     signing
 }
 
 group = rootProject.group
 version = rootProject.version
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     compileOnly(libs.lombok)
@@ -34,18 +30,20 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
+    withJavadocJar()
+    withSourcesJar()
 }
 
 tasks {
+    withType<JavaCompile>().configureEach {
+        options.release.set(8)
+    }
     withType<ShadowJar> {
         exclude("META-INF/**")
         minimize()
-    }
-    java {
-        withJavadocJar()
-        withSourcesJar()
     }
     signing {
         useGpgCmd()

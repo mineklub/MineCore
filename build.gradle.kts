@@ -1,21 +1,26 @@
 group = "dk.minecore"
 version = "1.0.0"
 
-repositories {
-    mavenCentral()
-}
-
 plugins {
-    id("java")
-    alias(libs.plugins.shadow)
-    alias(libs.plugins.spotless)
+    base
+    alias(libs.plugins.shadow) apply false
+    alias(libs.plugins.spotless) apply false
 }
 
 subprojects {
-    plugins.apply("java")
+    plugins.apply("java-library")
     plugins.apply("com.diffplug.spotless")
 
-    spotless {
+    group = rootProject.group
+    version = rootProject.version
+
+    extensions.configure<JavaPluginExtension> {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(25))
+        }
+    }
+
+    extensions.configure<com.diffplug.gradle.spotless.SpotlessExtension> {
         java {
             googleJavaFormat("1.24.0").aosp()
             targetExclude("build/generated/**/*")
@@ -31,11 +36,15 @@ subprojects {
         }
     }
 
-    tasks.withType<JavaCompile> {
+    tasks.withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
     }
 
-    tasks.build {
-        dependsOn(tasks.spotlessCheck)
+    tasks.withType<Test>().configureEach {
+        useJUnitPlatform()
+    }
+
+    tasks.named("check") {
+        dependsOn("spotlessCheck")
     }
 }

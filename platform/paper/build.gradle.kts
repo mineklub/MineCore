@@ -1,3 +1,1 @@
-repositories {
-    mavenCentral()
-}
+description = "Paper platform module"

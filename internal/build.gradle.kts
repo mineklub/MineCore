@@ -1,6 +1,6 @@
 plugins {
     id("java-library")
-    id("xyz.jpenilla.resource-factory-velocity-convention") version "1.3.1"
+    alias(libs.plugins.resource.factory.velocity)
     alias(libs.plugins.shadow)
 }
 
@@ -11,15 +11,18 @@ velocityPluginJson {
     main = "dk.mineclub.minecore.internal.InternalPlugin"
 }
 
-repositories {
-    mavenCentral()
-    maven {
-        name = "papermc"
-        url = uri("https://repo.papermc.io/repository/maven-public/")
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(21)
 }
 
 dependencies {
     compileOnly(libs.velocity)
     annotationProcessor(libs.velocity)
+    testImplementation(libs.junit.jupiter)
 }
