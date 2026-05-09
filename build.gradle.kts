@@ -22,7 +22,7 @@ subprojects {
 
     extensions.configure<com.diffplug.gradle.spotless.SpotlessExtension> {
         java {
-            googleJavaFormat("1.24.0").aosp()
+            googleJavaFormat("1.35.0").aosp()
             targetExclude("build/generated/**/*")
         }
         kotlinGradle {
