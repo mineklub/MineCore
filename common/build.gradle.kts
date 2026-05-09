@@ -1,6 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.vanniktech.maven.publish.JavaLibrary
 import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.SourcesJar
 
 plugins {
     id("java-library")
@@ -54,8 +55,8 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
     configure(JavaLibrary(
-        javadocJar = JavadocJar.None(),
-        sourcesJar = true,
+        javadocJar = JavadocJar.Javadoc(),
+        sourcesJar = SourcesJar.Sources(),
     ))
     pom {
         name = rootProject.name
