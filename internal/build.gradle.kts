@@ -24,5 +24,4 @@ tasks.withType<JavaCompile>().configureEach {
 dependencies {
     compileOnly(libs.velocity)
     annotationProcessor(libs.velocity)
-    testImplementation(libs.junit.jupiter)
 }
