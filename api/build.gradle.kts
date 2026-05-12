@@ -16,20 +16,12 @@ version = rootProject.version
 dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
-    implementation(libs.gson)
-    implementation(libs.okhttp) {
-        exclude(group = "com.squareup.okio", module = "okio")
-    }
-    implementation(libs.okio)
+    api(project(":common"))
     implementation(libs.socketclient) {
         exclude(group = "org.json", module = "json")
         exclude(group = "com.squareup.okio", module = "okio")
         exclude(group = "com.squareup.okhttp3", module = "okhttp")
     }
-    implementation(libs.json)
-    api(libs.jspecify)
-    api(libs.javaxValidation)
-    implementation(libs.hibernateValidator)
 }
 
 java {

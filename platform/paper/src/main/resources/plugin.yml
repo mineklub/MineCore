@@ -1,0 +1,7 @@
+name: MineCore
+version: 1.0.0
+main: dk.mineclub.minecore.platform.paper.MineCorePaperPlugin
+api-version: "1.21"
+author: MineClub
+description: Paper platform module for MineCore
+

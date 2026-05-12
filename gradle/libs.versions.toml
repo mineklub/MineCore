@@ -11,6 +11,10 @@ json = "20250517"
 okio = "1.17.6"
 jspecify = "1.0.0"
 velocity = "3.5.0-SNAPSHOT"
+paper = "26.1.2.build.+"
+jedis = "7.4.1"
+hibernateValidator = "6.2.5.Final"
+javaxValidation = "2.0.1.Final"
 
 [plugins]
 shadow = {id = "com.gradleup.shadow", version.ref = "shadow"}
@@ -27,3 +31,7 @@ json = {group = "org.json", name = "json", version.ref = "json"}
 okio = {group = "com.squareup.okio", name = "okio", version.ref = "okio"}
 jspecify = {group = "org.jspecify", name = "jspecify", version.ref = "jspecify"}
 velocity = {group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity"}
+paper = {group = "io.papermc.paper", name = "paper-api", version.ref = "paper"}
+jedis = {module = "redis.clients:jedis", version.ref = "jedis"}
+javaxValidation = {group = "javax.validation", name = "validation-api", version.ref = "javaxValidation"}
+hibernateValidator = {group = "org.hibernate.validator", name = "hibernate-validator", version.ref = "hibernateValidator"}
