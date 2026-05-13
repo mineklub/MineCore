@@ -6,4 +6,3 @@ socket:
   token: ""
   # Event to listen for (receive-only)
   event: "store_request"
-
