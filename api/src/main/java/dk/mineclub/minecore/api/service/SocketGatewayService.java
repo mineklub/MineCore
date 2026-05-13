@@ -24,17 +24,7 @@ public class SocketGatewayService {
      */
     @SuppressWarnings("unused")
     public SocketGatewayService(String bearerToken) {
-        this(DEFAULT_SERVER_URL, bearerToken);
-    }
-
-    /**
-     * Creates a socket gateway service for a specific server URL.
-     *
-     * @param serverUrl socket.io server URL
-     * @param bearerToken optional bearer token
-     */
-    public SocketGatewayService(String serverUrl, String bearerToken) {
-        this.socketClientManager = new SocketIoClientManager(serverUrl, bearerToken);
+        this.socketClientManager = new SocketIoClientManager(DEFAULT_SERVER_URL, bearerToken);
     }
 
     /** Connects to socket server. */
