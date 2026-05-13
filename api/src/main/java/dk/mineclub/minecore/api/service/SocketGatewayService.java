@@ -10,7 +10,10 @@ import java.util.function.Consumer;
  * <p>Use this service in API handlers/controllers to listen for socket events without directly
  * depending on lower-level socket configuration code.
  */
+@SuppressWarnings("unused")
 public class SocketGatewayService {
+
+    private static final String DEFAULT_SERVER_URL = "https://api.mineclub.dk";
 
     private final SocketIoClientManager socketClientManager;
 
@@ -19,8 +22,19 @@ public class SocketGatewayService {
      *
      * @param bearerToken optional bearer token
      */
+    @SuppressWarnings("unused")
     public SocketGatewayService(String bearerToken) {
-        this.socketClientManager = new SocketIoClientManager("https://api.mineclub.dk", bearerToken);
+        this(DEFAULT_SERVER_URL, bearerToken);
+    }
+
+    /**
+     * Creates a socket gateway service for a specific server URL.
+     *
+     * @param serverUrl socket.io server URL
+     * @param bearerToken optional bearer token
+     */
+    public SocketGatewayService(String serverUrl, String bearerToken) {
+        this.socketClientManager = new SocketIoClientManager(serverUrl, bearerToken);
     }
 
     /** Connects to socket server. */
@@ -50,14 +64,7 @@ public class SocketGatewayService {
      * @param listener callback that receives event arguments
      */
     public void onEvent(String event, Consumer<Object[]> listener) {
-        socketClientManager.on(
-                event,
-                new Emitter.Listener() {
-                    @Override
-                    public void call(Object... args) {
-                        listener.accept(args);
-                    }
-                });
+        on(event, args -> listener.accept(args));
     }
 
     /**
