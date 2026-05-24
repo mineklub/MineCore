@@ -34,7 +34,7 @@ java {
 
 tasks {
     withType<JavaCompile>().configureEach {
-        options.release.set(8)
+        options.release.set(25)
     }
     withType<ShadowJar> {
         exclude("META-INF/**")
