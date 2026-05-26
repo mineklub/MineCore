@@ -19,8 +19,6 @@ rootProject.name = "MineCore"
 
 include("api")
 project(":api").projectDir = file("api")
-include("common")
-project(":common").projectDir = file("common")
 include("internal")
 project(":internal").projectDir = file("internal")
 

@@ -14,7 +14,6 @@ dependencies {
     annotationProcessor(libs.lombok)
 
     compileOnly(libs.paper)
-    implementation(project(":common"))
     implementation(project(":api"))
 }
 

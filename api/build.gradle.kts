@@ -16,7 +16,6 @@ version = rootProject.version
 dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
-    api(project(":common"))
     implementation(libs.socketclient) {
         exclude(group = "org.json", module = "json")
         exclude(group = "com.squareup.okio", module = "okio")
