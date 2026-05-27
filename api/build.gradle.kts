@@ -22,6 +22,12 @@ dependencies {
         exclude(group = "com.squareup.okhttp3", module = "okhttp")
     }
     implementation(libs.gson)
+    implementation(libs.guava)
+    implementation(libs.okhttp) {
+        exclude(group = "com.squareup.okio", module = "okio")
+    }
+    implementation(libs.okio)
+    implementation(libs.json)
 }
 
 java {
