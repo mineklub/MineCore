@@ -24,8 +24,8 @@ public class RequestManager {
 		this.mineCoreApi = mineCoreApi;
 	}
 
-	public @Nullable JsonObject createRequest(StoreRequest storeRequest, UUID mcaccount) {
-		PreCreateRequestEvent event = new PreCreateRequestEvent(storeRequest, mcaccount);
+	public @Nullable JsonObject createRequest(StoreRequest storeRequest) {
+		PreCreateRequestEvent event = new PreCreateRequestEvent(storeRequest);
 		boolean cancelled = event.callEvent();
 		if (cancelled) {
 			return null;
@@ -37,7 +37,7 @@ public class RequestManager {
 			new Request.Builder()
 				.url(baseUrl + "/server/request")
 				.post(requestBody)
-				.header("Authorization", token)
+				.header("Authorization", "Bearer " + token)
 				.build();
 
 		try (Response response = client.newCall(request).execute()) {
@@ -45,9 +45,9 @@ public class RequestManager {
 				return mineCoreApi.getGson().fromJson(response.body().string(), JsonObject.class);
 			}
 
-			return null;
-		} catch (Exception _) {
-
+			System.out.println(response.body().string());
+		} catch (Exception ex) {
+			System.out.println("Failed to create request, " + ex.getMessage());
 		}
 
 		return null;

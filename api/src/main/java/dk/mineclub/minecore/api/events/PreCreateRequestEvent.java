@@ -12,11 +12,9 @@ public class PreCreateRequestEvent implements Event {
 	@Setter
 	private boolean cancelled;
 	private final StoreRequest storeRequest;
-	private final UUID mcaccount;
 
-	public PreCreateRequestEvent(StoreRequest storeRequest, UUID mcaccount) {
+	public PreCreateRequestEvent(StoreRequest storeRequest) {
 		this.storeRequest = storeRequest;
-		this.mcaccount = mcaccount;
 	}
 
 	@Override

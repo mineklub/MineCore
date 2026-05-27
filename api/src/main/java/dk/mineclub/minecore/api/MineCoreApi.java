@@ -17,7 +17,7 @@ public final class MineCoreApi {
 	private RequestManager minecoreRequestManager = new RequestManager(this);
 	@Getter private final Gson gson = new Gson();
 
-	private MineCoreApi() {
+	public MineCoreApi() {
 		instance = this;
 		ExecutorService executor = Executors.newCachedThreadPool();
 		this.asyncEventBus = new AsyncEventBus(executor);

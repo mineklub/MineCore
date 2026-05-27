@@ -8,7 +8,7 @@ import lombok.Getter;
 public class StoreProduct {
 	private String name;
 	private String id;
-	private Float price;
+	private Integer price;
 	private StoreProductQuantity quantity;
 	private Integer subscriptionDays;
 	private JsonObject metadata;

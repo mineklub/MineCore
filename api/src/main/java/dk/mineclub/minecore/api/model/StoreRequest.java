@@ -6,9 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 @Builder @Getter
 public class StoreRequest {
+	private UUID mcaccount;
 	private StoreProduct[] storeProducts;
 	private JsonObject metadata;
 
@@ -22,6 +24,9 @@ public class StoreRequest {
 						.collect(JsonArray::new, JsonArray::add, JsonArray::addAll));
 		if (metadata != null) {
 			jsonObject.add("metadata", metadata);
+		}
+		if (mcaccount != null) {
+			jsonObject.addProperty("mcaccount", mcaccount.toString());
 		}
 		return jsonObject;
 	}

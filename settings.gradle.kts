@@ -21,6 +21,8 @@ include("api")
 project(":api").projectDir = file("api")
 include("internal")
 project(":internal").projectDir = file("internal")
+include("example")
+project(":example").projectDir = file("example")
 
 sequenceOf("paper").forEach {
     val name = "platform-$it"
