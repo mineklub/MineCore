@@ -5,22 +5,19 @@ import dk.mineclub.minecore.api.model.StoreRequest;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 public class PreCreateRequestEvent implements Event {
-	@Setter
-	private boolean cancelled;
-	private final StoreRequest storeRequest;
+    @Setter private boolean cancelled;
+    private final StoreRequest storeRequest;
 
-	public PreCreateRequestEvent(StoreRequest storeRequest) {
-		this.storeRequest = storeRequest;
-	}
+    public PreCreateRequestEvent(StoreRequest storeRequest) {
+        this.storeRequest = storeRequest;
+    }
 
-	@Override
-	public boolean callEvent() {
-		MineCoreApi api = MineCoreApi.getInstance();
-		api.getAsyncEventBus().post(this);
-		return cancelled;
-	}
+    @Override
+    public boolean callEvent() {
+        MineCoreApi api = MineCoreApi.getInstance();
+        api.getAsyncEventBus().post(this);
+        return cancelled;
+    }
 }

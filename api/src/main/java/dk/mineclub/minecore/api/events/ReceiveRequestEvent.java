@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class ReceiveRequestEvent implements Event {
-	private final boolean cancelled = false;
+    private final boolean cancelled = false;
 
-	@Override
-	public boolean callEvent() {
-		return false;
-	}
+    @Override
+    public boolean callEvent() {
+        return false;
+    }
 }
