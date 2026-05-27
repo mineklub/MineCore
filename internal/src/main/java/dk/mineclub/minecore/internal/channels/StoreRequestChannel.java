@@ -4,7 +4,7 @@ import dk.mineclub.minecore.internal.InternalPlugin;
 import redis.clients.jedis.JedisPubSub;
 
 public class StoreRequestChannel extends JedisPubSub {
-    private final String CHANNEL = "MINECLUB:VOTE";
+    private final String CHANNEL = "MINECORE:REQUEST";
     private final InternalPlugin plugin;
 
     public StoreRequestChannel(InternalPlugin plugin) {
