@@ -8,7 +8,7 @@ gson = "2.14.0"
 socketclient = "2.1.2"
 lombok = "1.18.46"
 json = "20250517"
-okio = "1.17.6"
+okio = "3.17.0"
 jspecify = "1.0.0"
 velocity = "3.5.0-SNAPSHOT"
 
