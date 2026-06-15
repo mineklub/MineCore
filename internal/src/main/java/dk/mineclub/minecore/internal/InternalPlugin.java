@@ -8,6 +8,9 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import dk.mineclub.minecore.internal.channels.StoreRequestChannel;
 import java.io.File;
 import java.nio.file.Path;
+
+import dk.mineclub.minecore.internal.channels.StoreRequestFailedChannel;
+import dk.mineclub.minecore.internal.channels.StoreRequestSuccessChannel;
 import lombok.Getter;
 import org.slf4j.Logger;
 import redis.clients.jedis.DefaultJedisClientConfig;
@@ -16,6 +19,7 @@ import redis.clients.jedis.RedisClient;
 public class InternalPlugin {
     @Getter private static InternalPlugin instance;
     @Getter private RedisClient jedis;
+    @Getter private Lang lang;
 
     @Getter private final ProxyServer server;
     private final Logger logger;
@@ -28,6 +32,12 @@ public class InternalPlugin {
         this.logger = logger;
         this.environmentFile =
                 new EnvironmentFile(new File(dataDirectory.getParent().toFile(), "../"));
+        try {
+            this.lang = new Lang();
+            this.lang.load();
+        } catch (Exception e) {
+            logger.error("Error loading language file!", e);
+        }
     }
 
     @Subscribe
@@ -43,5 +53,7 @@ public class InternalPlugin {
                         .build();
 
         new StoreRequestChannel(this);
+        new StoreRequestFailedChannel(this);
+        new StoreRequestSuccessChannel(this);
     }
 }

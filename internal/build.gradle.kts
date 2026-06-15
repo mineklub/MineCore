@@ -23,6 +23,7 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 dependencies {
+    implementation(libs.gson)
     compileOnly(libs.velocity)
     compileOnly(libs.jedis)
     compileOnly(libs.lombok)

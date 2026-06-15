@@ -3,7 +3,6 @@ package dk.mineclub.minecore.example.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import dk.mineclub.minecore.api.model.StoreProduct;
-import dk.mineclub.minecore.api.model.StoreProductQuantity;
 import dk.mineclub.minecore.api.model.StoreRequest;
 import dk.mineclub.minecore.example.ExamplePlugin;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -24,12 +23,7 @@ public class BuyCommand {
                                             .name("Example Product")
                                             .id("example_product")
                                             .price(1)
-                                            .quantity(
-                                                    StoreProductQuantity.builder()
-                                                            .min(1)
-                                                            .value(1)
-                                                            .max(1)
-                                                            .build())
+                                            .quantity(1)
                                             .build();
                             StoreProduct[] storeProducts = new StoreProduct[] {product};
                             StoreRequest storeRequest =

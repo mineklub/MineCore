@@ -1,0 +1,38 @@
+request:
+    header:
+        - "<b><gradient:#FFA259:#F9FF7A>MINECORE</gradient></b>"
+        - "<gray>Du er ved at handle på <white><b><server></b>"
+        - " "
+    product:
+        - "<#707070>• <white><bold><name></bold> <gray>(<#ffe97a>⛃<price:'de-DE':'#,##0.00'><gray>)"
+    product-quantity:
+        - "<#707070>• <white><bold><name></bold> <gray><u>x<quantity></u> (<#ffe97a>⛃<price:'de-DE':'#,##0.00'><gray>)"
+    footer:
+        - " "
+        - "<gray>Samlet pris = <u><#ffe97a>⛃<total:'de-DE':'#,##0.00'><gray></u>"
+        - "<gray>Nuværende balance = <yellow>⛃<balance:'de-DE':'#,##0.00'><gray>"
+        - " "
+        - "<accept> <gray>- <deny>"
+    accept-button:
+        "<#beff69><b>[Accepter]</b> "
+    deny-button:
+        "<#ff6969><b>[Afvis]</b>"
+    timeout:
+        - " "
+        - "<red>Du har ikke accepteret dit køb i tide, og det er blevet annulleret."
+        - " "
+    accept-failed:
+        - " "
+        - "<red>Der skete en fejl under accepteringen af dit køb."
+        - " "
+    banned:
+        temp:
+            - "<red>Du er bannet fra lobbyen og kan derfor ikke bruge dine mønter, før du er blevet unbannet igen."
+            - "<red>Udløber: <expiry:'dd-MM-yyyy HH:mm:ss'>"
+            - "<red>Grund: <reason>"
+        perm:
+            - "<red>Du er bannet fra lobbyen og kan derfor ikke bruge dine mønter, før du er blevet unbannet igen."
+            - "<red>Grund: <reason>"
+    accept-error:
+        - "<red>Der skete en fejl under accepteringen af dit køb."
+        - "<red>Fejl: <error>"

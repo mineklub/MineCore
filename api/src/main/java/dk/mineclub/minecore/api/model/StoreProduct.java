@@ -10,7 +10,7 @@ public class StoreProduct {
     private String name;
     private String id;
     private Integer price;
-    private StoreProductQuantity quantity;
+    private Integer quantity;
     private Integer subscriptionDays;
     private JsonObject metadata;
 
@@ -26,7 +26,7 @@ public class StoreProduct {
             jsonObject.addProperty("price", price);
         }
         if (quantity != null) {
-            jsonObject.add("quantity", quantity.toJson());
+            jsonObject.addProperty("quantity", quantity);
         }
         if (subscriptionDays != null) {
             jsonObject.addProperty("subscriptionDays", subscriptionDays);
