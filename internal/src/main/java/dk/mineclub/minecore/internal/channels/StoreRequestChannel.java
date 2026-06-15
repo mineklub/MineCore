@@ -2,13 +2,8 @@ package dk.mineclub.minecore.internal.channels;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.velocitypowered.api.proxy.Player;
 import dk.mineclub.minecore.internal.InternalPlugin;
-import org.json.JSONArray;
-import org.jspecify.annotations.Nullable;
 import redis.clients.jedis.JedisPubSub;
-import redis.clients.jedis.json.Path2;
 
 public class StoreRequestChannel extends JedisPubSub {
     private final String CHANNEL = "MINECORE:REQUEST";

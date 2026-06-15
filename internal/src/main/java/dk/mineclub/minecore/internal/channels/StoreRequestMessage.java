@@ -37,9 +37,5 @@ public record StoreRequestMessage(String type, Data data) {
 
     public record ServiceInfo(Owner owner) {}
 
-    public record Owner(
-            @SerializedName("_id") String id,
-            String username,
-            String uuid) {}
+    public record Owner(@SerializedName("_id") String id, String username, String uuid) {}
 }
-

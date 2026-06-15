@@ -6,11 +6,10 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dk.mineclub.minecore.internal.channels.StoreRequestChannel;
-import java.io.File;
-import java.nio.file.Path;
-
 import dk.mineclub.minecore.internal.channels.StoreRequestFailedChannel;
 import dk.mineclub.minecore.internal.channels.StoreRequestSuccessChannel;
+import java.io.File;
+import java.nio.file.Path;
 import lombok.Getter;
 import org.slf4j.Logger;
 import redis.clients.jedis.DefaultJedisClientConfig;

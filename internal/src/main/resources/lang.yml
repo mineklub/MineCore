@@ -13,10 +13,8 @@ request:
         - "<gray>Nuværende balance = <yellow>⛃<balance:'de-DE':'#,##0.00'><gray>"
         - " "
         - "<accept> <gray>- <deny>"
-    accept-button:
-        "<#beff69><b>[Accepter]</b> "
-    deny-button:
-        "<#ff6969><b>[Afvis]</b>"
+    accept-button: "<#beff69><b>[Accepter]</b> "
+    deny-button: "<#ff6969><b>[Afvis]</b>"
     timeout:
         - " "
         - "<red>Du har ikke accepteret dit køb i tide, og det er blevet annulleret."
