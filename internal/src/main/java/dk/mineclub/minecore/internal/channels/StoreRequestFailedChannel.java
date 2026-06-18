@@ -30,7 +30,7 @@ public class StoreRequestFailedChannel extends JedisPubSub {
         parser.parse(message)
                 .ifPresentOrElse(
                         parsed -> {
-                            // Cancel the request
+                            // Can either be ban, or fail on proxyplugin side.
                         },
                         () -> System.out.println("Received invalid store message: " + message));
     }

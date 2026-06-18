@@ -27,6 +27,7 @@ dependencies {
     compileOnly(libs.velocity)
     compileOnly(libs.jedis)
     compileOnly(libs.lombok)
+    implementation(libs.okhttp)
     annotationProcessor(libs.lombok)
     annotationProcessor(libs.velocity)
 }

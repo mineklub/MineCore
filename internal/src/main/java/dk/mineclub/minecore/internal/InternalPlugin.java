@@ -1,5 +1,7 @@
 package dk.mineclub.minecore.internal;
 
+import com.google.common.net.MediaType;
+import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -7,10 +9,17 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dk.mineclub.minecore.internal.channels.StoreRequestChannel;
 import dk.mineclub.minecore.internal.channels.StoreRequestFailedChannel;
+import dk.mineclub.minecore.internal.channels.StoreRequestMessage;
 import dk.mineclub.minecore.internal.channels.StoreRequestSuccessChannel;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
+
 import lombok.Getter;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.slf4j.Logger;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.RedisClient;
@@ -23,6 +32,13 @@ public class InternalPlugin {
     @Getter private final ProxyServer server;
     private final Logger logger;
     private final EnvironmentFile environmentFile;
+    private String baseUrl = "https://api.mineclub.dk/v2/minecore";
+    private static final OkHttpClient client =
+        new OkHttpClient()
+            .newBuilder()
+            .readTimeout(1, TimeUnit.MINUTES)
+            .writeTimeout(1, TimeUnit.MINUTES)
+            .build();
 
     @Inject
     public InternalPlugin(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -54,5 +70,41 @@ public class InternalPlugin {
         new StoreRequestChannel(this);
         new StoreRequestFailedChannel(this);
         new StoreRequestSuccessChannel(this);
+    }
+
+    public Response acceptRequest(StoreRequestMessage message) {
+        String token = environmentFile.getToken();
+        Request request =
+            new Request.Builder()
+                .url(baseUrl + "/client/request/" + message.data().id() + "/accept")
+                .post(RequestBody.create(new byte[0]))
+                .header("Authorization", token)
+                .build();
+
+        try {
+            return client.newCall(request).execute();
+        } catch (Exception ex) {
+            System.out.println("Failed to create request, " + ex.getMessage());
+        }
+
+        return null;
+    }
+
+    public Response cancelRequest(StoreRequestMessage message) {
+        String token = environmentFile.getToken();
+        Request request =
+            new Request.Builder()
+                .url(baseUrl + "/client/request/" + message.data().id() + "/cancel")
+                .post(RequestBody.create(new byte[0]))
+                .header("Authorization", token)
+                .build();
+
+        try {
+            return client.newCall(request).execute();
+        } catch (Exception ex) {
+            System.out.println("Failed to create request, " + ex.getMessage());
+        }
+
+        return null;
     }
 }

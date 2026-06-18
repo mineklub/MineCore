@@ -12,6 +12,7 @@ public class EnvironmentFile {
     private final int port;
     private final String user;
     private final String password;
+    private final String token;
 
     public EnvironmentFile(File dataFolder) {
         this.dataFolder = dataFolder;
@@ -35,5 +36,6 @@ public class EnvironmentFile {
         this.port = node.node("jedis", "port").getInt(6379);
         this.user = node.node("jedis", "user").getString("");
         this.password = node.node("jedis", "password").getString("");
+        this.token = node.node("rest", "authorization").getString("");
     }
 }
