@@ -13,6 +13,7 @@ jedis = "7.4.1"
 guava = "33.6.0-jre"
 json = "20250517"
 okio = "1.17.6"
+skriptnew = "2.15.3"
 
 [plugins]
 shadow = {id = "com.gradleup.shadow", version.ref = "shadow"}
@@ -31,3 +32,4 @@ jedis = {module = "redis.clients:jedis", version.ref = "jedis"}
 guava = {group = "com.google.guava", name = "guava", version.ref = "guava"}
 json = {group = "org.json", name = "json", version.ref = "json"}
 okio = {group = "com.squareup.okio", name = "okio", version.ref = "okio"}
+skriptnew = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skriptnew"}

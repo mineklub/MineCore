@@ -15,6 +15,7 @@ dependencies {
 
     compileOnly(libs.paper)
     implementation(project(":api"))
+    implementation(project(":hooks"))
 }
 
 java {
@@ -35,5 +36,7 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<ShadowJar> {
     exclude("META-INF/**")
-    minimize()
+    minimize {
+        exclude(dependency("${rootProject.group}:hooks:.*"))
+    }
 }

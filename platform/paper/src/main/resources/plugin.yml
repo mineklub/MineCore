@@ -4,3 +4,5 @@ main: dk.mineclub.minecore.platform.paper.MineCorePaperPlugin
 api-version: "1.21"
 author: MineClub
 description: Paper platform module for MineCore
+softdepend:
+    - Skript

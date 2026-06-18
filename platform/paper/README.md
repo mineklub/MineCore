@@ -12,6 +12,8 @@ cd C:\Users\mhoff\Documents\GitHub\MinePay
 ## Startup
 
 The Paper plugin starts the shared API directly.
+Optional integrations are split into separate hook modules, such as `hooks:skript`, and are loaded from `plugins/MineCore/hooks/`.
+Each hook jar must include `minecore-hook.properties` with its bootstrap class.
 
 ### Optional token
 
@@ -31,3 +33,4 @@ Listen for them with `@EventHandler` like any other Bukkit event.
 ## Output
 
 The built plugin jar will be available under `platform/paper/build/libs/`.
+If you build a hook module, copy its jar into `plugins/MineCore/hooks/` on the server.

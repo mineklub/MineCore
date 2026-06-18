@@ -2,6 +2,7 @@ package dk.mineclub.minecore.platform.paper;
 
 import dk.mineclub.minecore.api.MineCoreApi;
 import dk.mineclub.minecore.platform.paper.bridge.PaperEventBridge;
+import dk.mineclub.minecore.platform.paper.hooks.HookLoader;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -9,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MineCorePaperPlugin extends JavaPlugin {
     @Getter private MineCoreApi api;
     private PaperEventBridge eventBridge;
+    private HookLoader hookLoader;
 
     @Override
     public void onEnable() {
@@ -21,6 +23,8 @@ public class MineCorePaperPlugin extends JavaPlugin {
         this.api = new MineCoreApi(null, token);
         this.eventBridge = new PaperEventBridge(this);
         this.api.getAsyncEventBus().register(eventBridge);
+        this.hookLoader = new HookLoader(this);
+        this.hookLoader.enable();
 
         getLogger().info("MineCore Paper plugin enabled");
     }
@@ -35,11 +39,16 @@ public class MineCorePaperPlugin extends JavaPlugin {
             }
         }
 
+        if (hookLoader != null) {
+            hookLoader.disable();
+        }
+
         if (api != null) {
             api.shutdown();
         }
 
         eventBridge = null;
+        hookLoader = null;
         api = null;
     }
 

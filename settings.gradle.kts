@@ -12,6 +12,9 @@ dependencyResolutionManagement {
         maven("https://repo.papermc.io/repository/maven-public/") {
             name = "papermc"
         }
+        maven("https://repo.skriptlang.org/releases") {
+            name = "skriptlang"
+        }
     }
 }
 
@@ -23,6 +26,11 @@ include("internal")
 project(":internal").projectDir = file("internal")
 include("example")
 project(":example").projectDir = file("example")
+include("hooks")
+project(":hooks").projectDir = file("hooks")
+
+include("hooks:skript")
+project(":hooks:skript").projectDir = file("hooks/skript")
 
 sequenceOf("paper").forEach {
     val name = "platform-$it"
