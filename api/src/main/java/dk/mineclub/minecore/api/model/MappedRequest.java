@@ -44,4 +44,3 @@ public class MappedRequest {
         private String client;
     }
 }
-

@@ -21,9 +21,12 @@ public class ReceiveRequestEvent implements Event {
 
     @Override
     public String toString() {
-        return "ReceiveRequestEvent{" +
-                "type='" + type + '\'' +
-                ", storeRequest=" + storeRequest +
-                '}';
+        return "ReceiveRequestEvent{"
+                + "type='"
+                + type
+                + '\''
+                + ", storeRequest="
+                + storeRequest
+                + '}';
     }
 }

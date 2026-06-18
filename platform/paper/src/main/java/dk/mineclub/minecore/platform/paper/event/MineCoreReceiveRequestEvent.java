@@ -18,7 +18,7 @@ public class MineCoreReceiveRequestEvent extends Event {
         this.storeRequest = storeRequest;
     }
 
-	@Override
+    @Override
     public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }

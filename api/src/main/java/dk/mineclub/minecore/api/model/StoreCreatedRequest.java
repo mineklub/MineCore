@@ -1,10 +1,10 @@
 package dk.mineclub.minecore.api.model;
 
 import com.google.gson.*;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.JsonAdapter;
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Type;
+import java.util.List;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -64,7 +64,8 @@ public class StoreCreatedRequest {
     private static final class DecimalValueAdapter
             implements JsonDeserializer<DecimalValue>, JsonSerializer<DecimalValue> {
         @Override
-        public DecimalValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public DecimalValue deserialize(
+                JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             if (json == null || json.isJsonNull()) {
                 return null;
@@ -88,7 +89,8 @@ public class StoreCreatedRequest {
         }
 
         @Override
-        public JsonElement serialize(DecimalValue src, Type typeOfSrc, JsonSerializationContext context) {
+        public JsonElement serialize(
+                DecimalValue src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jsonObject = new JsonObject();
             if (src != null && src.numberDecimal != null) {
                 jsonObject.addProperty("$numberDecimal", src.numberDecimal);

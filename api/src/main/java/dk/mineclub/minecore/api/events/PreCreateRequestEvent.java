@@ -23,9 +23,11 @@ public class PreCreateRequestEvent implements Event {
 
     @Override
     public String toString() {
-        return "PreCreateRequestEvent{" +
-                "cancelled=" + cancelled +
-                ", storeRequest=" + storeRequest +
-                '}';
+        return "PreCreateRequestEvent{"
+                + "cancelled="
+                + cancelled
+                + ", storeRequest="
+                + storeRequest
+                + '}';
     }
 }

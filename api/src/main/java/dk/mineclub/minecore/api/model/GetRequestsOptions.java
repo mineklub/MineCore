@@ -20,4 +20,3 @@ public class GetRequestsOptions {
     @Nullable private Boolean withMeta;
     @Nullable private Boolean includeProducts;
 }
-

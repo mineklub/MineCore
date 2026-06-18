@@ -11,7 +11,5 @@ public class RequestActionResponse {
     private boolean success;
     private String message;
 
-    @Nullable
-    private MappedRequest request;
+    @Nullable private MappedRequest request;
 }
-

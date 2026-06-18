@@ -20,11 +20,13 @@ public class PostCreateRequestEvent implements Event {
         return cancelled;
     }
 
-	@Override
-	public String toString() {
-		return "PostCreateRequestEvent{" +
-				"cancelled=" + cancelled +
-				", storeRequest=" + storeRequest +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "PostCreateRequestEvent{"
+                + "cancelled="
+                + cancelled
+                + ", storeRequest="
+                + storeRequest
+                + '}';
+    }
 }

@@ -5,7 +5,6 @@ import dk.mineclub.minecore.api.MineCoreApi;
 import dk.mineclub.minecore.api.events.PostCreateRequestEvent;
 import dk.mineclub.minecore.api.events.PreCreateRequestEvent;
 import dk.mineclub.minecore.api.events.ReceiveRequestEvent;
-import dk.mineclub.minecore.example.ExamplePlugin;
 
 public class StoreListeners {
     private MineCoreApi mineCoreApi;
@@ -16,15 +15,12 @@ public class StoreListeners {
 
     @Subscribe
     public void preEvent(PreCreateRequestEvent event) {
-        System.out.println(
-                "PreCreateRequestEvent called for request: "
-                        + event.toString());
+        System.out.println("PreCreateRequestEvent called for request: " + event.toString());
     }
 
     @Subscribe
     public void postEvent(PostCreateRequestEvent event) {
-        System.out.println(
-                "PostCreateRequestEvent called for request: " + event.toString());
+        System.out.println("PostCreateRequestEvent called for request: " + event.toString());
     }
 
     @Subscribe

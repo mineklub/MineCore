@@ -52,7 +52,12 @@ public class SocketIOManager {
             options.reconnectionDelay = 1000;
 
             if (token != null) {
-                options.auth = new HashMap<>() {{ put("token", token); }};
+                options.auth =
+                        new HashMap<>() {
+                            {
+                                put("token", token);
+                            }
+                        };
             }
 
             socket = IO.socket(URI.create(socketUrl), options);
@@ -76,7 +81,6 @@ public class SocketIOManager {
 
         isConnected = false;
     }
-
 
     /** Sets up default listeners for connection events */
     private void setupDefaultListeners() {

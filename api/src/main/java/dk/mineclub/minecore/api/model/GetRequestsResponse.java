@@ -49,5 +49,3 @@ public class GetRequestsResponse {
         private String to;
     }
 }
-
-

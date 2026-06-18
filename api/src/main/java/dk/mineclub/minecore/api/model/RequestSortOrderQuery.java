@@ -20,4 +20,3 @@ public enum RequestSortOrderQuery {
         return value;
     }
 }
-

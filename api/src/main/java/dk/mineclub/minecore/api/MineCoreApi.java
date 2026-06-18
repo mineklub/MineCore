@@ -61,10 +61,7 @@ public final class MineCoreApi {
 
     private void startRequestPolling() {
         requestPoller.scheduleAtFixedRate(
-                this::pollPendingAcceptedRequests,
-                0,
-                30,
-                TimeUnit.SECONDS);
+                this::pollPendingAcceptedRequests, 0, 30, TimeUnit.SECONDS);
     }
 
     private void pollPendingAcceptedRequests() {
