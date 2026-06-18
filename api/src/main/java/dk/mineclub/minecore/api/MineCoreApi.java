@@ -10,11 +10,7 @@ import dk.mineclub.minecore.api.model.GetRequestsResponse;
 import dk.mineclub.minecore.api.model.MappedRequest;
 import dk.mineclub.minecore.api.model.RequestStatusQuery;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,7 +26,6 @@ public final class MineCoreApi {
     @Getter private final Gson gson = new Gson();
     @Getter private final String token;
     private final ScheduledExecutorService requestPoller;
-    private final Map<String, String> lastEmittedRequestTypeById = new HashMap<>();
 
     public MineCoreApi() {
         this(System.getenv("SOCKET_IO_URL"), System.getenv("TOKEN"));
@@ -78,8 +73,6 @@ public final class MineCoreApi {
                 return;
             }
 
-            Set<String> eligibleIds = new HashSet<>();
-
             for (MappedRequest mappedRequest : requests) {
                 if (mappedRequest == null || mappedRequest.getStatus() == null) {
                     System.out.println("Skipping request with missing status: " + mappedRequest);
@@ -98,23 +91,13 @@ public final class MineCoreApi {
                     continue;
                 }
 
-                eligibleIds.add(requestId);
                 String type = "accept";
-                String previousType = lastEmittedRequestTypeById.get(requestId);
-                if (type.equals(previousType)) {
-                    System.out.println("Skipping request with duplicate type: " + mappedRequest);
-                    continue;
-                }
 
                 // Convert mapped request payload to the event model shape.
                 StoreCreatedRequest storeCreatedRequest =
                         gson.fromJson(gson.toJsonTree(mappedRequest), StoreCreatedRequest.class);
                 asyncEventBus.post(new ReceiveRequestEvent(type, storeCreatedRequest));
-                lastEmittedRequestTypeById.put(requestId, type);
             }
-
-            // Forget requests that are no longer eligible so they can emit again if they reappear.
-            lastEmittedRequestTypeById.keySet().retainAll(eligibleIds);
         } catch (Exception ignored) {
             // Polling should never crash the scheduler thread.
         }
