@@ -29,8 +29,7 @@ public class OldVersionHandler {
         return switch (apiMessage.trim().toLowerCase()) {
             case "request not found" -> "request.accept-errors.request-not-found";
             case "mcaccount not found" -> "request.accept-errors.mcaccount-not-found";
-            case "request is already accepted" ->
-                    "request.accept-errors.request-already-accepted";
+            case "request is already accepted" -> "request.accept-errors.request-already-accepted";
             case "cannot accept a cancelled request" ->
                     "request.accept-errors.cannot-accept-cancelled-request";
             case "player is not online" -> "request.accept-errors.player-not-online";
@@ -165,8 +164,12 @@ public class OldVersionHandler {
                                                                     handleRequestResponse(
                                                                             plugin,
                                                                             player,
-                                                                            () -> plugin.acceptRequest(message),
-                                                                            OldVersionHandler::getAcceptErrorKey,
+                                                                            () ->
+                                                                                    plugin
+                                                                                            .acceptRequest(
+                                                                                                    message),
+                                                                            OldVersionHandler
+                                                                                    ::getAcceptErrorKey,
                                                                             "request.accept-errors.network",
                                                                             "request.accept-errors.unexpected",
                                                                             "request.accept-errors.unknown");
@@ -182,8 +185,12 @@ public class OldVersionHandler {
                                                                     handleRequestResponse(
                                                                             plugin,
                                                                             player,
-                                                                            () -> plugin.cancelRequest(message),
-                                                                            OldVersionHandler::getCancelErrorKey,
+                                                                            () ->
+                                                                                    plugin
+                                                                                            .cancelRequest(
+                                                                                                    message),
+                                                                            OldVersionHandler
+                                                                                    ::getCancelErrorKey,
                                                                             "request.cancel-errors.network",
                                                                             "request.cancel-errors.unexpected",
                                                                             "request.cancel-errors.unknown");

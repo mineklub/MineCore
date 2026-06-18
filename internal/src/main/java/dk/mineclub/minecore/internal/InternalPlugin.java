@@ -1,7 +1,5 @@
 package dk.mineclub.minecore.internal;
 
-import com.google.common.net.MediaType;
-import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -14,7 +12,6 @@ import dk.mineclub.minecore.internal.channels.StoreRequestSuccessChannel;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
-
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -34,11 +31,11 @@ public class InternalPlugin {
     private final EnvironmentFile environmentFile;
     private String baseUrl = "https://api.mineclub.dk/v2/minecore";
     private static final OkHttpClient client =
-        new OkHttpClient()
-            .newBuilder()
-            .readTimeout(1, TimeUnit.MINUTES)
-            .writeTimeout(1, TimeUnit.MINUTES)
-            .build();
+            new OkHttpClient()
+                    .newBuilder()
+                    .readTimeout(1, TimeUnit.MINUTES)
+                    .writeTimeout(1, TimeUnit.MINUTES)
+                    .build();
 
     @Inject
     public InternalPlugin(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -75,11 +72,11 @@ public class InternalPlugin {
     public Response acceptRequest(StoreRequestMessage message) {
         String token = environmentFile.getToken();
         Request request =
-            new Request.Builder()
-                .url(baseUrl + "/client/request/" + message.data().id() + "/accept")
-                .post(RequestBody.create(new byte[0]))
-                .header("Authorization", token)
-                .build();
+                new Request.Builder()
+                        .url(baseUrl + "/client/request/" + message.data().id() + "/accept")
+                        .post(RequestBody.create(new byte[0]))
+                        .header("Authorization", token)
+                        .build();
 
         try {
             return client.newCall(request).execute();
@@ -93,11 +90,11 @@ public class InternalPlugin {
     public Response cancelRequest(StoreRequestMessage message) {
         String token = environmentFile.getToken();
         Request request =
-            new Request.Builder()
-                .url(baseUrl + "/client/request/" + message.data().id() + "/cancel")
-                .post(RequestBody.create(new byte[0]))
-                .header("Authorization", token)
-                .build();
+                new Request.Builder()
+                        .url(baseUrl + "/client/request/" + message.data().id() + "/cancel")
+                        .post(RequestBody.create(new byte[0]))
+                        .header("Authorization", token)
+                        .build();
 
         try {
             return client.newCall(request).execute();

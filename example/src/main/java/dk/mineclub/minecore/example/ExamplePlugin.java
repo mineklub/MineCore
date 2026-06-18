@@ -2,6 +2,7 @@ package dk.mineclub.minecore.example;
 
 import dk.mineclub.minecore.api.MineCoreApi;
 import dk.mineclub.minecore.example.commands.BuyCommand;
+import dk.mineclub.minecore.example.listeners.StoreListeners;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,5 +19,6 @@ public class ExamplePlugin extends JavaPlugin {
                             commands.registrar()
                                     .register(new BuyCommand().createCommand("buy", this));
                         });
+        api.getAsyncEventBus().register(new StoreListeners());
     }
 }

@@ -20,4 +20,12 @@ public class PreCreateRequestEvent implements Event {
         api.getAsyncEventBus().post(this);
         return cancelled;
     }
+
+    @Override
+    public String toString() {
+        return "PreCreateRequestEvent{" +
+                "cancelled=" + cancelled +
+                ", storeRequest=" + storeRequest +
+                '}';
+    }
 }
