@@ -7,10 +7,14 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Getter;
 import org.jspecify.annotations.Nullable;
 
 public class SocketIOManager {
+    private static final Logger LOGGER = Logger.getLogger(SocketIOManager.class.getName());
+
     private final MineCoreApi mineCoreApi;
     @Getter private @Nullable Socket socket;
     private final String socketUrl;
@@ -54,11 +58,23 @@ public class SocketIOManager {
             socket = IO.socket(URI.create(socketUrl), options);
 
             setupDefaultListeners();
-            socket.connect();
+            Socket currentSocket = socket;
+            if (currentSocket != null) {
+                currentSocket.connect();
+            }
         } catch (Exception ex) {
-            System.out.println("Failed to connect to Socket.IO server: " + ex.getMessage());
-            ex.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Failed to connect to Socket.IO server", ex);
         }
+    }
+
+    public void disconnect() {
+        if (socket != null) {
+            socket.disconnect();
+            socket.close();
+            socket = null;
+        }
+
+        isConnected = false;
     }
 
 

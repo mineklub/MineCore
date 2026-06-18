@@ -1,8 +1,1 @@
-socket:
-  enabled: true
-  # Socket server URL, e.g. https://api.mineclub.dk
-  url: ""
-  # Optional bearer token used in Authorization header
-  token: ""
-  # Event to listen for (receive-only)
-  event: "store_request"
+token: ""

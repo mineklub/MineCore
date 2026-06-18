@@ -1,6 +1,6 @@
 # Paper Platform Module
 
-This module contains the Paper plugin entry point for MineCore and a receive-only Socket.IO listener.
+This module contains the Paper plugin entry point for MineCore, boots the shared API, and exposes Bukkit events for the request lifecycle.
 
 ## Build
 
@@ -9,27 +9,24 @@ cd C:\Users\mhoff\Documents\GitHub\MinePay
 .\gradlew :platform-paper:build --no-daemon
 ```
 
-## Socket configuration
+## Startup
 
-Configure `platform/paper/src/main/resources/config.yml` defaults or override via environment variables.
+The Paper plugin starts the shared API directly.
 
-### `config.yml`
+### Optional token
 
-```yaml
-socket:
-  enabled: true
-  url: ""
-  token: ""
-  event: "store_request"
-```
+You may set `socket.token` in `platform/paper/src/main/resources/config.yml`.
+If the `TOKEN` environment variable is present, it overrides the config value.
 
-### Environment overrides
+## Bukkit events
 
-- `MINECORE_SOCKET_URL`
-- `MINECORE_SOCKET_TOKEN`
-- `MINECORE_SOCKET_EVENT`
+The Paper bridge forwards the API bus into Bukkit events:
 
-If `socket.url` is empty and `MINECORE_SOCKET_URL` is not set, the plugin skips socket startup.
+- `MineCorePreCreateRequestEvent` — cancellable, contains `StoreRequest`
+- `MineCorePostCreateRequestEvent` — contains `StoreCreatedRequest`
+- `MineCoreReceiveRequestEvent` — contains `SocketRequestType` and `StoreCreatedRequest`
+
+Listen for them with `@EventHandler` like any other Bukkit event.
 
 ## Output
 

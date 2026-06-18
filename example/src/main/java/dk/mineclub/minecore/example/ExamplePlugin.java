@@ -19,6 +19,6 @@ public class ExamplePlugin extends JavaPlugin {
                             commands.registrar()
                                     .register(new BuyCommand().createCommand("buy", this));
                         });
-        api.getAsyncEventBus().register(new StoreListeners());
+        api.getAsyncEventBus().register(new StoreListeners(api));
     }
 }
