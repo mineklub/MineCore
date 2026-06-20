@@ -31,8 +31,6 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(25))
     }
-    withJavadocJar()
-    withSourcesJar()
 }
 
 tasks {
