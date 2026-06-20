@@ -90,18 +90,24 @@ public class MineCorePaperLoader implements PluginLoader {
 
         String classifier = classifierForJavaFeature(Runtime.version().feature());
         if (classifier == null) {
+            System.err.println(
+                    "Cannot determine classifier for "
+                            + baseCoordinates
+                            + " : "
+                            + Runtime.version().feature());
             return baseCoordinates;
         }
 
-        return baseCoordinates + ":" + classifier;
+        System.out.println("Resolving " + baseCoordinates + ":" + classifier);
+        return baseCoordinates + "-" + classifier;
     }
 
     private static String classifierForJavaFeature(int javaFeature) {
         if (javaFeature >= JAVA_25) {
-            return "jvm25";
+            return null;
         }
         if (javaFeature >= JAVA_21) {
-            return null;
+            return "jvm21";
         }
         if (javaFeature >= JAVA_17) {
             return "jvm17";

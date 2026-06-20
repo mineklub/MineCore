@@ -6,6 +6,7 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.maven.MavenPom
 
 plugins {
     id("java-library")
@@ -23,6 +24,11 @@ val additionalApiClassifiersByJavaVersion =
                 11 to "jvm11",
                 17 to "jvm17",
                 25 to "jvm25")
+
+data class ApiVariantArtifact(
+        val javaVersion: Int,
+        val classifier: String,
+        val jarTask: org.gradle.api.tasks.TaskProvider<Jar>)
 
 dependencies {
     compileOnly(libs.lombok)
@@ -49,7 +55,7 @@ tasks {
     }
 }
 
-val additionalApiJarTasks =
+val additionalApiArtifacts =
         additionalApiClassifiersByJavaVersion.map { (javaVersion, classifier) ->
             val compileTask = tasks.register<JavaCompile>("compileJava$javaVersion") {
                 description = "Compiles API classes targeting Java $javaVersion."
@@ -67,14 +73,41 @@ val additionalApiJarTasks =
                 }
             }
 
-            tasks.register<Jar>("jarJava$javaVersion") {
+            val jarTask = tasks.register<Jar>("jarJava$javaVersion") {
                 description = "Builds an API jar targeting Java $javaVersion."
                 archiveClassifier.set(classifier)
                 from(compileTask)
                 from(tasks.named("processResources"))
                 dependsOn(compileTask, tasks.named("processResources"))
             }
+
+            ApiVariantArtifact(javaVersion = javaVersion, classifier = classifier, jarTask = jarTask)
         }
+
+fun MavenPom.applyApiPomMetadata() {
+    name.set(rootProject.name)
+    description.set("Payment system for servers on mineclub.dk")
+    inceptionYear.set("2024")
+    url.set("https://mineclub.dk/")
+    licenses {
+        license {
+            name.set("GNU GENERAL PUBLIC LICENSE")
+            url.set("https://www.gnu.org/licenses/gpl-3.0.html")
+        }
+    }
+    developers {
+        developer {
+            id.set("mineclub")
+            name.set("MineClub")
+            url.set("https://github.com/mineklub/")
+        }
+    }
+    scm {
+        url.set("https://github.com/mineklub/MineCore/")
+        connection.set("scm:git:git://github.com/mineklub/MineCore.git")
+        developerConnection.set("scm:git:ssh://git@github.com/mineklub/MineCore.git")
+    }
+}
 
 signing {
     val signingKeyId =
@@ -107,33 +140,28 @@ mavenPublishing {
         sourcesJar = SourcesJar.Sources(),
     ))
     pom {
-        name = rootProject.name
-        description = "Payment system for servers on mineclub.dk"
-        inceptionYear = "2024"
-        url = "https://mineclub.dk/"
-        licenses {
-            license {
-                name = "GNU GENERAL PUBLIC LICENSE"
-                url = "https://www.gnu.org/licenses/gpl-3.0.html"
-            }
-        }
-        developers {
-            developer {
-                id = "mineclub"
-                name = "MineClub"
-                url = "https://github.com/mineklub/"
-            }
-        }
-        scm {
-            url = "https://github.com/mineklub/MineCore/"
-            connection = "scm:git:git://github.com/mineklub/MineCore.git"
-            developerConnection = "scm:git:ssh://git@github.com/mineklub/MineCore.git"
-        }
+        applyApiPomMetadata()
     }
 }
 
 extensions.configure<PublishingExtension> {
     publications.withType(MavenPublication::class.java).configureEach {
-        additionalApiJarTasks.forEach { artifact(it) }
+        if (name == "maven") {
+            additionalApiArtifacts.forEach { artifact(it.jarTask) }
+        }
+    }
+
+    additionalApiArtifacts.forEach { variant ->
+        publications.register("mavenJvm${variant.javaVersion}", MavenPublication::class.java) {
+            groupId = project.group.toString()
+            artifactId = "api-${variant.classifier}"
+            version = project.version.toString()
+            artifact(variant.jarTask) {
+                classifier = null
+            }
+            pom {
+                applyApiPomMetadata()
+            }
+        }
     }
 }

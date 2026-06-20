@@ -51,6 +51,11 @@ gradle build -PminepayJavaVersion=21
 > - `api` publiceres i flere Java-varianter:
 >   - Default artifact (`api`) er Java 21.
 >   - Ekstra classifiers: `jvm8`, `jvm11`, `jvm17`, `jvm25` (fx `dk.minecore:api:1.0.0:jvm17`).
+>   - Der publiceres ogsa dedikerede artifacts med egen POM pr. Java-version:
+>     - `dk.minecore:api-jvm8:1.0.0`
+>     - `dk.minecore:api-jvm11:1.0.0`
+>     - `dk.minecore:api-jvm17:1.0.0`
+>     - `dk.minecore:api-jvm25:1.0.0`
 > - Hvis du får fejlen "Unsupported class file major version", skal du matche plugin-versionen med serverens Java-version:
 >   - Java 21 server → `gradle build -PminepayJavaVersion=21`
 >   - Java 25 server → `gradle build -PminepayJavaVersion=25`
