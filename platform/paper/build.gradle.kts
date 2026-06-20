@@ -43,7 +43,9 @@ val generateLoaderLibrariesProperties =
                             .asFile
             encoding = "UTF-8"
             property("libraries", loaderLibrariesCsv)
-            property("minecoreDependency", "com.github.mineklub:MineCore:$minecoreJitpackVersion")
+            property(
+                    "minecoreDependency",
+                    "com.github.mineklub.MineCore:api:$minecoreJitpackVersion")
         }
 
 java {

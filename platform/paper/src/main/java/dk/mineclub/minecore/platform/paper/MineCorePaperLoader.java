@@ -14,7 +14,7 @@ public class MineCorePaperLoader implements PluginLoader {
     private static final String GENERATED_RESOURCE =
             "minecore-loader-libraries-generated.properties";
     private static final String DEFAULT_MINECORE_DEPENDENCY =
-            "com.github.mineklub:MineCore:firsttry-SNAPSHOT";
+            "com.github.mineklub.MineCore:api:firsttry-SNAPSHOT";
 
     private static final int JAVA_8 = 8;
     private static final int JAVA_11 = 11;
@@ -88,37 +88,44 @@ public class MineCorePaperLoader implements PluginLoader {
             return baseCoordinates;
         }
 
-        String classifier = classifierForJavaFeature(Runtime.version().feature());
-        if (classifier == null) {
-            System.err.println(
-                    "Cannot determine classifier for "
-                            + baseCoordinates
-                            + " : "
-                            + Runtime.version().feature());
-            return baseCoordinates;
+        String group = parts[0];
+        String artifact = parts[1];
+        String version = parts[2];
+
+        String variantArtifact =
+                variantArtifactForJavaFeature(artifact, Runtime.version().feature());
+        if (variantArtifact == null) {
+            return group + ":" + artifact + ":" + version;
         }
 
-        System.out.println("Resolving " + baseCoordinates + ":" + classifier);
-        return baseCoordinates + "-" + classifier;
+        return group + ":" + variantArtifact + ":" + version;
     }
 
-    private static String classifierForJavaFeature(int javaFeature) {
+    private static String variantArtifactForJavaFeature(String baseArtifact, int javaFeature) {
         if (javaFeature >= JAVA_25) {
-            return null;
+            return withVariantSuffix(baseArtifact, "jvm25");
         }
         if (javaFeature >= JAVA_21) {
-            return "jvm21";
+            return null;
         }
         if (javaFeature >= JAVA_17) {
-            return "jvm17";
+            return withVariantSuffix(baseArtifact, "jvm17");
         }
         if (javaFeature >= JAVA_11) {
-            return "jvm11";
+            return withVariantSuffix(baseArtifact, "jvm11");
         }
         if (javaFeature >= JAVA_8) {
-            return "jvm8";
+            return withVariantSuffix(baseArtifact, "jvm8");
         }
         return null;
+    }
+
+    private static String withVariantSuffix(String baseArtifact, String variantSuffix) {
+        String suffix = "-" + variantSuffix;
+        if (baseArtifact.endsWith(suffix)) {
+            return baseArtifact;
+        }
+        return baseArtifact + suffix;
     }
 
     private static InputStream openPropertiesStream() {
