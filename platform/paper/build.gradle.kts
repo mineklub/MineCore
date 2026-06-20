@@ -28,6 +28,21 @@ val loaderLibrariesCsv =
                         "org.json:json:${libs.versions.json.get()}")
                 .joinToString(",")
 
+val minecoreJitpackVersion =
+        providers.gradleProperty("minecoreJitpackVersion").orElse("firsttry-SNAPSHOT").get()
+
+val generateLoaderLibrariesProperties =
+        tasks.register<WriteProperties>("generateLoaderLibrariesProperties") {
+            destinationFile =
+                    layout.buildDirectory
+                            .file("generated/resources/minecore-loader-libraries-generated.properties")
+                            .get()
+                            .asFile
+            encoding = "UTF-8"
+            property("libraries", loaderLibrariesCsv)
+            property("minecoreDependency", "com.github.mineklub:MineCore:$minecoreJitpackVersion")
+        }
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(25))
@@ -44,23 +59,10 @@ tasks.withType<JavaCompile>().configureEach {
     options.release.set(25)
 }
 
-val generateLoaderLibrariesProperties =
-        tasks.register<WriteProperties>("generateLoaderLibrariesProperties") {
-            description = "Generates the minecore-loader-libraries.properties file"
-            destinationFile =
-                    layout.buildDirectory
-                            .file("generated/resources/minecore-loader-libraries.properties")
-                            .get()
-                            .asFile
-            encoding = "UTF-8"
-            property("libraries", loaderLibrariesCsv)
-        }
-
 tasks.processResources {
-    dependsOn(generateLoaderLibrariesProperties)
-    exclude("minecore-loader-libraries.properties")
-    from(layout.buildDirectory.dir("generated/resources"))
+    from(generateLoaderLibrariesProperties)
 }
+
 
 tasks.withType<ShadowJar> {
     exclude("META-INF/**")

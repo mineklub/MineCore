@@ -11,6 +11,11 @@ import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.repository.RemoteRepository;
 
 public class MineCorePaperLoader implements PluginLoader {
+    private static final String GENERATED_RESOURCE =
+            "minecore-loader-libraries-generated.properties";
+    private static final String DEFAULT_MINECORE_DEPENDENCY =
+            "com.github.mineklub:MineCore:firsttry-SNAPSHOT";
+
     @Override
     public void classloader(PluginClasspathBuilder classpathBuilder) {
         MavenLibraryResolver resolver = new MavenLibraryResolver();
@@ -20,6 +25,8 @@ public class MineCorePaperLoader implements PluginLoader {
                                 "default",
                                 MavenLibraryResolver.MAVEN_CENTRAL_DEFAULT_MIRROR)
                         .build());
+        resolver.addRepository(
+                new RemoteRepository.Builder("jitpack", "default", "https://jitpack.io").build());
         resolver.addRepository(
                 new RemoteRepository.Builder(
                                 "paper",
@@ -33,33 +40,44 @@ public class MineCorePaperLoader implements PluginLoader {
     }
 
     private static void addDependency(MavenLibraryResolver resolver, String coordinates) {
+        System.out.println("Adding dependency: " + coordinates);
         resolver.addDependency(new Dependency(new DefaultArtifact(coordinates), null));
     }
 
     private static void loadLibrariesFromResource(MavenLibraryResolver resolver) {
         Properties properties = new Properties();
-        try (InputStream input =
-                MineCorePaperLoader.class
-                        .getClassLoader()
-                        .getResourceAsStream("minecore-loader-libraries.properties")) {
+        try (InputStream input = openPropertiesStream()) {
             if (input == null) {
-                throw new IllegalStateException(
-                        "Missing minecore-loader-libraries.properties resource");
+                throw new IllegalStateException("Cannot open properties file");
             }
 
             properties.load(input);
             String libraries = properties.getProperty("libraries", "").trim();
             if (libraries.isEmpty()) {
-                throw new IllegalStateException(
-                        "No libraries configured in minecore-loader-libraries.properties");
+                throw new RuntimeException("No libraries found!");
+            } else {
+                Arrays.stream(libraries.split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .forEach(coordinates -> addDependency(resolver, coordinates));
             }
 
-            Arrays.stream(libraries.split(","))
-                    .map(String::trim)
-                    .filter(s -> !s.isEmpty())
-                    .forEach(coordinates -> addDependency(resolver, coordinates));
+            String minecoreDependency =
+                    properties
+                            .getProperty("minecoreDependency", DEFAULT_MINECORE_DEPENDENCY)
+                            .trim();
+            if (minecoreDependency.isEmpty()) {
+                minecoreDependency = DEFAULT_MINECORE_DEPENDENCY;
+            }
+            addDependency(resolver, minecoreDependency);
         } catch (Exception ex) {
-            throw new IllegalStateException("Failed to load Paper runtime libraries", ex);
+            throw new RuntimeException(
+                    "Failed to load libraries from resource: " + GENERATED_RESOURCE, ex);
         }
+    }
+
+    private static InputStream openPropertiesStream() {
+        ClassLoader classLoader = MineCorePaperLoader.class.getClassLoader();
+        return classLoader.getResourceAsStream(GENERATED_RESOURCE);
     }
 }

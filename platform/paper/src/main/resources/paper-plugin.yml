@@ -3,7 +3,6 @@ version: "1.0.0"
 main: dk.mineclub.minecore.platform.paper.MineCorePaperPlugin
 description: "MineCore Plugin er et plugin til at forbinde MineCore med Paper platformen."
 api-version: "26.1.2"
-bootstrapper: io.papermc.testplugin.TestPluginBootstrap
 loader: dk.mineclub.minecore.platform.paper.MineCorePaperLoader
 dependencies:
     server:
