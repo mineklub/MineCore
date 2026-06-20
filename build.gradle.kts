@@ -1,3 +1,6 @@
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+
 group = "dk.minecore"
 version = "1.0.0"
 
@@ -60,3 +63,42 @@ subprojects {
         dependsOn("spotlessCheck")
     }
 }
+
+tasks.register("buildPlatformPaperJava21And25") {
+    group = "build"
+    description = "Builds :platform-paper shadow jar for Java 21 and 25 and stores both outputs."
+    notCompatibleWithConfigurationCache("Runs nested Gradle builds with different minepayJavaVersion values.")
+
+    doLast {
+        val gradlew = if (System.getProperty("os.name").contains("Windows", ignoreCase = true)) {
+            "gradlew.bat"
+        } else {
+            "./gradlew"
+        }
+
+        fun runGradle(vararg args: String) {
+            val command = mutableListOf(gradlew)
+            command.addAll(args)
+            val exitCode = ProcessBuilder(command).directory(rootDir).inheritIO().start().waitFor()
+            if (exitCode != 0) {
+                throw GradleException("Command failed (${command.joinToString(" ")}) with exit code $exitCode")
+            }
+        }
+
+        val libsDir = rootDir.resolve("platform/paper/build/libs")
+        val defaultShadowJar = libsDir.resolve("platform-paper-${project.version}-all.jar")
+        val java21ShadowJar = libsDir.resolve("platform-paper-${project.version}-jvm21-all.jar")
+        val java25ShadowJar = libsDir.resolve("platform-paper-${project.version}-jvm25-all.jar")
+
+        runGradle(":platform-paper:shadowJar", "-PminepayJavaVersion=21", "-x", "test")
+        Files.copy(defaultShadowJar.toPath(), java21ShadowJar.toPath(), StandardCopyOption.REPLACE_EXISTING)
+
+        runGradle(":platform-paper:shadowJar", "-PminepayJavaVersion=25", "-x", "test")
+        Files.copy(defaultShadowJar.toPath(), java25ShadowJar.toPath(), StandardCopyOption.REPLACE_EXISTING)
+    }
+}
+
+
+
+
+
