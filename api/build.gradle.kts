@@ -63,7 +63,12 @@ signing {
 
 mavenPublishing {
     publishToMavenCentral()
-    signAllPublications()
+    val hasSigningKey =
+            providers.gradleProperty("signingInMemoryKey").orNull != null
+                    || providers.environmentVariable("SIGNING_KEY").orNull != null
+    if (hasSigningKey) {
+        signAllPublications()
+    }
     configure(JavaLibrary(
         javadocJar = JavadocJar.Javadoc(),
         sourcesJar = SourcesJar.Sources(),
