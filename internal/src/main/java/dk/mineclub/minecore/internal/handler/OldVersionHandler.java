@@ -107,7 +107,7 @@ public class OldVersionHandler {
                     player.sendMessage(plugin.getLang().get(errorKey));
                 }
             }
-        } catch (Exception _) {
+        } catch (Exception ignored) {
             player.sendMessage(plugin.getLang().get(unexpectedKey));
         }
     }
@@ -160,7 +160,7 @@ public class OldVersionHandler {
                                                 .get("request.accept-button")
                                                 .clickEvent(
                                                         ClickEvent.callback(
-                                                                _ -> {
+                                                                ignored -> {
                                                                     handleRequestResponse(
                                                                             plugin,
                                                                             player,
@@ -181,7 +181,7 @@ public class OldVersionHandler {
                                                 .get("request.deny-button")
                                                 .clickEvent(
                                                         ClickEvent.callback(
-                                                                _ -> {
+                                                                ignored -> {
                                                                     handleRequestResponse(
                                                                             plugin,
                                                                             player,

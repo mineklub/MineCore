@@ -1,6 +1,21 @@
 group = "dk.minecore"
 version = "1.0.0"
 
+val targetJavaVersion =
+        providers.gradleProperty("minepayJavaVersion")
+                .map(String::toInt)
+                .orElse(25)
+                .get()
+
+val paperApiVersion = if (targetJavaVersion == 21) "1.21.11-R0.1-SNAPSHOT" else "26.1.2.build.+"
+
+require(targetJavaVersion == 21 || targetJavaVersion == 25) {
+    "minepayJavaVersion must be either 21 or 25."
+}
+
+extra["targetJavaVersion"] = targetJavaVersion
+extra["paperApiVersion"] = paperApiVersion
+
 plugins {
     base
     alias(libs.plugins.shadow) apply false
@@ -16,7 +31,7 @@ subprojects {
 
     extensions.configure<JavaPluginExtension> {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(25))
+            languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
         }
     }
 
@@ -38,6 +53,7 @@ subprojects {
 
     tasks.withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
+        options.release.set(targetJavaVersion)
     }
 
     tasks.named("check") {

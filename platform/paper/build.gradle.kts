@@ -10,11 +10,14 @@ plugins {
 group = rootProject.group
 version = rootProject.version
 
+val targetJavaVersion = rootProject.extra["targetJavaVersion"] as Int
+val paperApiVersion = rootProject.extra["paperApiVersion"] as String
+
 dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
 
-    compileOnly(libs.paper)
+    compileOnly("io.papermc.paper:paper-api:$paperApiVersion")
     compileOnly(project(":api"))
     implementation(project(":hooks"))
 }
@@ -45,7 +48,7 @@ val generateLoaderLibrariesProperties =
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(25))
+        languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
     }
 }
 
@@ -56,7 +59,7 @@ extensions.configure<SpotlessExtension> {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(25)
+    options.release.set(targetJavaVersion)
 }
 
 tasks.processResources {

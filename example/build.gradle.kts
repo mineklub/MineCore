@@ -8,14 +8,17 @@ plugins {
 group = rootProject.group
 version = rootProject.version
 
+val targetJavaVersion = rootProject.extra["targetJavaVersion"] as Int
+val paperApiVersion = rootProject.extra["paperApiVersion"] as String
+
 dependencies {
     implementation(project(":api"))
-    compileOnly(libs.paper)
+    compileOnly("io.papermc.paper:paper-api:$paperApiVersion")
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(25))
+        languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
     }
     withJavadocJar()
     withSourcesJar()
@@ -23,7 +26,7 @@ java {
 
 tasks {
     withType<JavaCompile>().configureEach {
-        options.release.set(25)
+        options.release.set(targetJavaVersion)
     }
     withType<ShadowJar> {
         exclude("META-INF/**")

@@ -53,7 +53,7 @@ public class SocketIOManager {
 
             if (token != null) {
                 options.auth =
-                        new HashMap<>() {
+                        new HashMap<String, String>() {
                             {
                                 put("token", token);
                             }

@@ -36,8 +36,24 @@ Brug følgende Gradle-kommando til at bygge MineCore:
 ```gradle
 gradle build
 ```
+
+Du kan skifte Java target-version mellem 25 (default) og 21.
+**Vigtig:** Du skal matche Java-versionen med din server:
+
+```gradle
+gradle build -PminepayJavaVersion=25
+gradle build -PminepayJavaVersion=21
+```
+
 > [!NOTE]  
-> Den genererede MineCore-fil gemmes i mappen `build/libs/MineCore-Bukkit-{version}.jar`.
+> - Den genererede MineCore-fil gemmes i mappen `build/libs/MineCore-Bukkit-{version}.jar`.
+> - Den genererede platform-paper plugin gemmes i `platform/paper/build/libs/platform-paper-{version}-all.jar`.
+> - `api` publiceres i flere Java-varianter:
+>   - Default artifact (`api`) er Java 21.
+>   - Ekstra classifiers: `jvm8`, `jvm11`, `jvm17`, `jvm25` (fx `dk.minecore:api:1.0.0:jvm17`).
+> - Hvis du får fejlen "Unsupported class file major version", skal du matche plugin-versionen med serverens Java-version:
+>   - Java 21 server → `gradle build -PminepayJavaVersion=21`
+>   - Java 25 server → `gradle build -PminepayJavaVersion=25`
 >
 
 ## License

@@ -80,7 +80,7 @@ public final class MineCoreApi {
                 }
 
                 String requestId = mappedRequest.getId();
-                if (requestId == null || requestId.isBlank()) {
+                if (requestId == null || requestId.trim().isEmpty()) {
                     System.out.println("Skipping request with missing id: " + mappedRequest);
                     continue;
                 }

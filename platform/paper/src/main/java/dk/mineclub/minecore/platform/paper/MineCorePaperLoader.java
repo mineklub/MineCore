@@ -23,7 +23,7 @@ public class MineCorePaperLoader implements PluginLoader {
                 new RemoteRepository.Builder(
                                 "central",
                                 "default",
-                                MavenLibraryResolver.MAVEN_CENTRAL_DEFAULT_MIRROR)
+                                "https://maven-central.storage-download.googleapis.com/maven2")
                         .build());
         resolver.addRepository(
                 new RemoteRepository.Builder("jitpack", "default", "https://jitpack.io").build());

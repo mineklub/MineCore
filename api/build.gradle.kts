@@ -2,6 +2,10 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.vanniktech.maven.publish.JavaLibrary
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.SourcesJar
+import org.gradle.api.tasks.bundling.Jar
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
 
 plugins {
     id("java-library")
@@ -12,6 +16,13 @@ plugins {
 
 group = rootProject.group
 version = rootProject.version
+
+val additionalApiClassifiersByJavaVersion =
+        linkedMapOf(
+                8 to "jvm8",
+                11 to "jvm11",
+                17 to "jvm17",
+                25 to "jvm25")
 
 dependencies {
     compileOnly(libs.lombok)
@@ -29,19 +40,46 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(25))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 tasks {
-    withType<JavaCompile>().configureEach {
-        options.release.set(25)
+    named<JavaCompile>("compileJava") {
+        options.release.set(21)
     }
     withType<ShadowJar> {
         exclude("META-INF/**")
         minimize()
     }
 }
+
+val additionalApiJarTasks =
+        additionalApiClassifiersByJavaVersion.map { (javaVersion, classifier) ->
+            val compileTask = tasks.register<JavaCompile>("compileJava$javaVersion") {
+                description = "Compiles API classes targeting Java $javaVersion."
+                source = sourceSets.main.get().allJava
+                classpath = sourceSets.main.get().compileClasspath
+                destinationDirectory.set(layout.buildDirectory.dir("classes/java/java$javaVersion"))
+                options.encoding = "UTF-8"
+                options.release.set(javaVersion)
+                options.annotationProcessorPath = sourceSets.main.get().annotationProcessorPath
+                if (javaVersion > 21) {
+                    javaCompiler.set(
+                            javaToolchains.compilerFor {
+                                languageVersion.set(JavaLanguageVersion.of(javaVersion))
+                            })
+                }
+            }
+
+            tasks.register<Jar>("jarJava$javaVersion") {
+                description = "Builds an API jar targeting Java $javaVersion."
+                archiveClassifier.set(classifier)
+                from(compileTask)
+                from(tasks.named("processResources"))
+                dependsOn(compileTask, tasks.named("processResources"))
+            }
+        }
 
 signing {
     val signingKeyId =
@@ -96,5 +134,11 @@ mavenPublishing {
             connection = "scm:git:git://github.com/mineklub/MineCore.git"
             developerConnection = "scm:git:ssh://git@github.com/mineklub/MineCore.git"
         }
+    }
+}
+
+extensions.configure<PublishingExtension> {
+    publications.withType(MavenPublication::class.java).configureEach {
+        additionalApiJarTasks.forEach { artifact(it) }
     }
 }
