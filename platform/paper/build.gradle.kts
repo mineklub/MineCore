@@ -15,7 +15,7 @@ dependencies {
     annotationProcessor(libs.lombok)
 
     compileOnly(libs.paper)
-    implementation(project(":api"))
+    compileOnly(project(":api"))
     implementation(project(":hooks"))
 }
 
@@ -24,7 +24,7 @@ val loaderLibrariesCsv =
                         "io.socket:socket.io-client:${libs.versions.socketclient.get()}",
                         "com.google.code.gson:gson:${libs.versions.gson.get()}",
                         "com.google.guava:guava:${libs.versions.guava.get()}",
-                        "com.squareup.okhttp3:okhttp:${libs.versions.okhttp.get()}",
+                        "com.squareup.okhttp3:okhttp-jvm:${libs.versions.okhttp.get()}",
                         "org.json:json:${libs.versions.json.get()}")
                 .joinToString(",")
 

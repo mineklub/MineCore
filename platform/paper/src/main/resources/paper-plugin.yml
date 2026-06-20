@@ -8,7 +8,7 @@ dependencies:
     server:
         # Add a required "RequiredPlugin" dependency, which will load AFTER your plugin.
         Skript:
-            load: AFTER
+            load: BEFORE
             required: false
             # This means that your plugin will not have access to their classpath
             join-classpath: true
