@@ -54,6 +54,7 @@ public class PaperEventBridge {
     public void onReceive(ReceiveRequestEvent event) {
         callSync(
                 () -> {
+                    System.out.println(event.getStoreRequest().toString());
                     Bukkit.getPluginManager()
                             .callEvent(
                                     new MineCoreReceiveRequestEvent(

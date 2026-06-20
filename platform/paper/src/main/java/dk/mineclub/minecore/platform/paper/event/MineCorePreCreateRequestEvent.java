@@ -2,6 +2,8 @@ package dk.mineclub.minecore.platform.paper.event;
 
 import dk.mineclub.minecore.api.model.StoreRequest;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -34,5 +36,9 @@ public class MineCorePreCreateRequestEvent extends Event implements Cancellable 
 
     public static HandlerList getHandlerList() {
         return HANDLERS;
+    }
+
+    public OfflinePlayer getOfflinePlayer() {
+        return Bukkit.getOfflinePlayer(storeRequest.getMcaccount());
     }
 }

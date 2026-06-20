@@ -31,8 +31,6 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(25))
     }
-    withJavadocJar()
-    withSourcesJar()
 }
 
 tasks {
@@ -43,7 +41,22 @@ tasks {
         exclude("META-INF/**")
         minimize()
     }
-    signing {
+}
+
+signing {
+    val signingKeyId =
+            providers.gradleProperty("signingInMemoryKeyId")
+                    .orElse(providers.environmentVariable("SIGNING_KEY_ID"))
+    val signingKey =
+            providers.gradleProperty("signingInMemoryKey")
+                    .orElse(providers.environmentVariable("SIGNING_KEY"))
+    val signingPassword =
+            providers.gradleProperty("signingInMemoryKeyPassword")
+                    .orElse(providers.environmentVariable("SIGNING_PASSWORD"))
+
+    if (signingKey.isPresent && signingPassword.isPresent) {
+        useInMemoryPgpKeys(signingKeyId.orNull, signingKey.orNull, signingPassword.orNull)
+    } else {
         useGpgCmd()
     }
 }

@@ -93,6 +93,8 @@ public final class MineCoreApi {
 
                 String type = "accept";
 
+                System.out.println(mappedRequest);
+
                 // Convert mapped request payload to the event model shape.
                 StoreCreatedRequest storeCreatedRequest =
                         gson.fromJson(gson.toJsonTree(mappedRequest), StoreCreatedRequest.class);

@@ -1,0 +1,15 @@
+name: MineCore
+version: "1.0.0"
+main: dk.mineclub.minecore.platform.paper.MineCorePaperPlugin
+description: "MineCore Plugin er et plugin til at forbinde MineCore med Paper platformen."
+api-version: "26.1.2"
+bootstrapper: io.papermc.testplugin.TestPluginBootstrap
+loader: dk.mineclub.minecore.platform.paper.MineCorePaperLoader
+dependencies:
+    server:
+        # Add a required "RequiredPlugin" dependency, which will load AFTER your plugin.
+        Skript:
+            load: AFTER
+            required: false
+            # This means that your plugin will not have access to their classpath
+            join-classpath: true

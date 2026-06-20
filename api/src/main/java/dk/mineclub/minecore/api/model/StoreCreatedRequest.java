@@ -30,15 +30,17 @@ public class StoreCreatedRequest {
     @ToString
     @SuppressWarnings("unused")
     public static class Product {
-        @SerializedName("_id")
-        private String id;
-
+        @SerializedName("name")
         private String productName;
+
+        @SerializedName("id")
         private String productId;
+
         private DecimalValue price;
         private int quantity;
         private String createdAt;
         private String updatedAt;
+        private JsonObject metadata;
 
         @SerializedName("__v")
         private int version;

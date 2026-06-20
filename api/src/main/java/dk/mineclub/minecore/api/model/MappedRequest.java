@@ -15,7 +15,7 @@ public class MappedRequest {
     private String id;
 
     /** UUID of the Minecraft account. */
-    private String mcaccount;
+    private Mcaccount mcaccount;
 
     private List<Product> products;
     private double price;
@@ -42,5 +42,13 @@ public class MappedRequest {
     public static class Status {
         private String server;
         private String client;
+    }
+
+    @Getter
+    @ToString
+    @SuppressWarnings("unused")
+    public static class Mcaccount {
+        private String username;
+        private String uuid;
     }
 }
