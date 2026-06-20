@@ -38,11 +38,6 @@ dependencies {
     implementation(libs.json)
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
-}
 
 tasks {
     named<JavaCompile>("compileJava") {

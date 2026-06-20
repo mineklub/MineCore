@@ -16,6 +16,12 @@ public class MineCorePaperLoader implements PluginLoader {
     private static final String DEFAULT_MINECORE_DEPENDENCY =
             "com.github.mineklub:MineCore:firsttry-SNAPSHOT";
 
+    private static final int JAVA_8 = 8;
+    private static final int JAVA_11 = 11;
+    private static final int JAVA_17 = 17;
+    private static final int JAVA_21 = 21;
+    private static final int JAVA_25 = 25;
+
     @Override
     public void classloader(PluginClasspathBuilder classpathBuilder) {
         MavenLibraryResolver resolver = new MavenLibraryResolver();
@@ -69,11 +75,44 @@ public class MineCorePaperLoader implements PluginLoader {
             if (minecoreDependency.isEmpty()) {
                 minecoreDependency = DEFAULT_MINECORE_DEPENDENCY;
             }
-            addDependency(resolver, minecoreDependency);
+            addDependency(resolver, resolveMineCoreDependencyForRuntime(minecoreDependency));
         } catch (Exception ex) {
             throw new RuntimeException(
                     "Failed to load libraries from resource: " + GENERATED_RESOURCE, ex);
         }
+    }
+
+    private static String resolveMineCoreDependencyForRuntime(String baseCoordinates) {
+        String[] parts = baseCoordinates.split(":");
+        if (parts.length != 3) {
+            return baseCoordinates;
+        }
+
+        String classifier = classifierForJavaFeature(Runtime.version().feature());
+        if (classifier == null) {
+            return baseCoordinates;
+        }
+
+        return baseCoordinates + ":" + classifier;
+    }
+
+    private static String classifierForJavaFeature(int javaFeature) {
+        if (javaFeature >= JAVA_25) {
+            return "jvm25";
+        }
+        if (javaFeature >= JAVA_21) {
+            return null;
+        }
+        if (javaFeature >= JAVA_17) {
+            return "jvm17";
+        }
+        if (javaFeature >= JAVA_11) {
+            return "jvm11";
+        }
+        if (javaFeature >= JAVA_8) {
+            return "jvm8";
+        }
+        return null;
     }
 
     private static InputStream openPropertiesStream() {
