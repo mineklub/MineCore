@@ -138,8 +138,8 @@ public final class MineCoreApi {
                 }
 
                 String status = mappedVote.getStatus();
-                if (!"accepted".equalsIgnoreCase(status)) {
-                    System.out.println("Skipping vote with non-accepted status: " + mappedVote);
+                if (!"pending".equalsIgnoreCase(status)) {
+                    System.out.println("Skipping vote with pending status: " + mappedVote);
                     continue;
                 }
 
