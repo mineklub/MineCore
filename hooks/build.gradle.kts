@@ -14,16 +14,6 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:$hookPaperApiVersion")
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
-tasks.withType<JavaCompile>().configureEach {
-    options.release.set(17)
-}
-
 val additionalHookClassifiersByJavaVersion: LinkedHashMap<Int, String> =
         linkedMapOf(
                 17 to "jvm17",
