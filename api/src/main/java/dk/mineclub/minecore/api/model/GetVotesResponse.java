@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.jspecify.annotations.Nullable;
 
-/** Response from GET /server/votes. Contains either a flat list or paginated data with meta. */
+/** Response from GET /server/vote. Contains either a flat list or paginated data with meta. */
 @Getter
 @Setter
 @ToString

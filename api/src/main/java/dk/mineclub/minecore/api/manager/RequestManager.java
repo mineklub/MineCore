@@ -162,7 +162,7 @@ public class RequestManager {
         String token = mineCoreApi.getToken();
         Request request =
                 new Request.Builder()
-                        .url(baseUrl + "/server/votes/" + mappedVote.getId() + "/accept")
+                        .url(baseUrl + "/server/vote/" + mappedVote.getId() + "/accept")
                         .post(EMPTY_REQUEST_BODY)
                         .header("Authorization", "Bearer " + token)
                         .build();
@@ -251,7 +251,7 @@ public class RequestManager {
     public @Nullable GetVotesResponse getVotes(@Nullable GetVotesOptions options) {
         String token = mineCoreApi.getToken();
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "/server/votes").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "/server/vote").newBuilder();
 
         int page = options != null && options.getPage() != null ? options.getPage() : 1;
         int limit = options != null && options.getLimit() != null ? options.getLimit() : 25;
