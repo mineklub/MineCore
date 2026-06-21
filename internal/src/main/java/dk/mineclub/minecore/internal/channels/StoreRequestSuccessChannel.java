@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import dk.mineclub.minecore.internal.InternalPlugin;
+import dk.mineclub.minecore.internal.handler.NewVersionHandler;
 import dk.mineclub.minecore.internal.handler.OldVersionHandler;
 import java.util.UUID;
 import redis.clients.jedis.JedisPubSub;
@@ -57,7 +58,7 @@ public class StoreRequestSuccessChannel extends JedisPubSub {
                                     < 0) {
                                 OldVersionHandler.handle(plugin, player, parsed);
                             } else {
-                                OldVersionHandler.handle(plugin, player, parsed);
+                                NewVersionHandler.handle(plugin, player, parsed);
                             }
                         },
                         () -> System.out.println("Received invalid store message: " + message));
