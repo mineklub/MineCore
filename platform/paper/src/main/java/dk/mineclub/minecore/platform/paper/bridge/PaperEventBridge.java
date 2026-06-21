@@ -4,10 +4,12 @@ import com.google.common.eventbus.Subscribe;
 import dk.mineclub.minecore.api.events.PostCreateRequestEvent;
 import dk.mineclub.minecore.api.events.PreCreateRequestEvent;
 import dk.mineclub.minecore.api.events.ReceiveRequestEvent;
+import dk.mineclub.minecore.api.events.ReceiveVoteEvent;
 import dk.mineclub.minecore.platform.paper.MineCorePaperPlugin;
 import dk.mineclub.minecore.platform.paper.event.MineCorePostCreateRequestEvent;
 import dk.mineclub.minecore.platform.paper.event.MineCorePreCreateRequestEvent;
 import dk.mineclub.minecore.platform.paper.event.MineCoreReceiveRequestEvent;
+import dk.mineclub.minecore.platform.paper.event.MineCoreReceiveVoteEvent;
 import dk.mineclub.minecore.platform.paper.event.SocketRequestType;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -60,6 +62,18 @@ public class PaperEventBridge {
                                     new MineCoreReceiveRequestEvent(
                                             SocketRequestType.from(event.getType()),
                                             event.getStoreRequest()));
+                    return null;
+                });
+    }
+
+    @Subscribe
+    @SuppressWarnings("unused")
+    public void onReceiveVote(ReceiveVoteEvent event) {
+        callSync(
+                () -> {
+                    System.out.println(event.getVote().toString());
+                    Bukkit.getPluginManager()
+                            .callEvent(new MineCoreReceiveVoteEvent(event.getVote()));
                     return null;
                 });
     }

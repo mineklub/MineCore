@@ -2,6 +2,8 @@ package dk.mineclub.minecore.api.manager;
 
 import dk.mineclub.minecore.api.MineCoreApi;
 import dk.mineclub.minecore.api.events.ReceiveRequestEvent;
+import dk.mineclub.minecore.api.events.ReceiveVoteEvent;
+import dk.mineclub.minecore.api.model.MappedVote;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -145,11 +147,48 @@ public class SocketIOManager {
                                 "Failed to parse Socket.IO request event: " + ex.getMessage());
                     }
                 });
+        socket.on(
+                "vote",
+                args -> {
+                    if (args.length == 0 || args[0] == null) {
+                        System.out.println("Socket.IO vote event received without payload");
+                        return;
+                    }
+
+                    try {
+                        VoteEnvelope envelope =
+                                mineCoreApi
+                                        .getGson()
+                                        .fromJson(String.valueOf(args[0]), VoteEnvelope.class);
+
+                        if (envelope == null || envelope.data == null) {
+                            System.out.println("Socket.IO vote event payload was empty");
+                            return;
+                        }
+
+                        if (envelope.type != null && !"newVote".equalsIgnoreCase(envelope.type)) {
+                            System.out.println(
+                                    "Socket.IO vote event ignored for type: " + envelope.type);
+                            return;
+                        }
+
+                        new ReceiveVoteEvent(envelope.data).callEvent();
+                    } catch (Exception ex) {
+                        System.out.println(
+                                "Failed to parse Socket.IO vote event: " + ex.getMessage());
+                    }
+                });
     }
 
     @SuppressWarnings("unused")
     private static final class RequestEnvelope {
         private String type;
         private StoreCreatedRequest data;
+    }
+
+    @SuppressWarnings("unused")
+    private static final class VoteEnvelope {
+        private String type;
+        private MappedVote data;
     }
 }

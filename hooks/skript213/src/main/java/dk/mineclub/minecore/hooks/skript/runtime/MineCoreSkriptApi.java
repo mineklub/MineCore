@@ -3,6 +3,7 @@ package dk.mineclub.minecore.hooks.skript.runtime;
 import ch.njol.skript.Skript;
 import dk.mineclub.minecore.api.MineCoreApi;
 import dk.mineclub.minecore.api.manager.RequestManager;
+import dk.mineclub.minecore.api.model.MappedVote;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,6 +39,28 @@ public final class MineCoreSkriptApi {
         } catch (Exception ex) {
             Skript.warning(
                     "MineCore Skript: invalid request id '" + requestId + "': " + ex.getMessage());
+            return null;
+        }
+    }
+
+    public static @Nullable MappedVote toVote(@Nullable Object input) {
+        if (input instanceof MappedVote vote) {
+            return vote;
+        }
+
+        if (!(input instanceof String voteId) || voteId.isBlank()) {
+            return null;
+        }
+
+        MineCoreApi api = MineCoreApi.getInstance();
+        if (api == null) {
+            return null;
+        }
+
+        try {
+            return api.getGson().fromJson("{\"_id\":\"" + voteId + "\"}", MappedVote.class);
+        } catch (Exception ex) {
+            Skript.warning("MineCore Skript: invalid vote id '" + voteId + "': " + ex.getMessage());
             return null;
         }
     }

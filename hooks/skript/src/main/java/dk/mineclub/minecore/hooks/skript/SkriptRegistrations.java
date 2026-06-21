@@ -4,21 +4,25 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import dk.mineclub.minecore.api.model.MappedVote;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
 import dk.mineclub.minecore.api.model.StoreProduct;
 import dk.mineclub.minecore.api.model.StoreRequest;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreAcceptRequest;
+import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreAcceptVote;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreAddProduct;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreCancelRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCorePostCreateRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCorePreCreateRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreReceiveRequest;
+import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreReceiveVote;
 import dk.mineclub.minecore.hooks.skript.expressions.*;
 import dk.mineclub.minecore.hooks.skript.runtime.MineCoreSkriptApi;
 import dk.mineclub.minecore.hooks.skript.sections.SecMineCoreCreateRequest;
 import dk.mineclub.minecore.platform.paper.event.MineCorePostCreateRequestEvent;
 import dk.mineclub.minecore.platform.paper.event.MineCorePreCreateRequestEvent;
 import dk.mineclub.minecore.platform.paper.event.MineCoreReceiveRequestEvent;
+import dk.mineclub.minecore.platform.paper.event.MineCoreReceiveVoteEvent;
 import org.bukkit.OfflinePlayer;
 import org.jspecify.annotations.Nullable;
 import org.skriptlang.skript.addon.SkriptAddon;
@@ -66,6 +70,14 @@ final class SkriptRegistrations {
                         .addPatterns("minecore receive request")
                         .addEvent(MineCoreReceiveRequestEvent.class)
                         .build());
+
+        syntaxRegistry.register(
+                eventKey,
+                BukkitSyntaxInfos.Event.builder(
+                                EvtMineCoreReceiveVote.class, "MineCore Receive Vote")
+                        .addPatterns("minecore receive vote")
+                        .addEvent(MineCoreReceiveVoteEvent.class)
+                        .build());
     }
 
     private static void registerSections(SyntaxRegistry syntaxRegistry) {
@@ -90,6 +102,14 @@ final class SkriptRegistrations {
                         .addPatterns(
                                 "accept [minecore] request %object%",
                                 "accept [minecore] request [with] id %string%")
+                        .build());
+
+        syntaxRegistry.register(
+                SyntaxRegistry.EFFECT,
+                SyntaxInfo.builder(EffMineCoreAcceptVote.class)
+                        .addPatterns(
+                                "accept [minecore] vote %object%",
+                                "accept [minecore] vote [with] id %string%")
                         .build());
 
         syntaxRegistry.register(
@@ -169,12 +189,24 @@ final class SkriptRegistrations {
                                 "[the] quantity of %newproduct%",
                                 "[the] subscription[ ]days of %newproduct%")
                         .build());
+
+        syntaxRegistry.register(
+                SyntaxRegistry.EXPRESSION,
+                SyntaxInfo.Expression.builder(ExprMineCoreMappedVoteProperty.class, Object.class)
+                        .addPatterns(
+                                "[the] id of %mappedvote%",
+                                "[the] status of %mappedvote%",
+                                "[the] created[ ]at of %mappedvote%",
+                                "[the] updated[ ]at of %mappedvote%",
+                                "[the] offlineplayer of %mappedvote%")
+                        .build());
     }
 
     private static void registerEventValues(EventValueRegistry eventValueRegistry) {
         registerPreCreateRequestValues(eventValueRegistry);
         registerPostCreateRequestValues(eventValueRegistry);
         registerReceiveRequestValues(eventValueRegistry);
+        registerReceiveVoteValues(eventValueRegistry);
     }
 
     private static void registerPreCreateRequestValues(EventValueRegistry eventValueRegistry) {
@@ -223,6 +255,19 @@ final class SkriptRegistrations {
                 EventValue.builder(MineCoreReceiveRequestEvent.class, StoreCreatedRequest.class)
                         .patterns("createdrequest")
                         .getter(MineCoreReceiveRequestEvent::getStoreRequest)
+                        .build());
+    }
+
+    private static void registerReceiveVoteValues(EventValueRegistry eventValueRegistry) {
+        eventValueRegistry.register(
+                EventValue.builder(MineCoreReceiveVoteEvent.class, OfflinePlayer.class)
+                        .getter(MineCoreReceiveVoteEvent::getOfflinePlayer)
+                        .build());
+
+        eventValueRegistry.register(
+                EventValue.builder(MineCoreReceiveVoteEvent.class, MappedVote.class)
+                        .patterns("mappedvote", "vote")
+                        .getter(MineCoreReceiveVoteEvent::getVote)
                         .build());
     }
 
@@ -328,6 +373,30 @@ final class SkriptRegistrations {
                                     @Override
                                     public String toVariableNameString(StoreProduct o) {
                                         return "newproduct:" + (o == null ? "none" : o.getId());
+                                    }
+                                }));
+
+        Classes.registerClass(
+                new ClassInfo<>(MappedVote.class, "mappedvote")
+                        .user("mapped ?votes?", "votes?")
+                        .name("Mapped Vote")
+                        .description("A MineCore vote payload received from the API.")
+                        .since("1.0")
+                        .parser(
+                                new Parser<MappedVote>() {
+                                    @Override
+                                    public boolean canParse(ParseContext context) {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public String toString(MappedVote o, int flags) {
+                                        return o == null ? "none" : "vote " + o.getId();
+                                    }
+
+                                    @Override
+                                    public String toVariableNameString(MappedVote o) {
+                                        return "mappedvote:" + (o == null ? "none" : o.getId());
                                     }
                                 }));
     }

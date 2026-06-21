@@ -8,10 +8,16 @@ import dk.mineclub.minecore.api.events.PostCreateRequestEvent;
 import dk.mineclub.minecore.api.events.PreCreateRequestEvent;
 import dk.mineclub.minecore.api.model.GetRequestsOptions;
 import dk.mineclub.minecore.api.model.GetRequestsResponse;
+import dk.mineclub.minecore.api.model.GetVotesOptions;
+import dk.mineclub.minecore.api.model.GetVotesResponse;
 import dk.mineclub.minecore.api.model.MappedRequest;
+import dk.mineclub.minecore.api.model.MappedVote;
 import dk.mineclub.minecore.api.model.RequestActionResponse;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
 import dk.mineclub.minecore.api.model.StoreRequest;
+import dk.mineclub.minecore.api.model.VoteSortByQuery;
+import dk.mineclub.minecore.api.model.VoteSortOrderQuery;
+import dk.mineclub.minecore.api.model.VoteStatusQuery;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -146,6 +152,31 @@ public class RequestManager {
         return null;
     }
 
+    public @Nullable RequestActionResponse acceptVote(MappedVote mappedVote) {
+        if (mappedVote == null
+                || mappedVote.getId() == null
+                || mappedVote.getId().trim().isEmpty()) {
+            return null;
+        }
+
+        String token = mineCoreApi.getToken();
+        Request request =
+                new Request.Builder()
+                        .url(baseUrl + "/server/votes/" + mappedVote.getId() + "/accept")
+                        .post(EMPTY_REQUEST_BODY)
+                        .header("Authorization", "Bearer " + token)
+                        .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            ResponseBody body = response.body();
+            return mineCoreApi.getGson().fromJson(body.string(), RequestActionResponse.class);
+        } catch (Exception ex) {
+            System.out.println("Failed to accept vote, " + ex.getMessage());
+        }
+
+        return null;
+    }
+
     public @Nullable GetRequestsResponse getRequests(@Nullable GetRequestsOptions options) {
         String token = mineCoreApi.getToken();
 
@@ -212,6 +243,98 @@ public class RequestManager {
             return mineCoreApi.getGson().fromJson(element, GetRequestsResponse.class);
         } catch (Exception ex) {
             System.out.println("Failed to get requests, " + ex.getMessage());
+        }
+
+        return null;
+    }
+
+    public @Nullable GetVotesResponse getVotes(@Nullable GetVotesOptions options) {
+        String token = mineCoreApi.getToken();
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "/server/votes").newBuilder();
+
+        int page = options != null && options.getPage() != null ? options.getPage() : 1;
+        int limit = options != null && options.getLimit() != null ? options.getLimit() : 25;
+        VoteStatusQuery status =
+                options != null && options.getStatus() != null
+                        ? options.getStatus()
+                        : VoteStatusQuery.ACCEPTED;
+        VoteSortByQuery sortBy =
+                options != null && options.getSortBy() != null
+                        ? options.getSortBy()
+                        : VoteSortByQuery.CREATED_AT;
+        VoteSortOrderQuery order =
+                options != null && options.getOrder() != null
+                        ? options.getOrder()
+                        : VoteSortOrderQuery.DESC;
+
+        if (page < 1) {
+            throw new IllegalArgumentException("Page must be an integer >= 1");
+        }
+
+        if (limit < 1 || limit > 100) {
+            throw new IllegalArgumentException("Limit must be an integer between 1 and 100");
+        }
+
+        if (options != null
+                && options.getFrom() != null
+                && options.getTo() != null
+                && options.getFrom().after(options.getTo())) {
+            throw new IllegalArgumentException("from must be before to");
+        }
+
+        urlBuilder.addQueryParameter("page", String.valueOf(page));
+        urlBuilder.addQueryParameter("limit", String.valueOf(limit));
+        urlBuilder.addQueryParameter("status", status.toString());
+        urlBuilder.addQueryParameter("sortBy", sortBy.toString());
+        urlBuilder.addQueryParameter("order", order.toString());
+
+        if (options != null) {
+            if (options.getMcaccount() != null)
+                urlBuilder.addQueryParameter("mcaccount", options.getMcaccount());
+            if (options.getFrom() != null) {
+                urlBuilder.addQueryParameter(
+                        "from",
+                        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                                .format(options.getFrom()));
+            }
+            if (options.getTo() != null) {
+                urlBuilder.addQueryParameter(
+                        "to",
+                        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                                .format(options.getTo()));
+            }
+            if (options.getWithMeta() != null)
+                urlBuilder.addQueryParameter("withMeta", String.valueOf(options.getWithMeta()));
+        }
+
+        Request request =
+                new Request.Builder()
+                        .url(urlBuilder.build())
+                        .get()
+                        .header("Authorization", "Bearer " + token)
+                        .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            ResponseBody body = response.body();
+            if (body == null) return null;
+            String responseBody = body.string();
+
+            JsonElement element = mineCoreApi.getGson().fromJson(responseBody, JsonElement.class);
+
+            // Plain array response (withMeta=false or not set)
+            if (element instanceof JsonArray) {
+                Type listType = new TypeToken<List<MappedVote>>() {}.getType();
+                List<MappedVote> list = mineCoreApi.getGson().fromJson(element, listType);
+                GetVotesResponse wrapper = new GetVotesResponse();
+                wrapper.setVotes(list);
+                return wrapper;
+            }
+
+            // Object response (withMeta=true)
+            return mineCoreApi.getGson().fromJson(element, GetVotesResponse.class);
+        } catch (Exception ex) {
+            System.out.println("Failed to get votes, " + ex.getMessage());
         }
 
         return null;

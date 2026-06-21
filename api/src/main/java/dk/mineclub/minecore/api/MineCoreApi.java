@@ -3,13 +3,18 @@ package dk.mineclub.minecore.api;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.gson.Gson;
 import dk.mineclub.minecore.api.events.ReceiveRequestEvent;
+import dk.mineclub.minecore.api.events.ReceiveVoteEvent;
 import dk.mineclub.minecore.api.manager.RequestManager;
 import dk.mineclub.minecore.api.manager.SocketIOManager;
 import dk.mineclub.minecore.api.model.GetRequestsOptions;
 import dk.mineclub.minecore.api.model.GetRequestsResponse;
+import dk.mineclub.minecore.api.model.GetVotesOptions;
+import dk.mineclub.minecore.api.model.GetVotesResponse;
 import dk.mineclub.minecore.api.model.MappedRequest;
+import dk.mineclub.minecore.api.model.MappedVote;
 import dk.mineclub.minecore.api.model.RequestStatusQuery;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
+import dk.mineclub.minecore.api.model.VoteStatusQuery;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,7 +61,13 @@ public final class MineCoreApi {
 
     private void startRequestPolling() {
         requestPoller.scheduleAtFixedRate(
-                this::pollPendingAcceptedRequests, 0, 30, TimeUnit.SECONDS);
+                () -> {
+                    pollPendingAcceptedRequests();
+                    pollPendingVoteRequests();
+                },
+                0,
+                30,
+                TimeUnit.SECONDS);
     }
 
     private void pollPendingAcceptedRequests() {
@@ -99,6 +110,40 @@ public final class MineCoreApi {
                 StoreCreatedRequest storeCreatedRequest =
                         gson.fromJson(gson.toJsonTree(mappedRequest), StoreCreatedRequest.class);
                 asyncEventBus.post(new ReceiveRequestEvent(type, storeCreatedRequest));
+            }
+        } catch (Exception ignored) {
+            // Polling should never crash the scheduler thread.
+        }
+    }
+
+    private void pollPendingVoteRequests() {
+        try {
+            GetVotesOptions options =
+                    GetVotesOptions.builder().status(VoteStatusQuery.PENDING).build();
+            GetVotesResponse response = minecoreRequestManager.getVotes(options);
+            List<MappedVote> votes = response != null ? response.getAll() : null;
+            if (votes == null) {
+                return;
+            }
+
+            for (MappedVote mappedVote : votes) {
+                if (mappedVote == null) {
+                    continue;
+                }
+
+                String voteId = mappedVote.getId();
+                if (voteId == null || voteId.trim().isEmpty()) {
+                    System.out.println("Skipping vote with missing id: " + mappedVote);
+                    continue;
+                }
+
+                String status = mappedVote.getStatus();
+                if (!"accepted".equalsIgnoreCase(status)) {
+                    System.out.println("Skipping vote with non-accepted status: " + mappedVote);
+                    continue;
+                }
+
+                asyncEventBus.post(new ReceiveVoteEvent(mappedVote));
             }
         } catch (Exception ignored) {
             // Polling should never crash the scheduler thread.
