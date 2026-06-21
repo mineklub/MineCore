@@ -43,7 +43,7 @@ public class ExprMineCoreRequestProductProperty extends SimpleExpression<Object>
                 value = product.getProductName();
                 break;
             case 2:
-                value = product.getPriceAsDouble();
+                value = product.getPrice();
                 break;
             case 3:
                 value = product.getQuantity();
