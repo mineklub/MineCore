@@ -5,6 +5,12 @@
   ],
   "packageRules": [
     {
+      "matchPackageNames": [
+        "com.github.SkriptLang:Skript"
+      ],
+      "enabled": false
+    },
+    {
       "matchUpdateTypes": [
         "minor",
         "patch"

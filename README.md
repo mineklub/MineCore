@@ -53,7 +53,7 @@ gradle :hooks:build :platform-paper:build -PminepayJavaVersion=21
 gradle :hooks:build :platform-paper:build -PminepayJavaVersion=25
 ```
 
-Hvis du vil bygge `platform-paper` for bade Java 17, Java 21 og Java 25 i samme kørsel:
+Hvis du vil bygge `platform-paper` for både Java 17, Java 21 og Java 25 i samme kørsel:
 
 ```gradle
 gradle buildPlatformPaperJava21And25
@@ -66,7 +66,7 @@ Det laver disse filer i `platform/paper/build/libs`:
 
 `hooks` bygger ogsa ekstra jars for Java 8, 11, 17, 21 og 25 i `hooks/build/libs` nar du korer `:hooks:assemble`.
 
-> [!NOTE]  
+> [!NOTE]
 > - Den genererede MineCore-fil gemmes i mappen `build/libs/MineCore-Bukkit-{version}.jar`.
 > - Den genererede platform-paper plugin gemmes i `platform/paper/build/libs/platform-paper-{version}-all.jar`.
 > - `api` publiceres i flere Java-varianter:
