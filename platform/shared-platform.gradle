@@ -1,0 +1,98 @@
+import org.gradle.api.tasks.bundling.Jar
+import org.gradle.api.tasks.compile.JavaCompile
+
+String moduleLabel = project.ext.platformModuleLabel as String
+
+evaluationDependsOn(":api")
+evaluationDependsOn(":hooks")
+evaluationDependsOn(":platform-common")
+
+project.group = rootProject.group
+project.version = rootProject.version
+
+int targetJavaVersion = rootProject.ext.targetJavaVersion as int
+String paperApiVersion = rootProject.ext.paperApiVersion as String
+
+def apiJarTaskForTarget = project(":api").tasks.named("jarJava${targetJavaVersion}", Jar)
+def apiJarForTarget = project.files(apiJarTaskForTarget.flatMap { it.archiveFile }).builtBy(apiJarTaskForTarget)
+def commonJarTaskForTarget = project(":platform-common").tasks.named("jarJava${targetJavaVersion}", Jar)
+def commonJarForTarget = project.files(commonJarTaskForTarget.flatMap { it.archiveFile }).builtBy(commonJarTaskForTarget)
+def hooksJarTaskForTarget = project(":hooks").tasks.named("jarJava${targetJavaVersion}", Jar)
+def hooksJarForTarget = project.files(hooksJarTaskForTarget.flatMap { it.archiveFile }).builtBy(hooksJarTaskForTarget)
+def commonConfigResource = project(":platform-common").file("src/main/resources/config.yml")
+
+dependencies {
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+
+    compileOnly(project(":platform-common"))
+    compileOnly("io.papermc.paper:paper-api:${paperApiVersion}")
+    compileOnly(apiJarForTarget)
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+spotless {
+    yaml {
+        targetExclude("src/main/resources/plugin.yml", "src/main/resources/config.yml")
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = targetJavaVersion
+}
+
+tasks.named("compileJava", JavaCompile) {
+    classpath = sourceSets.main.compileClasspath + hooksJarForTarget
+    dependsOn(hooksJarTaskForTarget)
+}
+
+tasks.processResources {
+    from(commonConfigResource)
+}
+
+def additionalClassifiersByJavaVersion = [8: "jvm8", 11: "jvm11", 17: "jvm17", 21: "jvm21", 25: "jvm25"]
+
+additionalClassifiersByJavaVersion.each { javaVersion, classifier ->
+    def hooksJarTaskForJavaVersion = project(":hooks").tasks.named("jarJava${javaVersion}", Jar)
+    def hooksJarForJavaVersion =
+            project.files(hooksJarTaskForJavaVersion.flatMap { it.archiveFile }).builtBy(hooksJarTaskForJavaVersion)
+    def apiJarTaskForJavaVersion = project(":api").tasks.named("jarJava${javaVersion}", Jar)
+    def commonJarTaskForJavaVersion = project(":platform-common").tasks.named("jarJava${javaVersion}", Jar)
+
+    def compileTask = tasks.register("compileJava${javaVersion}", JavaCompile) {
+        description = "Compiles ${moduleLabel} classes targeting Java ${javaVersion}."
+        source = sourceSets.main.allJava
+        classpath = sourceSets.main.compileClasspath + hooksJarForJavaVersion
+        destinationDirectory = layout.buildDirectory.dir("classes/java/java${javaVersion}")
+        options.encoding = "UTF-8"
+        options.annotationProcessorPath = sourceSets.main.annotationProcessorPath
+        if (javaVersion == 17) {
+            // Keep compatibility with classpaths that expose newer bytecode dependencies.
+            options.release = null
+            sourceCompatibility = "17"
+            targetCompatibility = "17"
+        } else {
+            options.release = javaVersion
+        }
+        if (javaVersion > targetJavaVersion) {
+            javaCompiler = javaToolchains.compilerFor {
+                languageVersion = JavaLanguageVersion.of(javaVersion)
+            }
+        }
+        dependsOn(hooksJarTaskForJavaVersion, commonJarTaskForJavaVersion)
+    }
+
+}
+
+project.ext.additionalPlatformClassifiersByJavaVersion = additionalClassifiersByJavaVersion
+project.ext.apiJarTaskForTarget = apiJarTaskForTarget
+project.ext.commonJarTaskForTarget = commonJarTaskForTarget
+project.ext.hooksJarTaskForTarget = hooksJarTaskForTarget
+
+
+

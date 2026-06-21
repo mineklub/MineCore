@@ -1,16 +1,22 @@
 [versions]
-shadow = "9.4.2"
 spotless = "8.7.0"
+shadow = "9.4.2"
 mavenPublish = "0.36.0"
 resourceFactoryVelocity = "1.3.1"
 okhttp = "5.4.0"
 gson = "2.14.0"
 socketclient = "2.1.2"
 lombok = "1.18.46"
+velocity = "3.5.0-SNAPSHOT"
+paper = "26.1.2.build.+"
+jedis = "7.4.1"
+guava = "33.6.0-jre"
 json = "20250517"
 okio = "3.17.0"
-jspecify = "1.0.0"
-velocity = "3.5.0-SNAPSHOT"
+skriptnew = "2.15.3"
+skript213 = "2.13.2"
+skript295 = "2.9.5"
+skript22dev36 = "dev36"
 
 [plugins]
 shadow = {id = "com.gradleup.shadow", version.ref = "shadow"}
@@ -19,11 +25,17 @@ maven-publish = {id = "com.vanniktech.maven.publish", version.ref = "mavenPublis
 resource-factory-velocity = {id = "xyz.jpenilla.resource-factory-velocity-convention", version.ref = "resourceFactoryVelocity"}
 
 [libraries]
-okhttp = {group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp"}
+okhttp = {group = "com.squareup.okhttp3", name = "okhttp-jvm", version.ref = "okhttp"}
 gson = {group = "com.google.code.gson", name = "gson", version.ref = "gson"}
 socketclient = {group = "io.socket", name = "socket.io-client", version.ref = "socketclient"}
 lombok = {group = "org.projectlombok", name = "lombok", version.ref = "lombok"}
+velocity = {group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity"}
+paper = {group = "io.papermc.paper", name = "paper-api", version.ref = "paper"}
+jedis = {module = "redis.clients:jedis", version.ref = "jedis"}
+guava = {group = "com.google.guava", name = "guava", version.ref = "guava"}
 json = {group = "org.json", name = "json", version.ref = "json"}
 okio = {group = "com.squareup.okio", name = "okio", version.ref = "okio"}
-jspecify = {group = "org.jspecify", name = "jspecify", version.ref = "jspecify"}
-velocity = {group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity"}
+skriptnew = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skriptnew"}
+skript213 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript213"}
+skript295 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript295"}
+skript22dev36 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript22dev36"}

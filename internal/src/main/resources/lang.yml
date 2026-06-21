@@ -1,0 +1,67 @@
+request:
+    header:
+        - "<b><gradient:#FFA259:#F9FF7A>MINECORE</gradient></b>"
+        - "<gray>Du er ved at handle på <white><b><server></b>"
+        - " "
+    product:
+        - "<#707070>• <white><bold><name></bold> <gray>(<#ffe97a>⛃<price:'de-DE':'#,##0.00'><gray>)"
+    product-quantity:
+        - "<#707070>• <white><bold><name></bold> <gray><u>x<quantity></u> (<#ffe97a>⛃<price:'de-DE':'#,##0.00'><gray>)"
+    footer:
+        - " "
+        - "<gray>Samlet pris = <u><#ffe97a>⛃<total:'de-DE':'#,##0.00'><gray></u>"
+        - "<gray>Nuværende balance = <yellow>⛃<balance:'de-DE':'#,##0.00'><gray>"
+        - " "
+        - "<accept> <gray>- <deny>"
+    accept-button: "<#beff69><b>[Accepter]</b> "
+    deny-button: "<#ff6969><b>[Afvis]</b>"
+    timeout:
+        - " "
+        - "<red>Du har ikke accepteret dit køb i tide, og det er blevet annulleret."
+        - " "
+    banned:
+        temp:
+            - "<red>Du er bannet fra lobbyen og kan derfor ikke bruge dine mønter, før du er blevet unbannet igen."
+            - "<red>Udløber: <expiry:'dd-MM-yyyy HH:mm:ss'>"
+            - "<red>Grund: <reason>"
+        perm:
+            - "<red>Du er bannet fra lobbyen og kan derfor ikke bruge dine mønter, før du er blevet unbannet igen."
+            - "<red>Grund: <reason>"
+    accept-errors:
+        request-not-found:
+            - "<red>Din købsforespørgsel blev ikke fundet. Prøv igen om et øjeblik."
+        mcaccount-not-found:
+            - "<red>Din konto blev ikke fundet. Kontakt en administrator, hvis fejlen fortsætter."
+        request-already-accepted:
+            - "<red>Denne købsforespørgsel er allerede accepteret."
+        cannot-accept-cancelled-request:
+            - "<red>Dette køb kan ikke accepteres, fordi det allerede er afvist."
+        player-not-online:
+            - "<red>Du skal være online for at gennemføre købet."
+        distribution-not-found:
+            - "<red>Købet kunne ikke gennemføres, fordi distributionen ikke blev fundet."
+        insufficient-balance:
+            - "<red>Du har ikke nok saldo til at gennemføre dette køb."
+        network:
+            - "<red>Kunne ikke kontakte shoppen. Prøv igen om et øjeblik."
+        unexpected:
+            - "<red>Der opstod en uventet fejl under accepteringen af dit køb."
+        unknown:
+            - "<red>Der skete en fejl under accepteringen af dit køb."
+            - "<red>Fejl: <error>"
+    cancel-errors:
+        request-not-found:
+            - "<red>Din købsforespørgsel blev ikke fundet."
+        mcaccount-not-found:
+            - "<red>Din konto blev ikke fundet. Kontakt en administrator, hvis fejlen fortsætter."
+        cannot-cancel-accepted-request:
+            - "<red>Dette køb kan ikke afvises, fordi det allerede er accepteret."
+        request-already-cancelled:
+            - "<red>Denne købsforespørgsel er allerede afvist."
+        network:
+            - "<red>Kunne ikke kontakte shoppen for at afvise købet. Prøv igen om et øjeblik."
+        unexpected:
+            - "<red>Der opstod en uventet fejl under afvisningen af dit køb."
+        unknown:
+            - "<red>Der skete en fejl under afvisningen af dit køb."
+            - "<red>Fejl: <error>"

@@ -1,0 +1,75 @@
+plugins {
+    id("java-library")
+}
+
+group = rootProject.group
+version = rootProject.version
+
+val targetJavaVersion = rootProject.extra["targetJavaVersion"] as Int
+val paperApiVersion = rootProject.extra["paperApiVersion"] as String
+val hooksJarTaskForTarget = project(":hooks").tasks.named<Jar>("jarJava$targetJavaVersion")
+val hooksJarForTarget = files(hooksJarTaskForTarget.flatMap { it.archiveFile }).builtBy(hooksJarTaskForTarget)
+
+dependencies {
+    compileOnly(project(":api"))
+    compileOnly(project(":platform-common"))
+    compileOnly("io.papermc.paper:paper-api:$paperApiVersion")
+    compileOnly(libs.skript22dev36) {
+        exclude(group = "com.destroystokyo.paper")
+        exclude(group = "com.sk89q")
+        exclude(group = "net.milkbowl.vault")
+        exclude(group = "org.bukkit")
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
+    }
+}
+
+tasks.named<JavaCompile>("compileJava") {
+    classpath = sourceSets.main.get().compileClasspath + hooksJarForTarget
+    dependsOn(hooksJarTaskForTarget)
+}
+
+val additionalHookClassifiersByJavaVersion: LinkedHashMap<Int, String> =
+    linkedMapOf(
+        8 to "jvm8",
+        11 to "jvm11",
+        17 to "jvm17",
+        21 to "jvm21",
+        25 to "jvm25")
+
+additionalHookClassifiersByJavaVersion.forEach { (javaVersion, classifier) ->
+    val hooksJarTaskForJavaVersion = project(":hooks").tasks.named<Jar>("jarJava$javaVersion")
+    val hooksJarForJavaVersion = files(hooksJarTaskForJavaVersion.flatMap { it.archiveFile }).builtBy(hooksJarTaskForJavaVersion)
+
+    val compileTask = tasks.register<JavaCompile>("compileJava$javaVersion") {
+        description = "Compiles hooks classes targeting Java $javaVersion."
+        source = sourceSets.main.get().allJava
+        classpath = sourceSets.main.get().compileClasspath + hooksJarForJavaVersion
+        destinationDirectory.set(layout.buildDirectory.dir("classes/java/java$javaVersion"))
+        options.encoding = "UTF-8"
+        options.release.set(javaVersion)
+        if (javaVersion > targetJavaVersion) {
+            javaCompiler.set(
+                javaToolchains.compilerFor {
+                    languageVersion.set(JavaLanguageVersion.of(javaVersion))
+                })
+        }
+        dependsOn(hooksJarTaskForJavaVersion)
+    }
+
+    tasks.register<Jar>("jarJava$javaVersion") {
+        description = "Builds hooks jar targeting Java $javaVersion."
+        archiveClassifier.set(classifier)
+        from(compileTask.flatMap { it.destinationDirectory })
+        from(tasks.named("processResources"))
+        dependsOn(compileTask, tasks.named("processResources"))
+    }
+}
+
+tasks.named("assemble") {
+    dependsOn(additionalHookClassifiersByJavaVersion.keys.map { "jarJava$it" })
+}

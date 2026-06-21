@@ -9,6 +9,7 @@ version = rootProject.version
 
 velocityPluginJson {
     main = "dk.mineclub.minecore.internal.InternalPlugin"
+    authors = listOf("MineClub")
 }
 
 java {
@@ -18,10 +19,15 @@ java {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(21)
+    options.release.set(25)
 }
 
 dependencies {
+    implementation(libs.gson)
     compileOnly(libs.velocity)
+    compileOnly(libs.jedis)
+    compileOnly(libs.lombok)
+    implementation(libs.okhttp)
+    annotationProcessor(libs.lombok)
     annotationProcessor(libs.velocity)
 }
