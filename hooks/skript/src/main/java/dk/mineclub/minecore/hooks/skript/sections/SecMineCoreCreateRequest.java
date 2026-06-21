@@ -23,6 +23,16 @@ public class SecMineCoreCreateRequest extends Section {
     private Expression<OfflinePlayer> account;
     private Trigger sectionTrigger;
 
+    @SuppressWarnings("unchecked")
+    private static Expression<OfflinePlayer> toOfflinePlayerExpression(Expression<?> expression) {
+        return (Expression<OfflinePlayer>) expression;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Class<? extends Event>[] defaultEventTypes() {
+        return (Class<? extends Event>[]) new Class<?>[] {Event.class};
+    }
+
     @Override
     public boolean init(
             Expression<?>[] expressions,
@@ -31,14 +41,14 @@ public class SecMineCoreCreateRequest extends Section {
             SkriptParser.ParseResult parseResult,
             SectionNode sectionNode,
             List<TriggerItem> triggerItems) {
-        account = (Expression<OfflinePlayer>) expressions[0];
+        account = toOfflinePlayerExpression(expressions[0]);
         String eventName = getParser().getCurrentEventName();
         Class<? extends Event>[] eventTypes = getParser().getCurrentEvents();
         sectionTrigger =
                 loadCode(
                         sectionNode,
                         eventName == null ? "minecore create request section" : eventName,
-                        eventTypes == null ? new Class[] {Event.class} : eventTypes);
+                        eventTypes == null ? defaultEventTypes() : eventTypes);
         return true;
     }
 
