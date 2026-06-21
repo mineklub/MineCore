@@ -37,7 +37,7 @@ val loaderLibrariesCsv =
                 .joinToString(",")
 
 val minecoreJitpackVersion =
-        providers.gradleProperty("minecoreJitpackVersion").orElse("firsttry-SNAPSHOT").get()
+        providers.gradleProperty("minecoreJitpackVersion").orElse("c4b2613be3").get()
 
 val generateLoaderLibrariesProperties =
         tasks.register<WriteProperties>("generateLoaderLibrariesProperties") {
