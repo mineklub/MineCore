@@ -12,16 +12,35 @@ import dk.mineclub.minecore.api.model.MappedRequest;
 import dk.mineclub.minecore.api.model.RequestActionResponse;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
 import dk.mineclub.minecore.api.model.StoreRequest;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.*;
+import okio.BufferedSink;
 import org.jspecify.annotations.Nullable;
 
 public class RequestManager {
     private final MineCoreApi mineCoreApi;
+    private static final @Nullable MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
+    private static final RequestBody EMPTY_REQUEST_BODY =
+            new RequestBody() {
+                @Override
+                public @Nullable MediaType contentType() {
+                    return null;
+                }
+
+                @Override
+                public long contentLength() {
+                    return 0L;
+                }
+
+                @Override
+                public void writeTo(BufferedSink sink) throws IOException {}
+            };
+
     private static final OkHttpClient client =
             new OkHttpClient()
                     .newBuilder()
@@ -34,6 +53,26 @@ public class RequestManager {
         this.mineCoreApi = mineCoreApi;
     }
 
+    private static RequestBody createJsonRequestBody(String json) {
+        byte[] payload = json.getBytes(StandardCharsets.UTF_8);
+        return new RequestBody() {
+            @Override
+            public @Nullable MediaType contentType() {
+                return JSON_MEDIA_TYPE;
+            }
+
+            @Override
+            public long contentLength() {
+                return payload.length;
+            }
+
+            @Override
+            public void writeTo(BufferedSink sink) throws IOException {
+                sink.write(payload);
+            }
+        };
+    }
+
     public @Nullable StoreCreatedRequest createRequest(StoreRequest storeRequest) {
         PreCreateRequestEvent event = new PreCreateRequestEvent(storeRequest);
         boolean cancelled = event.callEvent();
@@ -42,10 +81,7 @@ public class RequestManager {
         }
 
         String token = mineCoreApi.getToken();
-        RequestBody requestBody =
-                RequestBody.create(
-                        storeRequest.toJson().toString().getBytes(StandardCharsets.UTF_8),
-                        MediaType.parse("application/json"));
+        RequestBody requestBody = createJsonRequestBody(storeRequest.toJson().toString());
         Request request =
                 new Request.Builder()
                         .url(baseUrl + "/server/request")
@@ -77,7 +113,7 @@ public class RequestManager {
         Request request =
                 new Request.Builder()
                         .url(baseUrl + "/server/request/" + storeCreatedRequest.getId() + "/accept")
-                        .post(RequestBody.create(new byte[0]))
+                        .post(EMPTY_REQUEST_BODY)
                         .header("Authorization", "Bearer " + token)
                         .build();
 
@@ -96,7 +132,7 @@ public class RequestManager {
         Request request =
                 new Request.Builder()
                         .url(baseUrl + "/server/request/" + storeCreatedRequest.getId() + "/cancel")
-                        .post(RequestBody.create(new byte[0]))
+                        .post(EMPTY_REQUEST_BODY)
                         .header("Authorization", "Bearer " + token)
                         .build();
 
