@@ -16,6 +16,8 @@ dependencies {
 
 val additionalHookClassifiersByJavaVersion: LinkedHashMap<Int, String> =
         linkedMapOf(
+                8 to "jvm8",
+                11 to "jvm11",
                 17 to "jvm17",
                 21 to "jvm21",
                 25 to "jvm25")

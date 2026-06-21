@@ -93,12 +93,29 @@ public class MineCorePaperLoader implements PluginLoader {
         String version = parts[2];
 
         String variantArtifact =
-                variantArtifactForJavaFeature(artifact, Runtime.version().feature());
+                variantArtifactForJavaFeature(artifact, detectJavaFeatureVersion());
         if (variantArtifact == null) {
             return group + ":" + artifact + ":" + version;
         }
 
         return group + ":" + variantArtifact + ":" + version;
+    }
+
+    private static int detectJavaFeatureVersion() {
+        String specVersion = System.getProperty("java.specification.version", "").trim();
+        if (specVersion.isEmpty()) {
+            return JAVA_8;
+        }
+
+        if (specVersion.startsWith("1.")) {
+            specVersion = specVersion.substring(2);
+        }
+
+        try {
+            return Integer.parseInt(specVersion);
+        } catch (NumberFormatException ignored) {
+            return JAVA_8;
+        }
     }
 
     private static String variantArtifactForJavaFeature(String baseArtifact, int javaFeature) {

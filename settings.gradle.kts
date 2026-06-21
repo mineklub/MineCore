@@ -39,7 +39,10 @@ project(":hooks:skript").projectDir = file("hooks/skript")
 include("hooks:skript213")
 project(":hooks:skript213").projectDir = file("hooks/skript213")
 
-sequenceOf("paper").forEach {
+include("hooks:skript295")
+project(":hooks:skript295").projectDir = file("hooks/skript295")
+
+sequenceOf("common", "paper", "bukkit").forEach {
     val name = "platform-$it"
     if (file("platform/$it").exists()) {
         include(name)

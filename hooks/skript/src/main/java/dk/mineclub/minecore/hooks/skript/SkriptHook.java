@@ -1,7 +1,6 @@
 package dk.mineclub.minecore.hooks.skript;
 
 import ch.njol.skript.Skript;
-import dk.mineclub.minecore.hooks.Hook;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.skriptlang.skript.addon.SkriptAddon;
 

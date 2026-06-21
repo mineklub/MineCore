@@ -1,4 +1,4 @@
-package dk.mineclub.minecore.platform.paper.hooks;
+package dk.mineclub.minecore.platform.common.hooks;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,13 +15,14 @@ import java.util.Properties;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class HookLoader {
+/** Loads optional MineCore hook jars from the plugin data directory. */
+public final class CommonHookLoader {
     private static final String METADATA_RESOURCE = "minecore-hook.properties";
 
     private final Plugin plugin;
     private final List<LoadedHook> loadedHooks = new ArrayList<>();
 
-    public HookLoader(Plugin plugin) {
+    public CommonHookLoader(Plugin plugin) {
         this.plugin = plugin;
     }
 
@@ -87,7 +88,7 @@ public final class HookLoader {
             Properties metadata = loadMetadata(classLoader);
             String bootstrapClassName = metadata.getProperty("bootstrap-class");
             String hookName = metadata.getProperty("hook-name", jar.getFileName().toString());
-            if (bootstrapClassName == null || bootstrapClassName.isBlank()) {
+            if (bootstrapClassName == null || bootstrapClassName.trim().isEmpty()) {
                 plugin.getLogger()
                         .warning(
                                 "Skipping "
@@ -138,6 +139,24 @@ public final class HookLoader {
         }
     }
 
-    private record LoadedHook(
-            String name, Path jar, URLClassLoader classLoader, Object bootstrap, Method disable) {}
+    private static final class LoadedHook {
+        private final String name;
+        private final Path jar;
+        private final URLClassLoader classLoader;
+        private final Object bootstrap;
+        private final Method disable;
+
+        private LoadedHook(
+                String name,
+                Path jar,
+                URLClassLoader classLoader,
+                Object bootstrap,
+                Method disable) {
+            this.name = name;
+            this.jar = jar;
+            this.classLoader = classLoader;
+            this.bootstrap = bootstrap;
+            this.disable = disable;
+        }
+    }
 }

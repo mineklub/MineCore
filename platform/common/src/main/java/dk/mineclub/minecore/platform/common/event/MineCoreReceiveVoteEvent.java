@@ -1,6 +1,6 @@
-package dk.mineclub.minecore.platform.paper.event;
+package dk.mineclub.minecore.platform.common.event;
 
-import dk.mineclub.minecore.api.model.StoreCreatedRequest;
+import dk.mineclub.minecore.api.model.MappedVote;
 import java.util.UUID;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -10,13 +10,13 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public class MineCorePostCreateRequestEvent extends Event {
+public class MineCoreReceiveVoteEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private final StoreCreatedRequest storeRequest;
+    private final MappedVote vote;
 
-    public MineCorePostCreateRequestEvent(StoreCreatedRequest storeRequest) {
-        this.storeRequest = storeRequest;
+    public MineCoreReceiveVoteEvent(MappedVote vote) {
+        this.vote = vote;
     }
 
     @Override
@@ -24,12 +24,15 @@ public class MineCorePostCreateRequestEvent extends Event {
         return HANDLERS;
     }
 
-    @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 
     public OfflinePlayer getOfflinePlayer() {
-        return Bukkit.getOfflinePlayer(UUID.fromString(storeRequest.getMcaccount().getUuid()));
+        if (vote == null || vote.getMcaccount() == null || vote.getMcaccount().getUuid() == null) {
+            return null;
+        }
+
+        return Bukkit.getOfflinePlayer(UUID.fromString(vote.getMcaccount().getUuid()));
     }
 }

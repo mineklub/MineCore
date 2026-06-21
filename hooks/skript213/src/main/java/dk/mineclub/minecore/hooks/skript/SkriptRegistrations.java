@@ -20,10 +20,10 @@ import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreReceiveVote;
 import dk.mineclub.minecore.hooks.skript.expressions.*;
 import dk.mineclub.minecore.hooks.skript.runtime.MineCoreSkriptApi;
 import dk.mineclub.minecore.hooks.skript.sections.SecMineCoreCreateRequest;
-import dk.mineclub.minecore.platform.paper.event.MineCorePostCreateRequestEvent;
-import dk.mineclub.minecore.platform.paper.event.MineCorePreCreateRequestEvent;
-import dk.mineclub.minecore.platform.paper.event.MineCoreReceiveRequestEvent;
-import dk.mineclub.minecore.platform.paper.event.MineCoreReceiveVoteEvent;
+import dk.mineclub.minecore.platform.common.event.MineCorePostCreateRequestEvent;
+import dk.mineclub.minecore.platform.common.event.MineCorePreCreateRequestEvent;
+import dk.mineclub.minecore.platform.common.event.MineCoreReceiveRequestEvent;
+import dk.mineclub.minecore.platform.common.event.MineCoreReceiveVoteEvent;
 import org.bukkit.OfflinePlayer;
 import org.jspecify.annotations.Nullable;
 import org.skriptlang.skript.addon.SkriptAddon;
@@ -226,11 +226,6 @@ final class SkriptRegistrations {
                 MineCorePostCreateRequestEvent.class,
                 OfflinePlayer.class,
                 MineCorePostCreateRequestEvent::getOfflinePlayer);
-
-        EventValues.registerEventValue(
-                MineCorePostCreateRequestEvent.class,
-                StoreCreatedRequest.Product[].class,
-                e -> e.getStoreRequest().getProducts().toArray(new StoreCreatedRequest.Product[0]));
 
         EventValues.registerEventValue(
                 MineCorePostCreateRequestEvent.class,

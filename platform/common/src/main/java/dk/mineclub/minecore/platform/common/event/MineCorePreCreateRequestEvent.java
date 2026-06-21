@@ -1,4 +1,4 @@
-package dk.mineclub.minecore.platform.paper.event;
+package dk.mineclub.minecore.platform.common.event;
 
 import dk.mineclub.minecore.api.model.StoreRequest;
 import lombok.Getter;

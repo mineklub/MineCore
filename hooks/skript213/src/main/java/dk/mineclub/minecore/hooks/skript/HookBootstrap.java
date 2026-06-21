@@ -1,6 +1,5 @@
 package dk.mineclub.minecore.hooks.skript;
 
-import dk.mineclub.minecore.hooks.Hook;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.plugin.java.JavaPlugin;

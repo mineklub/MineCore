@@ -1,25 +1,26 @@
-package dk.mineclub.minecore.platform.paper.bridge;
+package dk.mineclub.minecore.platform.common.bridge;
 
 import com.google.common.eventbus.Subscribe;
 import dk.mineclub.minecore.api.events.PostCreateRequestEvent;
 import dk.mineclub.minecore.api.events.PreCreateRequestEvent;
 import dk.mineclub.minecore.api.events.ReceiveRequestEvent;
 import dk.mineclub.minecore.api.events.ReceiveVoteEvent;
-import dk.mineclub.minecore.platform.paper.MineCorePaperPlugin;
-import dk.mineclub.minecore.platform.paper.event.MineCorePostCreateRequestEvent;
-import dk.mineclub.minecore.platform.paper.event.MineCorePreCreateRequestEvent;
-import dk.mineclub.minecore.platform.paper.event.MineCoreReceiveRequestEvent;
-import dk.mineclub.minecore.platform.paper.event.MineCoreReceiveVoteEvent;
-import dk.mineclub.minecore.platform.paper.event.SocketRequestType;
+import dk.mineclub.minecore.platform.common.event.MineCorePostCreateRequestEvent;
+import dk.mineclub.minecore.platform.common.event.MineCorePreCreateRequestEvent;
+import dk.mineclub.minecore.platform.common.event.MineCoreReceiveRequestEvent;
+import dk.mineclub.minecore.platform.common.event.MineCoreReceiveVoteEvent;
+import dk.mineclub.minecore.platform.common.event.SocketRequestType;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class PaperEventBridge {
-    private final MineCorePaperPlugin plugin;
+/** Bridges async MineCore API events into synchronous Bukkit events. */
+public class CommonEventBridge {
+    private final JavaPlugin plugin;
 
-    public PaperEventBridge(MineCorePaperPlugin plugin) {
+    public CommonEventBridge(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 

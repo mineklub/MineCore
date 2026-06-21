@@ -12,7 +12,7 @@ val hooksJarForTarget = files(hooksJarTaskForTarget.flatMap { it.archiveFile }).
 
 dependencies {
     compileOnly(project(":api"))
-    compileOnly(project(":platform-paper"))
+    compileOnly(project(":platform-common"))
     compileOnly("io.papermc.paper:paper-api:$paperApiVersion")
     compileOnly(libs.skript213)
 }

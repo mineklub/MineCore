@@ -5,7 +5,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import dk.mineclub.minecore.platform.paper.event.MineCoreReceiveRequestEvent;
+import dk.mineclub.minecore.platform.common.event.MineCoreReceiveRequestEvent;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 

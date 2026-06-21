@@ -145,6 +145,7 @@ public class SocketIOManager {
                     } catch (Exception ex) {
                         System.out.println(
                                 "Failed to parse Socket.IO request event: " + ex.getMessage());
+                        ex.printStackTrace();
                     }
                 });
         socket.on(

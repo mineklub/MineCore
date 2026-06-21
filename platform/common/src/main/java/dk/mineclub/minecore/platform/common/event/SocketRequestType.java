@@ -1,4 +1,4 @@
-package dk.mineclub.minecore.platform.paper.event;
+package dk.mineclub.minecore.platform.common.event;
 
 @SuppressWarnings("unused")
 public enum SocketRequestType {

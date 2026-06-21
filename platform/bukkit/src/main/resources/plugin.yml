@@ -1,0 +1,9 @@
+name: MineCore
+version: 1.0.0
+main: dk.mineclub.minecore.platform.bukkit.MineCoreBukkitPlugin
+api-version: "1.13"
+author: MineClub
+description: Bukkit platform module for MineCore
+softdepend:
+    - Skript
+

@@ -3,7 +3,7 @@ package dk.mineclub.minecore.hooks.skript.events;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
-import dk.mineclub.minecore.platform.paper.event.MineCorePostCreateRequestEvent;
+import dk.mineclub.minecore.platform.common.event.MineCorePostCreateRequestEvent;
 import org.bukkit.event.Event;
 
 public class EvtMineCorePostCreateRequest extends SkriptEvent {
