@@ -74,7 +74,9 @@ val additionalApiArtifacts =
             val jarTask = tasks.register<Jar>("jarJava$javaVersion") {
                 description = "Builds an API jar targeting Java $javaVersion."
                 archiveClassifier.set(classifier)
-                from(compileTask)
+                from(compileTask.map { it.destinationDirectory }) {
+                    exclude("previous-compilation-data.bin")
+                }
                 from(tasks.named("processResources"))
                 dependsOn(compileTask, tasks.named("processResources"))
             }
