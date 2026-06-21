@@ -13,6 +13,7 @@ import dk.mineclub.minecore.api.model.RequestActionResponse;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
 import dk.mineclub.minecore.api.model.StoreRequest;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +44,8 @@ public class RequestManager {
         String token = mineCoreApi.getToken();
         RequestBody requestBody =
                 RequestBody.create(
-                        storeRequest.toJson().toString(), MediaType.parse("application/json"));
+                        storeRequest.toJson().toString().getBytes(StandardCharsets.UTF_8),
+                        MediaType.parse("application/json"));
         Request request =
                 new Request.Builder()
                         .url(baseUrl + "/server/request")

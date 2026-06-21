@@ -94,6 +94,7 @@ additionalPaperClassifiersByJavaVersion.forEach { (javaVersion, classifier) ->
         classpath = sourceSets.main.get().compileClasspath + hooksJarForJavaVersion
         destinationDirectory.set(layout.buildDirectory.dir("classes/java/java$javaVersion"))
         options.encoding = "UTF-8"
+        options.annotationProcessorPath = sourceSets.main.get().annotationProcessorPath
         if (javaVersion == 17) {
             // Keep compatibility with classpaths that expose newer bytecode dependencies.
             options.release.set(null as Int?)
