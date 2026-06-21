@@ -139,9 +139,7 @@ public class SocketIOManager {
                             return;
                         }
 
-                        mineCoreApi
-                                .getAsyncEventBus()
-                                .post(new ReceiveRequestEvent(envelope.type, envelope.data));
+                        new ReceiveRequestEvent(envelope.type, envelope.data).callEvent();
                     } catch (Exception ex) {
                         System.out.println(
                                 "Failed to parse Socket.IO request event: " + ex.getMessage());

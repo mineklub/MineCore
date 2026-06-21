@@ -1,5 +1,6 @@
 package dk.mineclub.minecore.api.events;
 
+import dk.mineclub.minecore.api.MineCoreApi;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
 import lombok.Getter;
 
@@ -16,7 +17,9 @@ public class ReceiveRequestEvent implements Event {
 
     @Override
     public boolean callEvent() {
-        return false;
+        MineCoreApi api = MineCoreApi.getInstance();
+        api.getAsyncEventBus().post(this);
+        return cancelled;
     }
 
     @Override

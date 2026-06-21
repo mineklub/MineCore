@@ -1,13 +1,16 @@
 package dk.mineclub.minecore.api.events;
 
+import dk.mineclub.minecore.api.MineCoreApi;
+import lombok.Getter;
+
+@Getter
 public class ReceiveVoteEvent implements Event {
-    @Override
-    public boolean isCancelled() {
-        return false;
-    }
+    private final boolean cancelled = false;
 
     @Override
     public boolean callEvent() {
-        return false;
+        MineCoreApi api = MineCoreApi.getInstance();
+        api.getAsyncEventBus().post(this);
+        return cancelled;
     }
 }
