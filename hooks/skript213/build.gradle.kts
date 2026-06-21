@@ -14,7 +14,7 @@ dependencies {
     compileOnly(project(":api"))
     compileOnly(project(":platform-paper"))
     compileOnly("io.papermc.paper:paper-api:$paperApiVersion")
-    compileOnly(libs.skriptnew)
+    compileOnly(libs.skript213)
 }
 
 java {

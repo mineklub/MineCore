@@ -14,6 +14,7 @@ guava = "33.6.0-jre"
 json = "20250517"
 okio = "3.17.0"
 skriptnew = "2.15.3"
+skript213 = "2.13.2"
 
 [plugins]
 shadow = {id = "com.gradleup.shadow", version.ref = "shadow"}
@@ -22,7 +23,7 @@ maven-publish = {id = "com.vanniktech.maven.publish", version.ref = "mavenPublis
 resource-factory-velocity = {id = "xyz.jpenilla.resource-factory-velocity-convention", version.ref = "resourceFactoryVelocity"}
 
 [libraries]
-okhttp = {group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp"}
+okhttp = {group = "com.squareup.okhttp3", name = "okhttp-jvm", version.ref = "okhttp"}
 gson = {group = "com.google.code.gson", name = "gson", version.ref = "gson"}
 socketclient = {group = "io.socket", name = "socket.io-client", version.ref = "socketclient"}
 lombok = {group = "org.projectlombok", name = "lombok", version.ref = "lombok"}
@@ -33,3 +34,4 @@ guava = {group = "com.google.guava", name = "guava", version.ref = "guava"}
 json = {group = "org.json", name = "json", version.ref = "json"}
 okio = {group = "com.squareup.okio", name = "okio", version.ref = "okio"}
 skriptnew = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skriptnew"}
+skript213 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript213"}

@@ -8,40 +8,37 @@ plugins {
 group = rootProject.group
 version = rootProject.version
 
-val targetJavaVersion = rootProject.extra["targetJavaVersion"] as Int
-val paperApiVersion = rootProject.extra["paperApiVersion"] as String
+val hookPaperApiVersion = "1.20.4-R0.1-SNAPSHOT"
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:$paperApiVersion")
+    compileOnly("io.papermc.paper:paper-api:$hookPaperApiVersion")
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(targetJavaVersion)
+    options.release.set(17)
 }
 
-val additionalHookClassifiersByJavaVersion =
+val additionalHookClassifiersByJavaVersion: LinkedHashMap<Int, String> =
         linkedMapOf(
-                8 to "jvm8",
-                11 to "jvm11",
                 17 to "jvm17",
                 21 to "jvm21",
                 25 to "jvm25")
 
 additionalHookClassifiersByJavaVersion.forEach { (javaVersion, classifier) ->
     val compileTask = tasks.register<JavaCompile>("compileJava$javaVersion") {
-        description = "Compiles hooks classes targeting Java $javaVersion."
+        description = "Compiles hook API classes targeting Java $javaVersion."
         source = sourceSets.main.get().allJava
         classpath = sourceSets.main.get().compileClasspath
         destinationDirectory.set(layout.buildDirectory.dir("classes/java/java$javaVersion"))
         options.encoding = "UTF-8"
         options.release.set(javaVersion)
-        if (javaVersion > 21) {
+        if (javaVersion > 17) {
             javaCompiler.set(
                     javaToolchains.compilerFor {
                         languageVersion.set(JavaLanguageVersion.of(javaVersion))
@@ -50,9 +47,9 @@ additionalHookClassifiersByJavaVersion.forEach { (javaVersion, classifier) ->
     }
 
     tasks.register<Jar>("jarJava$javaVersion") {
-        description = "Builds hooks jar targeting Java $javaVersion."
+        description = "Builds hook API jar targeting Java $javaVersion."
         archiveClassifier.set(classifier)
-        from(compileTask)
+        from(compileTask.flatMap { it.destinationDirectory })
         from(tasks.named("processResources"))
         dependsOn(compileTask, tasks.named("processResources"))
     }

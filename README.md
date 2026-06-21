@@ -37,12 +37,13 @@ Brug følgende Gradle-kommando til at bygge MineCore:
 gradle build
 ```
 
-Du kan skifte Java target-version mellem 25 (default) og 21.
+Du kan skifte Java target-version mellem 25 (default), 21 og 17.
 **Vigtig:** Du skal matche Java-versionen med din server:
 
 ```gradle
 gradle build -PminepayJavaVersion=25
 gradle build -PminepayJavaVersion=21
+gradle build -PminepayJavaVersion=17
 ```
 
 Hvis du kun vil bygge `hooks` og `platform-paper` for en bestemt Java-version:
@@ -52,13 +53,14 @@ gradle :hooks:build :platform-paper:build -PminepayJavaVersion=21
 gradle :hooks:build :platform-paper:build -PminepayJavaVersion=25
 ```
 
-Hvis du vil bygge `platform-paper` for bade Java 21 og Java 25 i samme kørsel:
+Hvis du vil bygge `platform-paper` for bade Java 17, Java 21 og Java 25 i samme kørsel:
 
 ```gradle
 gradle buildPlatformPaperJava21And25
 ```
 
 Det laver disse filer i `platform/paper/build/libs`:
+- `platform-paper-{version}-jvm17-all.jar`
 - `platform-paper-{version}-jvm21-all.jar`
 - `platform-paper-{version}-jvm25-all.jar`
 
@@ -76,6 +78,7 @@ Det laver disse filer i `platform/paper/build/libs`:
 >     - `dk.minecore:api-jvm17:1.0.0`
 >     - `dk.minecore:api-jvm25:1.0.0`
 > - Hvis du får fejlen "Unsupported class file major version", skal du matche plugin-versionen med serverens Java-version:
+>   - Java 17 server -> `gradle build -PminepayJavaVersion=17`
 >   - Java 21 server → `gradle build -PminepayJavaVersion=21`
 >   - Java 25 server → `gradle build -PminepayJavaVersion=25`
 >

@@ -4,6 +4,7 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.EventValues;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
 import dk.mineclub.minecore.api.model.StoreProduct;
 import dk.mineclub.minecore.api.model.StoreRequest;
@@ -22,12 +23,11 @@ import dk.mineclub.minecore.platform.paper.event.MineCoreReceiveRequestEvent;
 import org.bukkit.OfflinePlayer;
 import org.jspecify.annotations.Nullable;
 import org.skriptlang.skript.addon.SkriptAddon;
-import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
-import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
+@SuppressWarnings("UnstableApiUsage")
 final class SkriptRegistrations {
     private SkriptRegistrations() {}
 
@@ -36,7 +36,7 @@ final class SkriptRegistrations {
         registerSections(addon.syntaxRegistry());
         registerEffects(addon.syntaxRegistry());
         registerExpressions(addon.syntaxRegistry());
-        registerEventValues(addon.registry(EventValueRegistry.class));
+        registerEventValues();
         registerClasses();
     }
 
@@ -171,59 +171,51 @@ final class SkriptRegistrations {
                         .build());
     }
 
-    private static void registerEventValues(EventValueRegistry eventValueRegistry) {
-        registerPreCreateRequestValues(eventValueRegistry);
-        registerPostCreateRequestValues(eventValueRegistry);
-        registerReceiveRequestValues(eventValueRegistry);
+    private static void registerEventValues() {
+        registerPreCreateRequestValues();
+        registerPostCreateRequestValues();
+        registerReceiveRequestValues();
     }
 
-    private static void registerPreCreateRequestValues(EventValueRegistry eventValueRegistry) {
-        eventValueRegistry.register(
-                EventValue.builder(MineCorePreCreateRequestEvent.class, OfflinePlayer.class)
-                        .getter(MineCorePreCreateRequestEvent::getOfflinePlayer)
-                        .build());
+    private static void registerPreCreateRequestValues() {
+        EventValues.registerEventValue(
+                MineCorePreCreateRequestEvent.class,
+                OfflinePlayer.class,
+                MineCorePreCreateRequestEvent::getOfflinePlayer);
 
-        eventValueRegistry.register(
-                EventValue.builder(MineCorePreCreateRequestEvent.class, StoreRequest.class)
-                        .getter(MineCorePreCreateRequestEvent::getStoreRequest)
-                        .build());
+        EventValues.registerEventValue(
+                MineCorePreCreateRequestEvent.class,
+                StoreRequest.class,
+                MineCorePreCreateRequestEvent::getStoreRequest);
     }
 
-    private static void registerPostCreateRequestValues(EventValueRegistry eventValueRegistry) {
-        eventValueRegistry.register(
-                EventValue.builder(MineCorePostCreateRequestEvent.class, OfflinePlayer.class)
-                        .getter(MineCorePostCreateRequestEvent::getOfflinePlayer)
-                        .build());
+    private static void registerPostCreateRequestValues() {
+        EventValues.registerEventValue(
+                MineCorePostCreateRequestEvent.class,
+                OfflinePlayer.class,
+                MineCorePostCreateRequestEvent::getOfflinePlayer);
 
-        eventValueRegistry.register(
-                EventValue.builder(
-                                MineCorePostCreateRequestEvent.class,
-                                StoreCreatedRequest.Product[].class)
-                        .patterns("products of request")
-                        .getter(
-                                e ->
-                                        e.getStoreRequest()
-                                                .getProducts()
-                                                .toArray(new StoreCreatedRequest.Product[0]))
-                        .build());
+        EventValues.registerEventValue(
+                MineCorePostCreateRequestEvent.class,
+                StoreCreatedRequest.Product[].class,
+                e -> e.getStoreRequest().getProducts().toArray(new StoreCreatedRequest.Product[0]));
 
-        eventValueRegistry.register(
-                EventValue.builder(MineCorePostCreateRequestEvent.class, StoreCreatedRequest.class)
-                        .getter(MineCorePostCreateRequestEvent::getStoreRequest)
-                        .build());
+        EventValues.registerEventValue(
+                MineCorePostCreateRequestEvent.class,
+                StoreCreatedRequest.class,
+                MineCorePostCreateRequestEvent::getStoreRequest);
     }
 
-    private static void registerReceiveRequestValues(EventValueRegistry eventValueRegistry) {
-        eventValueRegistry.register(
-                EventValue.builder(MineCoreReceiveRequestEvent.class, OfflinePlayer.class)
-                        .getter(MineCoreReceiveRequestEvent::getOfflinePlayer)
-                        .build());
+    private static void registerReceiveRequestValues() {
+        EventValues.registerEventValue(
+                MineCoreReceiveRequestEvent.class,
+                OfflinePlayer.class,
+                MineCoreReceiveRequestEvent::getOfflinePlayer);
 
-        eventValueRegistry.register(
-                EventValue.builder(MineCoreReceiveRequestEvent.class, StoreCreatedRequest.class)
-                        .patterns("createdrequest")
-                        .getter(MineCoreReceiveRequestEvent::getStoreRequest)
-                        .build());
+        EventValues.registerEventValue(
+                MineCoreReceiveRequestEvent.class,
+                StoreCreatedRequest.class,
+                MineCoreReceiveRequestEvent::getStoreRequest);
     }
 
     private static void registerClasses() {
@@ -235,7 +227,7 @@ final class SkriptRegistrations {
                                 "An outgoing MineCore store request being built before creation.")
                         .since("1.0")
                         .parser(
-                                new Parser<StoreRequest>() {
+                                new Parser<>() {
                                     @Override
                                     public boolean canParse(ParseContext context) {
                                         return false;
@@ -259,7 +251,7 @@ final class SkriptRegistrations {
                         .description("A MineCore store request that has already been created.")
                         .since("1.0")
                         .parser(
-                                new Parser<StoreCreatedRequest>() {
+                                new Parser<>() {
                                     @Override
                                     public @Nullable StoreCreatedRequest parse(
                                             String s, ParseContext context) {
@@ -285,7 +277,7 @@ final class SkriptRegistrations {
                                 "A product on an existing (created or received) MineCore request.")
                         .since("1.0")
                         .parser(
-                                new Parser<StoreCreatedRequest.Product>() {
+                                new Parser<>() {
                                     @Override
                                     public boolean canParse(ParseContext context) {
                                         return false;
@@ -313,7 +305,7 @@ final class SkriptRegistrations {
                                 "A product attached to an outgoing MineCore request before creation.")
                         .since("1.0")
                         .parser(
-                                new Parser<StoreProduct>() {
+                                new Parser<>() {
                                     @Override
                                     public boolean canParse(
                                             ch.njol.skript.lang.ParseContext context) {

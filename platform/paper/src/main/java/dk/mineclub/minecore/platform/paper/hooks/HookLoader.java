@@ -110,6 +110,13 @@ public final class HookLoader {
                             "Skipping "
                                     + jar.getFileName()
                                     + " because bootstrap class was not found");
+        } catch (LinkageError ex) {
+            plugin.getLogger()
+                    .warning(
+                            "Skipping "
+                                    + jar.getFileName()
+                                    + " because it is not compatible with this Java runtime: "
+                                    + ex.getMessage());
         } catch (Exception ex) {
             plugin.getLogger()
                     .warning(

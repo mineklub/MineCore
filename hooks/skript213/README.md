@@ -1,12 +1,12 @@
-# Skript 2.15.3 Hook Module
+# Skript 2.13.2 Hook Module
 
-This module contains the Skript 2.15.3 integration for MineCore.
+This module contains the legacy Skript 2.13.2 integration for MineCore.
 
 ## Build
 
 ```powershell
 cd C:\Users\mhoff\Documents\GitHub\MinePay
-.\gradlew :hooks:skript:build --no-daemon
+.\gradlew :hooks:skript213:build --no-daemon
 ```
 
 ## Runtime
