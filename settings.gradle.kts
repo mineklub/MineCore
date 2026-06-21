@@ -19,6 +19,9 @@ dependencyResolutionManagement {
         maven("https://repo.skriptlang.org/releases") {
             name = "skriptlang"
         }
+        maven("https://jitpack.io") {
+            name = "jitpack"
+        }
     }
 }
 
@@ -41,6 +44,9 @@ project(":hooks:skript213").projectDir = file("hooks/skript213")
 
 include("hooks:skript295")
 project(":hooks:skript295").projectDir = file("hooks/skript295")
+
+include("hooks:skript22dev36")
+project(":hooks:skript22dev36").projectDir = file("hooks/skript22dev36")
 
 sequenceOf("common", "paper", "bukkit").forEach {
     val name = "platform-$it"

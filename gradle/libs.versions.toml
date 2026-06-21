@@ -16,6 +16,7 @@ okio = "3.17.0"
 skriptnew = "2.15.3"
 skript213 = "2.13.2"
 skript295 = "2.9.5"
+skript22dev36 = "dev36"
 
 [plugins]
 shadow = {id = "com.gradleup.shadow", version.ref = "shadow"}
@@ -37,3 +38,4 @@ okio = {group = "com.squareup.okio", name = "okio", version.ref = "okio"}
 skriptnew = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skriptnew"}
 skript213 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript213"}
 skript295 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript295"}
+skript22dev36 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript22dev36"}
