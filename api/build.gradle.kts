@@ -47,9 +47,6 @@ dependencies {
 
 
 tasks {
-    named<JavaCompile>("compileJava") {
-        options.release.set(21)
-    }
     withType<ShadowJar> {
         exclude("META-INF/**")
         minimize()
