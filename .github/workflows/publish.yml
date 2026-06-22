@@ -1,0 +1,113 @@
+name: MineCore Publish
+
+on:
+  push:
+    branches:
+      - dev
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      publish-api:
+        description: "Publish :api to Maven Central"
+        type: boolean
+        required: true
+        default: true
+      publish-platform-jars:
+        description: "Build and upload platform jars to GitHub Release"
+        type: boolean
+        required: true
+        default: true
+      publish-api-snapshot:
+        description: "Publish :api snapshot to Maven Central snapshots"
+        type: boolean
+        required: true
+        default: false
+
+jobs:
+  publish-api:
+    name: Publish API to Maven Central
+    if: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs['publish-api']) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+      ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+      SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+      SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: "corretto"
+          java-version: "25"
+          cache: "gradle"
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Publish and release API
+        run: ./gradlew --no-daemon :api:publishAndReleaseToMavenCentral --full-stacktrace
+
+  publish-api-snapshot:
+    name: Publish API snapshot
+    if: ${{ github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && inputs['publish-api-snapshot']) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+      ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+      SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+      SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: "corretto"
+          java-version: "25"
+          cache: "gradle"
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Resolve snapshot version
+        run: |
+          BASE_VERSION=$(grep -E '^version = ' build.gradle.kts | head -n 1 | sed -E 's/.*orElse\("([^"]+)"\).*/\1/')
+          if [[ "$BASE_VERSION" == *"-SNAPSHOT" ]]; then
+            SNAPSHOT_VERSION="$BASE_VERSION"
+          else
+            SNAPSHOT_VERSION="${BASE_VERSION}-SNAPSHOT"
+          fi
+          echo "SNAPSHOT_VERSION=$SNAPSHOT_VERSION" >> "$GITHUB_ENV"
+      - name: Publish snapshot API artifacts
+        run: ./gradlew --no-daemon :api:publishAllPublicationsToMavenCentralRepository -PminecoreVersion="${SNAPSHOT_VERSION}" --full-stacktrace
+
+  publish-platform-jars:
+    name: Publish platform jars to GitHub Release
+    if: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs['publish-platform-jars']) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: "corretto"
+          java-version: "25"
+          cache: "gradle"
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build platform jars
+        run: ./gradlew --no-daemon :platform-bukkit:clean :platform-paper:clean :platform-bukkit:assemble :platform-paper:assemble --full-stacktrace
+      - name: Upload jars to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            platform/bukkit/build/libs/MineCore-bukkit-*.jar
+            platform/paper/build/libs/MineCore-paper-*.jar
