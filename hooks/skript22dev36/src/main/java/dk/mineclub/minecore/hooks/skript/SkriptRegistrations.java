@@ -29,14 +29,13 @@ import dk.mineclub.minecore.hooks.skript.expressions.ExprMineCoreNewProductPrope
 import dk.mineclub.minecore.hooks.skript.expressions.ExprMineCoreNewRequestProducts;
 import dk.mineclub.minecore.hooks.skript.expressions.ExprMineCoreReceiveRequestType;
 import dk.mineclub.minecore.hooks.skript.expressions.ExprMineCoreRequestProductProperty;
-import dk.mineclub.minecore.hooks.skript.runtime.MineCoreSkriptApi;
 import dk.mineclub.minecore.hooks.skript.sections.SecMineCoreCreateRequest;
 import dk.mineclub.minecore.platform.common.event.MineCorePostCreateRequestEvent;
 import dk.mineclub.minecore.platform.common.event.MineCorePreCreateRequestEvent;
 import dk.mineclub.minecore.platform.common.event.MineCoreReceiveRequestEvent;
 import dk.mineclub.minecore.platform.common.event.MineCoreReceiveVoteEvent;
 import org.bukkit.OfflinePlayer;
-import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /** Registers MineCore syntax elements with Skript 2.2-dev36. */
 final class SkriptRegistrations {
@@ -144,9 +143,8 @@ final class SkriptRegistrations {
                         .parser(
                                 new Parser<StoreCreatedRequest>() {
                                     @Override
-                                    public @Nullable StoreCreatedRequest parse(
-                                            String s, ParseContext context) {
-                                        return MineCoreSkriptApi.toRequest(s);
+                                    public boolean canParse(@NonNull ParseContext context) {
+                                        return false;
                                     }
 
                                     @Override
