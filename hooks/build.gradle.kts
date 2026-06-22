@@ -8,7 +8,7 @@ plugins {
 group = rootProject.group
 version = rootProject.version
 
-val hookPaperApiVersion = "1.20.4-R0.1-SNAPSHOT"
+val hookPaperApiVersion = "26.1.2.build.72-stable"
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$hookPaperApiVersion")
