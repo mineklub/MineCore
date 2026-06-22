@@ -12,6 +12,7 @@ import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreAcceptRequest;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreAcceptVote;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreAddProduct;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreCancelRequest;
+import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreCreateServerPay;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCorePostCreateRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCorePreCreateRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreReceiveRequest;
@@ -118,6 +119,13 @@ final class SkriptRegistrations {
                         .addPatterns(
                                 "cancel [minecore] request %object%",
                                 "cancel [minecore] request [with] id %string%")
+                        .build());
+
+        syntaxRegistry.register(
+                SyntaxRegistry.EFFECT,
+                SyntaxInfo.builder(EffMineCoreCreateServerPay.class)
+                        .addPatterns(
+                                "create [a] [minecore] server pay for %string% with amount %number%")
                         .build());
     }
 

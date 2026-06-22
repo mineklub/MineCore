@@ -13,6 +13,8 @@ import dk.mineclub.minecore.api.model.GetVotesResponse;
 import dk.mineclub.minecore.api.model.MappedRequest;
 import dk.mineclub.minecore.api.model.MappedVote;
 import dk.mineclub.minecore.api.model.RequestActionResponse;
+import dk.mineclub.minecore.api.model.ServerPayRequest;
+import dk.mineclub.minecore.api.model.ServerPayResponse;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
 import dk.mineclub.minecore.api.model.StoreRequest;
 import dk.mineclub.minecore.api.model.VoteSortByQuery;
@@ -175,6 +177,33 @@ public class RequestManager {
             return mineCoreApi.getGson().fromJson(body.string(), RequestActionResponse.class);
         } catch (Exception ex) {
             LOGGER.log(Level.WARNING, "Failed to accept vote, " + ex.getMessage(), ex);
+        }
+
+        return null;
+    }
+
+    public @Nullable ServerPayResponse createServerPay(ServerPayRequest serverPayRequest) {
+        if (serverPayRequest == null) {
+            return null;
+        }
+
+        String token = mineCoreApi.getToken();
+        RequestBody requestBody = createJsonRequestBody(serverPayRequest.toJson().toString());
+        Request request =
+                new Request.Builder()
+                        .url(baseUrl + "/server/pay")
+                        .post(requestBody)
+                        .header("Authorization", "Bearer " + token)
+                        .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            ResponseBody body = response.body();
+            if (body == null) {
+                return null;
+            }
+            return mineCoreApi.getGson().fromJson(body.string(), ServerPayResponse.class);
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Failed to create server pay, " + ex.getMessage(), ex);
         }
 
         return null;
