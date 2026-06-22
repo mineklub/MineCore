@@ -169,8 +169,7 @@ public class SocketIOManager {
                         }
 
                         if (envelope.type != null && !"newVote".equalsIgnoreCase(envelope.type)) {
-                            LOGGER.info(
-                                    "Socket.IO vote event ignored for type: " + envelope.type);
+                            LOGGER.info("Socket.IO vote event ignored for type: " + envelope.type);
                             return;
                         }
 

@@ -101,7 +101,8 @@ public final class MineCoreApi {
 
                 String serverStatus = mappedRequest.getStatus().getServer();
                 if (!"pending".equalsIgnoreCase(serverStatus)) {
-                    LOGGER.fine("Skipping request with non-pending server status: " + mappedRequest);
+                    LOGGER.fine(
+                            "Skipping request with non-pending server status: " + mappedRequest);
                     continue;
                 }
 

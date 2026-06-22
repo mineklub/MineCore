@@ -57,7 +57,8 @@ public class CommonEventBridge {
     public void onReceive(ReceiveRequestEvent event) {
         callSync(
                 () -> {
-                    plugin.getLogger().fine("ReceiveRequestEvent payload: " + event.getStoreRequest());
+                    plugin.getLogger()
+                            .fine("ReceiveRequestEvent payload: " + event.getStoreRequest());
                     Bukkit.getPluginManager()
                             .callEvent(
                                     new MineCoreReceiveRequestEvent(
