@@ -2,7 +2,9 @@ package dk.mineclub.minecore.internal.channels;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.velocitypowered.api.proxy.Player;
 import dk.mineclub.minecore.internal.InternalPlugin;
+import java.util.UUID;
 import redis.clients.jedis.JedisPubSub;
 
 public class StoreRequestChannel extends JedisPubSub {
@@ -32,6 +34,16 @@ public class StoreRequestChannel extends JedisPubSub {
                 .ifPresentOrElse(
                         parsed -> {
                             JsonObject object = new JsonObject();
+                            Player player =
+                                    InternalPlugin.getInstance()
+                                            .getServer()
+                                            .getPlayer(
+                                                    UUID.fromString(
+                                                            parsed.data().mcaccount().uuid()))
+                                            .orElse(null);
+                            if (player == null) {
+                                return;
+                            }
                             object.addProperty("uuid", parsed.data().mcaccount().uuid());
                             object.add("request", GSON.toJsonTree(parsed));
                             plugin.getJedis().publish("MINECORE:REQUEST:SEND", object.toString());
