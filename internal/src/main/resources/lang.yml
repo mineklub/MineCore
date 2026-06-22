@@ -13,6 +13,10 @@ request:
         - "<gray>Nuværende balance = <yellow>⛃<balance:'de-DE':'#,##0.00'><gray>"
         - " "
         - "<accept> <gray>- <deny>"
+    dialog-footer:
+        - " "
+        - "<gray>Samlet pris = <u><#ffe97a>⛃<total:'de-DE':'#,##0.00'><gray></u>"
+        - "<gray>Nuværende balance = <yellow>⛃<balance:'de-DE':'#,##0.00'><gray>"
     accept-button: "<#beff69><b>[Accepter]</b> "
     deny-button: "<#ff6969><b>[Afvis]</b>"
     timeout:

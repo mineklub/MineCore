@@ -19,6 +19,9 @@ dependencyResolutionManagement {
         maven("https://repo.skriptlang.org/releases") {
             name = "skriptlang"
         }
+        maven("https://repo.codemc.io/repository/maven-releases/") {
+            name = "codemc"
+        }
         maven("https://jitpack.io") {
             name = "jitpack"
         }

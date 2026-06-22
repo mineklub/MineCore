@@ -8,6 +8,7 @@ gson = "2.14.0"
 socketclient = "2.1.2"
 lombok = "1.18.46"
 velocity = "3.5.0-SNAPSHOT"
+packetevents = "2.13.0"
 paper = "26.1.2.build.+"
 jedis = "7.5.2"
 guava = "33.6.0-jre"
@@ -30,6 +31,7 @@ gson = {group = "com.google.code.gson", name = "gson", version.ref = "gson"}
 socketclient = {group = "io.socket", name = "socket.io-client", version.ref = "socketclient"}
 lombok = {group = "org.projectlombok", name = "lombok", version.ref = "lombok"}
 velocity = {group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity"}
+packetevents-api = {group = "com.github.retrooper", name = "packetevents-api", version.ref = "packetevents"}
 paper = {group = "io.papermc.paper", name = "paper-api", version.ref = "paper"}
 jedis = {module = "redis.clients:jedis", version.ref = "jedis"}
 guava = {group = "com.google.guava", name = "guava", version.ref = "guava"}

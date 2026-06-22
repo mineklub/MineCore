@@ -5,12 +5,8 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import dk.mineclub.minecore.internal.channels.StoreRequestChannel;
-import dk.mineclub.minecore.internal.channels.StoreRequestFailedChannel;
-import dk.mineclub.minecore.internal.channels.StoreRequestMessage;
-import dk.mineclub.minecore.internal.channels.StoreRequestSuccessChannel;
+import dk.mineclub.minecore.internal.channels.*;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -19,6 +15,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.BufferedSink;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.RedisClient;
@@ -29,9 +26,9 @@ public class InternalPlugin {
     @Getter private Lang lang;
 
     @Getter private final ProxyServer server;
-    private final Logger logger;
+    @Getter private final Logger logger;
     private final EnvironmentFile environmentFile;
-    private String baseUrl = "https://api.mineclub.dk/v2/minecore";
+    private final String baseUrl = "https://api.mineclub.dk/v2/minecore";
     private static final OkHttpClient client =
             new OkHttpClient()
                     .newBuilder()
@@ -51,11 +48,14 @@ public class InternalPlugin {
                 }
 
                 @Override
-                public void writeTo(BufferedSink sink) throws IOException {}
+                public void writeTo(BufferedSink sink) {}
             };
 
     @Inject
-    public InternalPlugin(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
+    public InternalPlugin(
+            @NotNull ProxyServer server,
+            @NotNull Logger logger,
+            @DataDirectory @NotNull Path dataDirectory) {
         instance = this;
         this.server = server;
         this.logger = logger;
@@ -84,6 +84,7 @@ public class InternalPlugin {
         new StoreRequestChannel(this);
         new StoreRequestFailedChannel(this);
         new StoreRequestSuccessChannel(this);
+        new StoreRequestTimeoutChannel(this);
     }
 
     public Response acceptRequest(StoreRequestMessage message) {
@@ -98,7 +99,7 @@ public class InternalPlugin {
         try {
             return client.newCall(request).execute();
         } catch (Exception ex) {
-            System.out.println("Failed to create request, " + ex.getMessage());
+            logger.warn("Failed to create request, {}", ex.getMessage(), ex);
         }
 
         return null;
@@ -116,7 +117,7 @@ public class InternalPlugin {
         try {
             return client.newCall(request).execute();
         } catch (Exception ex) {
-            System.out.println("Failed to create request, " + ex.getMessage());
+            logger.warn("Failed to cancel request, {}", ex.getMessage(), ex);
         }
 
         return null;

@@ -21,7 +21,7 @@ import okhttp3.Response;
 public class OldVersionHandler {
     private static final Gson GSON = new Gson();
 
-    private static String getAcceptErrorKey(String apiMessage) {
+    static String getAcceptErrorKey(String apiMessage) {
         if (apiMessage == null || apiMessage.isBlank()) {
             return "request.accept-errors.unknown";
         }
@@ -39,7 +39,7 @@ public class OldVersionHandler {
         };
     }
 
-    private static String getCancelErrorKey(String apiMessage) {
+    static String getCancelErrorKey(String apiMessage) {
         if (apiMessage == null || apiMessage.isBlank()) {
             return "request.cancel-errors.unknown";
         }
@@ -83,7 +83,7 @@ public class OldVersionHandler {
                                         "error", apiMessage == null ? "Unknown" : apiMessage)));
     }
 
-    private static void handleRequestResponse(
+    static void handleRequestResponse(
             InternalPlugin plugin,
             Player player,
             Supplier<Response> action,
@@ -112,7 +112,7 @@ public class OldVersionHandler {
         }
     }
 
-    private static void publishReturn(InternalPlugin plugin, StoreRequestMessage message) {
+    static void publishReturn(InternalPlugin plugin, StoreRequestMessage message) {
         JsonObject object = new JsonObject();
         object.addProperty("service", message.data().service().id());
         object.addProperty("mcaccount", message.data().mcaccount().uuid());

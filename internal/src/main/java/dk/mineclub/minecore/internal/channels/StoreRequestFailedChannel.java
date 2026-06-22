@@ -1,6 +1,7 @@
 package dk.mineclub.minecore.internal.channels;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import dk.mineclub.minecore.internal.InternalPlugin;
 import redis.clients.jedis.JedisPubSub;
 
@@ -27,11 +28,6 @@ public class StoreRequestFailedChannel extends JedisPubSub {
     }
 
     public void handleMessage(String message) {
-        parser.parse(message)
-                .ifPresentOrElse(
-                        parsed -> {
-                            // Can either be ban, or fail on proxyplugin side.
-                        },
-                        () -> System.out.println("Received invalid store message: " + message));
+        JsonObject json = GSON.fromJson(message, JsonObject.class);
     }
 }
