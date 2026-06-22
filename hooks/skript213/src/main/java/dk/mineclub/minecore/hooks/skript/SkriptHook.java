@@ -24,7 +24,8 @@ public class SkriptHook implements Hook {
             return;
         }
 
-        addon = Skript.instance().registerAddon(SkriptHook.class, "MineCore");
+        // Use the owning plugin class so Paper can resolve the providing plugin classloader.
+        addon = Skript.instance().registerAddon(plugin.getClass(), "MineCore");
         SkriptRegistrations.register(addon);
     }
 
