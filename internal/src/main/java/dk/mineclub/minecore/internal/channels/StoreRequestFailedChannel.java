@@ -7,6 +7,7 @@ import dk.mineclub.minecore.internal.InternalPlugin;
 import java.time.Instant;
 import java.util.UUID;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import okhttp3.Response;
 import redis.clients.jedis.JedisPubSub;
 
 public class StoreRequestFailedChannel extends JedisPubSub {
@@ -45,10 +46,11 @@ public class StoreRequestFailedChannel extends JedisPubSub {
                         player -> {
                             switch (type) {
                                 case "ban" -> handleBan(player, json);
-                                case "connection" ->
-                                        player.sendMessage(
-                                                plugin.getLang()
-                                                        .get("request.accept-errors.network"));
+                                case "connection" -> {
+                                    player.sendMessage(
+                                            plugin.getLang().get("request.accept-errors.network"));
+                                    cancelRequestIfPresent(json);
+                                }
                                 default -> {}
                             }
                         });
@@ -67,6 +69,7 @@ public class StoreRequestFailedChannel extends JedisPubSub {
             player.sendMessage(
                     plugin.getLang()
                             .get("request.banned.perm", Placeholder.unparsed("reason", reason)));
+            cancelRequestIfPresent(json);
             return;
         }
 
@@ -77,6 +80,24 @@ public class StoreRequestFailedChannel extends JedisPubSub {
                                 "request.banned.temp",
                                 Placeholder.unparsed("reason", reason),
                                 Placeholder.unparsed("expiry", expiry)));
+        cancelRequestIfPresent(json);
+    }
+
+    private void cancelRequestIfPresent(JsonObject json) {
+        JsonObject request =
+                json.getAsJsonObject("request").getAsJsonObject("request").getAsJsonObject("data");
+        if (request == null || !request.has("_id")) {
+            return;
+        }
+
+        try (Response response = plugin.cancelRequest(request.get("_id").getAsString())) {
+            if (response != null && !response.isSuccessful()) {
+                plugin.getLogger()
+                        .warn("Cancelling banned request returned status {}", response.code());
+            }
+        } catch (Exception e) {
+            plugin.getLogger().warn("Failed to cancel banned request", e);
+        }
     }
 
     private String getStringOrDefault(JsonObject json, String key, String defaultValue) {

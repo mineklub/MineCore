@@ -34,7 +34,6 @@ public class StoreRequestSuccessChannel extends JedisPubSub {
 
     public void handleMessage(String message) {
         JsonObject messageObject = GSON.fromJson(message, JsonObject.class);
-        System.out.println(messageObject);
         parser.parse(
                         messageObject
                                 .get("request")

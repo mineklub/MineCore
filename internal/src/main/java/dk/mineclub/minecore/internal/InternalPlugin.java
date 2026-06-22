@@ -87,11 +87,11 @@ public class InternalPlugin {
         new StoreRequestTimeoutChannel(this);
     }
 
-    public Response acceptRequest(StoreRequestMessage message) {
+    public Response acceptRequest(String id) {
         String token = environmentFile.getToken();
         Request request =
                 new Request.Builder()
-                        .url(baseUrl + "/client/request/" + message.data().id() + "/accept")
+                        .url(baseUrl + "/client/request/" + id + "/accept")
                         .post(EMPTY_REQUEST_BODY)
                         .header("Authorization", token)
                         .build();
@@ -105,11 +105,11 @@ public class InternalPlugin {
         return null;
     }
 
-    public Response cancelRequest(StoreRequestMessage message) {
+    public Response cancelRequest(String id) {
         String token = environmentFile.getToken();
         Request request =
                 new Request.Builder()
-                        .url(baseUrl + "/client/request/" + message.data().id() + "/cancel")
+                        .url(baseUrl + "/client/request/" + id + "/cancel")
                         .post(EMPTY_REQUEST_BODY)
                         .header("Authorization", token)
                         .build();

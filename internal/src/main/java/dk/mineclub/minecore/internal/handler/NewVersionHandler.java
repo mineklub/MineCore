@@ -272,7 +272,7 @@ public class NewVersionHandler {
             OldVersionHandler.handleRequestResponse(
                     plugin,
                     player,
-                    () -> plugin.acceptRequest(message),
+                    () -> plugin.acceptRequest(message.data().id()),
                     OldVersionHandler::getAcceptErrorKey,
                     "request.accept-errors.network",
                     "request.accept-errors.unexpected",
@@ -285,7 +285,7 @@ public class NewVersionHandler {
             OldVersionHandler.handleRequestResponse(
                     plugin,
                     player,
-                    () -> plugin.cancelRequest(message),
+                    () -> plugin.cancelRequest(message.data().id()),
                     OldVersionHandler::getCancelErrorKey,
                     "request.cancel-errors.network",
                     "request.cancel-errors.unexpected",

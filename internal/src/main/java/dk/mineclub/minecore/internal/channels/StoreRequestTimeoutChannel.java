@@ -3,11 +3,12 @@ package dk.mineclub.minecore.internal.channels;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dk.mineclub.minecore.internal.InternalPlugin;
+import java.util.Objects;
 import java.util.UUID;
 import redis.clients.jedis.JedisPubSub;
 
 public class StoreRequestTimeoutChannel extends JedisPubSub {
-    private final String CHANNEL = "MINECORE:REQUEST:JOIN:FAILED";
+    private final String CHANNEL = "MINECORE:REQUEST:TIMEOUT";
     private final InternalPlugin plugin;
     private final StoreRequestMessageParser parser = new StoreRequestMessageParser();
     private static final Gson GSON = new Gson();
@@ -36,17 +37,13 @@ public class StoreRequestTimeoutChannel extends JedisPubSub {
     }
 
     private String getRequestPayload(JsonObject messageObject, String fallbackMessage) {
-        JsonObject requestObject = messageObject.getAsJsonObject("request");
+        JsonObject requestObject = messageObject.getAsJsonObject("data");
         if (requestObject == null) {
             return fallbackMessage;
         }
 
-        JsonObject nestedRequestObject = requestObject.getAsJsonObject("request");
-        if (nestedRequestObject != null) {
-            return nestedRequestObject.toString();
-        }
-
-        return requestObject.toString();
+        JsonObject nestedRequestObject = requestObject.getAsJsonObject("data");
+        return Objects.requireNonNullElse(nestedRequestObject, requestObject).toString();
     }
 
     public void handleMessage(String message) {

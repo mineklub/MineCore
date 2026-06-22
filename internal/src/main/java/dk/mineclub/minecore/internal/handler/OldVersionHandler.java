@@ -167,7 +167,8 @@ public class OldVersionHandler {
                                                                             () ->
                                                                                     plugin
                                                                                             .acceptRequest(
-                                                                                                    message),
+                                                                                                    message.data()
+                                                                                                            .id()),
                                                                             OldVersionHandler
                                                                                     ::getAcceptErrorKey,
                                                                             "request.accept-errors.network",
@@ -188,7 +189,8 @@ public class OldVersionHandler {
                                                                             () ->
                                                                                     plugin
                                                                                             .cancelRequest(
-                                                                                                    message),
+                                                                                                    message.data()
+                                                                                                            .id()),
                                                                             OldVersionHandler
                                                                                     ::getCancelErrorKey,
                                                                             "request.cancel-errors.network",
