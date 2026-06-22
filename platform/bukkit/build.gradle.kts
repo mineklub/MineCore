@@ -42,6 +42,7 @@ tasks.withType<ShadowJar> {
 @Suppress("UNCHECKED_CAST")
 val additionalClassifiersByJavaVersion =
         extra["additionalPlatformClassifiersByJavaVersion"] as Map<Int, String>
+val targetJavaVersion = rootProject.extra["targetJavaVersion"] as Int
 @Suppress("UNCHECKED_CAST")
 val hooksJarTaskForTarget = extra["hooksJarTaskForTarget"] as org.gradle.api.tasks.TaskProvider<Jar>
 @Suppress("UNCHECKED_CAST")
@@ -74,6 +75,7 @@ additionalClassifiersByJavaVersion.forEach { (javaVersion, classifier) ->
 }
 
 tasks.named<ShadowJar>("shadowJar") {
+    archiveClassifier.set("jvm${targetJavaVersion}-all")
     from({ zipTree(hooksJarTaskForTarget.get().archiveFile.get().asFile) })
     from({ zipTree(apiJarTaskForTarget.get().archiveFile.get().asFile) })
     from({ zipTree(commonJarTaskForTarget.get().archiveFile.get().asFile) })

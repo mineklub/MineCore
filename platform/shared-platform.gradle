@@ -2,6 +2,8 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.compile.JavaCompile
 
 String moduleLabel = project.ext.platformModuleLabel as String
+String platformName = moduleLabel.replaceFirst("^platform-", "")
+String platformArchiveBaseName = "MineCore-${platformName}"
 
 evaluationDependsOn(":api")
 evaluationDependsOn(":hooks")
@@ -45,6 +47,14 @@ spotless {
 
 tasks.withType(JavaCompile).configureEach {
     options.release = targetJavaVersion
+}
+
+tasks.withType(Jar).configureEach {
+    archiveBaseName.set(platformArchiveBaseName)
+}
+
+tasks.named("jar", Jar) {
+    archiveClassifier.set("jvm${targetJavaVersion}")
 }
 
 tasks.named("compileJava", JavaCompile) {
