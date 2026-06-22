@@ -20,6 +20,7 @@ def commonJarForTarget = project.files(commonJarTaskForTarget.flatMap { it.archi
 def hooksJarTaskForTarget = project(":hooks").tasks.named("jarJava${targetJavaVersion}", Jar)
 def hooksJarForTarget = project.files(hooksJarTaskForTarget.flatMap { it.archiveFile }).builtBy(hooksJarTaskForTarget)
 def commonConfigResource = project(":platform-common").file("src/main/resources/config.yml")
+def pluginVersion = rootProject.version.toString()
 
 dependencies {
     compileOnly(libs.lombok)
@@ -52,7 +53,11 @@ tasks.named("compileJava", JavaCompile) {
 }
 
 tasks.processResources {
+    inputs.property("pluginVersion", pluginVersion)
     from(commonConfigResource)
+    filesMatching(["plugin.yml", "paper-plugin.yml"]) {
+        expand(version: pluginVersion)
+    }
 }
 
 def additionalClassifiersByJavaVersion = [8: "jvm8", 11: "jvm11", 17: "jvm17", 21: "jvm21", 25: "jvm25"]
@@ -93,6 +98,3 @@ project.ext.additionalPlatformClassifiersByJavaVersion = additionalClassifiersBy
 project.ext.apiJarTaskForTarget = apiJarTaskForTarget
 project.ext.commonJarTaskForTarget = commonJarTaskForTarget
 project.ext.hooksJarTaskForTarget = hooksJarTaskForTarget
-
-
-

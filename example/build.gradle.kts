@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.language.jvm.tasks.ProcessResources
 
 plugins {
     id("java-library")
@@ -24,12 +25,19 @@ java {
     withSourcesJar()
 }
 
-tasks {
-    withType<JavaCompile>().configureEach {
-        options.release.set(targetJavaVersion)
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(targetJavaVersion)
+}
+
+tasks.named<ProcessResources>("processResources") {
+    val pluginResourceTokens = mapOf("version" to project.version.toString())
+    inputs.properties(pluginResourceTokens)
+    filesMatching("plugin.yml") {
+        expand(pluginResourceTokens)
     }
-    withType<ShadowJar> {
-        exclude("META-INF/**")
-        minimize()
-    }
+}
+
+tasks.withType<ShadowJar> {
+    exclude("META-INF/**")
+    minimize()
 }

@@ -1,5 +1,5 @@
 name: MineCore
-version: "1.0.0"
+version: "${version}"
 main: dk.mineclub.minecore.platform.paper.MineCorePaperPlugin
 description: "MineCore Plugin er et plugin til at forbinde MineCore med Paper platformen."
 api-version: "1.19"
