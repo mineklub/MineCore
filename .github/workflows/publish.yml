@@ -106,7 +106,7 @@ jobs:
       - name: Build platform jars
         run: ./gradlew --no-daemon :platform-bukkit:clean :platform-paper:clean :platform-bukkit:assemble :platform-paper:assemble --full-stacktrace
       - name: Upload jars to release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             platform/bukkit/build/libs/MineCore-bukkit-*.jar
