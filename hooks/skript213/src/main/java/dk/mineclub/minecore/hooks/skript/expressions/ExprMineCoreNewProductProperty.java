@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprMineCoreNewProductProperty extends SimpleExpression<Object> {
 
     private Expression<StoreProduct> productExpr;
-    private int property; // 0=id, 1=name, 2=price, 3=quantity, 4=subscriptionDays
+    private int property; // 0=id, 1=price, 2=quantity, 3=subscriptionDays
 
     @Override
     @SuppressWarnings("unchecked")
@@ -20,6 +20,10 @@ public class ExprMineCoreNewProductProperty extends SimpleExpression<Object> {
             int matchedPattern,
             Kleenean isDelayed,
             ParseResult parseResult) {
+        if (!StoreProduct.class.isAssignableFrom(exprs[0].getReturnType())) {
+            return false;
+        }
+
         this.productExpr = (Expression<StoreProduct>) exprs[0];
         this.property = matchedPattern;
         return true;
@@ -35,10 +39,9 @@ public class ExprMineCoreNewProductProperty extends SimpleExpression<Object> {
         Object value =
                 switch (property) {
                     case 0 -> product.getId();
-                    case 1 -> product.getName();
-                    case 2 -> product.getPrice();
-                    case 3 -> product.getQuantity();
-                    case 4 -> product.getSubscriptionDays();
+                    case 1 -> product.getPrice();
+                    case 2 -> product.getQuantity();
+                    case 3 -> product.getSubscriptionDays();
                     default -> null;
                 };
 
@@ -52,7 +55,11 @@ public class ExprMineCoreNewProductProperty extends SimpleExpression<Object> {
 
     @Override
     public Class<?> getReturnType() {
-        return Object.class;
+        return switch (property) {
+            case 2 -> Double.class;
+            case 3, 4 -> Integer.class;
+            default -> String.class;
+        };
     }
 
     @Override

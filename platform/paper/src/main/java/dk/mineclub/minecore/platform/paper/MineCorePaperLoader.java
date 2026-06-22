@@ -122,7 +122,7 @@ public class MineCorePaperLoader implements PluginLoader {
             return withVariantSuffix(baseArtifact, "jvm25");
         }
         if (javaFeature >= JAVA_21) {
-            return null;
+            return withVariantSuffix(baseArtifact, "jvm21");
         }
         if (javaFeature >= JAVA_17) {
             return withVariantSuffix(baseArtifact, "jvm17");

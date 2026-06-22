@@ -22,6 +22,10 @@ public class ExprMineCoreRequestProductProperty extends SimpleExpression<Object>
             int matchedPattern,
             Kleenean isDelayed,
             ParseResult parseResult) {
+        if (!Product.class.isAssignableFrom(exprs[0].getReturnType())) {
+            return false;
+        }
+
         this.productExpr = (Expression<Product>) exprs[0];
         this.property = matchedPattern;
         return true;
@@ -37,11 +41,10 @@ public class ExprMineCoreRequestProductProperty extends SimpleExpression<Object>
         Object value =
                 switch (property) {
                     case 0 -> product.getProductId();
-                    case 1 -> product.getProductName();
-                    case 2 -> product.getPrice();
-                    case 3 -> product.getQuantity();
-                    case 4 -> product.getCreatedAt();
-                    case 5 -> product.getUpdatedAt();
+                    case 1 -> product.getPrice();
+                    case 2 -> product.getQuantity();
+                    case 3 -> product.getCreatedAt();
+                    case 4 -> product.getUpdatedAt();
                     default -> null;
                 };
 
@@ -56,8 +59,8 @@ public class ExprMineCoreRequestProductProperty extends SimpleExpression<Object>
     @Override
     public Class<?> getReturnType() {
         return switch (property) {
-            case 2 -> Double.class;
-            case 3 -> Integer.class;
+            case 1 -> Double.class;
+            case 2 -> Integer.class;
             default -> String.class;
         };
     }

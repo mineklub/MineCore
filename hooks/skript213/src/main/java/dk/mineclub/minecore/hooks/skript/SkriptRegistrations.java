@@ -1,5 +1,6 @@
 package dk.mineclub.minecore.hooks.skript;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
@@ -29,6 +30,8 @@ import org.bukkit.OfflinePlayer;
 import org.jspecify.annotations.Nullable;
 import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
+import org.skriptlang.skript.lang.properties.Property;
+import org.skriptlang.skript.lang.properties.PropertyHandler;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
@@ -300,6 +303,11 @@ final class SkriptRegistrations {
                         .parser(
                                 new Parser<>() {
                                     @Override
+                                    public boolean canParse(ParseContext context) {
+                                        return false;
+                                    }
+
+                                    @Override
                                     public @Nullable StoreCreatedRequest parse(
                                             String s, ParseContext context) {
                                         return MineCoreSkriptApi.toRequest(s);
@@ -323,6 +331,12 @@ final class SkriptRegistrations {
                         .description(
                                 "A product on an existing (created or received) MineCore request.")
                         .since("1.0")
+                        .property(
+                                Property.NAME,
+                                "name of product",
+                                Skript.instance(),
+                                PropertyHandler.ExpressionPropertyHandler.of(
+                                        StoreCreatedRequest.Product::getProductName, String.class))
                         .parser(
                                 new Parser<>() {
                                     @Override
@@ -351,6 +365,12 @@ final class SkriptRegistrations {
                         .description(
                                 "A product attached to an outgoing MineCore request before creation.")
                         .since("1.0")
+                        .property(
+                                Property.NAME,
+                                "name of product",
+                                Skript.instance(),
+                                PropertyHandler.ExpressionPropertyHandler.of(
+                                        StoreProduct::getName, String.class))
                         .parser(
                                 new Parser<>() {
                                     @Override

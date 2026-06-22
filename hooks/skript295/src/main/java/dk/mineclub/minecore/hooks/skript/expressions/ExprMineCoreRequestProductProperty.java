@@ -22,6 +22,10 @@ public class ExprMineCoreRequestProductProperty extends SimpleExpression<Object>
             int matchedPattern,
             Kleenean isDelayed,
             ParseResult parseResult) {
+        if (!Product.class.isAssignableFrom(exprs[0].getReturnType())) {
+            return false;
+        }
+
         this.productExpr = (Expression<Product>) exprs[0];
         this.property = matchedPattern;
         return true;

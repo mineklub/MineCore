@@ -20,6 +20,10 @@ public class ExprMineCoreNewProductProperty extends SimpleExpression<Object> {
             int matchedPattern,
             Kleenean isDelayed,
             ParseResult parseResult) {
+        if (!StoreProduct.class.isAssignableFrom(exprs[0].getReturnType())) {
+            return false;
+        }
+
         this.productExpr = (Expression<StoreProduct>) exprs[0];
         this.property = matchedPattern;
         return true;
@@ -64,7 +68,15 @@ public class ExprMineCoreNewProductProperty extends SimpleExpression<Object> {
 
     @Override
     public Class<?> getReturnType() {
-        return Object.class;
+        switch (property) {
+            case 2:
+                return Double.class;
+            case 3:
+            case 4:
+                return Integer.class;
+            default:
+                return String.class;
+        }
     }
 
     @Override

@@ -151,9 +151,9 @@ final class SkriptRegistrations {
                         .parser(
                                 new Parser<StoreCreatedRequest>() {
                                     @Override
-                                    public @Nullable StoreCreatedRequest parse(
-                                            String s, ParseContext context) {
-                                        return MineCoreSkriptApi.toRequest(s);
+                                    public boolean canParse(
+                                        ch.njol.skript.lang.ParseContext context) {
+                                        return false;
                                     }
 
                                     @Override
