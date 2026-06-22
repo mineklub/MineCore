@@ -60,6 +60,6 @@ public class StoreRequestSuccessChannel extends JedisPubSub {
                                 NewVersionHandler.handle(plugin, player, parsed);
                             }
                         },
-                        () -> System.out.println("Received invalid store message: " + message));
+                        () -> plugin.getLogger().warn("Received invalid store message: {}", message));
     }
 }

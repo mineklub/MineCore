@@ -20,10 +20,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Getter;
 import org.jspecify.annotations.Nullable;
 
 public final class MineCoreApi {
+    private static final Logger LOGGER = Logger.getLogger(MineCoreApi.class.getName());
     @Getter private static MineCoreApi instance;
     @Getter private final AsyncEventBus asyncEventBus;
     @Getter private final RequestManager minecoreRequestManager;
@@ -80,39 +83,40 @@ public final class MineCoreApi {
             GetRequestsResponse response = minecoreRequestManager.getRequests(options);
             List<MappedRequest> requests = response != null ? response.getAll() : null;
             if (requests == null) {
-                System.err.println("No requests found");
+                LOGGER.fine("No requests found");
                 return;
             }
 
             for (MappedRequest mappedRequest : requests) {
                 if (mappedRequest == null || mappedRequest.getStatus() == null) {
-                    System.out.println("Skipping request with missing status: " + mappedRequest);
+                    LOGGER.warning("Skipping request with missing status: " + mappedRequest);
                     continue;
                 }
 
                 String requestId = mappedRequest.getId();
                 if (requestId == null || requestId.trim().isEmpty()) {
-                    System.out.println("Skipping request with missing id: " + mappedRequest);
+                    LOGGER.warning("Skipping request with missing id: " + mappedRequest);
                     continue;
                 }
 
                 String serverStatus = mappedRequest.getStatus().getServer();
                 if (!"pending".equalsIgnoreCase(serverStatus)) {
-                    System.out.println("Skipping request with missing status: " + mappedRequest);
+                    LOGGER.fine("Skipping request with non-pending server status: " + mappedRequest);
                     continue;
                 }
 
                 String type = "accept";
 
-                System.out.println(mappedRequest);
+                LOGGER.fine("Dispatching accepted request poll result: " + mappedRequest);
 
                 // Convert mapped request payload to the event model shape.
                 StoreCreatedRequest storeCreatedRequest =
                         gson.fromJson(gson.toJsonTree(mappedRequest), StoreCreatedRequest.class);
                 asyncEventBus.post(new ReceiveRequestEvent(type, storeCreatedRequest));
             }
-        } catch (Exception ignored) {
+        } catch (Exception ex) {
             // Polling should never crash the scheduler thread.
+            LOGGER.log(Level.WARNING, "Failed while polling accepted requests", ex);
         }
     }
 
@@ -133,20 +137,21 @@ public final class MineCoreApi {
 
                 String voteId = mappedVote.getId();
                 if (voteId == null || voteId.trim().isEmpty()) {
-                    System.out.println("Skipping vote with missing id: " + mappedVote);
+                    LOGGER.warning("Skipping vote with missing id: " + mappedVote);
                     continue;
                 }
 
                 String status = mappedVote.getStatus();
                 if (!"pending".equalsIgnoreCase(status)) {
-                    System.out.println("Skipping vote with pending status: " + mappedVote);
+                    LOGGER.fine("Skipping vote with non-pending status: " + mappedVote);
                     continue;
                 }
 
                 asyncEventBus.post(new ReceiveVoteEvent(mappedVote));
             }
-        } catch (Exception ignored) {
+        } catch (Exception ex) {
             // Polling should never crash the scheduler thread.
+            LOGGER.log(Level.WARNING, "Failed while polling votes", ex);
         }
     }
 }

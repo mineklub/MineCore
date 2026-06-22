@@ -5,11 +5,15 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
+import java.util.logging.Logger;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 public class ExprMineCoreCreatedRequestProducts
         extends SimpleExpression<StoreCreatedRequest.Product> {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(ExprMineCoreCreatedRequestProducts.class.getName());
 
     private Expression<StoreCreatedRequest> requestExpr;
 
@@ -28,7 +32,7 @@ public class ExprMineCoreCreatedRequestProducts
     protected StoreCreatedRequest.Product[] get(Event event) {
         StoreCreatedRequest request = requestExpr.getSingle(event);
         if (request == null) return null;
-        System.out.println("Getting products for request: " + request.toString());
+        LOGGER.fine("Getting products for request: " + request);
         if (request.getProducts() == null) return null;
         return request.getProducts().toArray(new StoreCreatedRequest.Product[0]);
     }

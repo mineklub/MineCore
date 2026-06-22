@@ -46,7 +46,6 @@ public class MineCorePaperLoader implements PluginLoader {
     }
 
     private static void addDependency(MavenLibraryResolver resolver, String coordinates) {
-        System.out.println("Adding dependency: " + coordinates);
         resolver.addDependency(new Dependency(new DefaultArtifact(coordinates), null));
     }
 

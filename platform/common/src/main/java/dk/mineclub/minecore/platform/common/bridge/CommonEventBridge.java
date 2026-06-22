@@ -57,7 +57,7 @@ public class CommonEventBridge {
     public void onReceive(ReceiveRequestEvent event) {
         callSync(
                 () -> {
-                    System.out.println(event.getStoreRequest().toString());
+                    plugin.getLogger().fine("ReceiveRequestEvent payload: " + event.getStoreRequest());
                     Bukkit.getPluginManager()
                             .callEvent(
                                     new MineCoreReceiveRequestEvent(
@@ -72,7 +72,7 @@ public class CommonEventBridge {
     public void onReceiveVote(ReceiveVoteEvent event) {
         callSync(
                 () -> {
-                    System.out.println(event.getVote().toString());
+                    plugin.getLogger().fine("ReceiveVoteEvent payload: " + event.getVote());
                     Bukkit.getPluginManager()
                             .callEvent(new MineCoreReceiveVoteEvent(event.getVote()));
                     return null;

@@ -27,17 +27,17 @@ public class StoreListeners implements Listener {
 
     @Subscribe
     public void preEvent(PreCreateRequestEvent event) {
-        System.out.println("PreCreateRequestEvent called for request: " + event.toString());
+        plugin.getLogger().info("PreCreateRequestEvent called for request: " + event);
     }
 
     @Subscribe
     public void postEvent(PostCreateRequestEvent event) {
-        System.out.println("PostCreateRequestEvent called for request: " + event.toString());
+        plugin.getLogger().info("PostCreateRequestEvent called for request: " + event);
     }
 
     @Subscribe
     public void receiveEvent(ReceiveRequestEvent event) {
-        System.out.println("ReceiveRequestEvent called for request: " + event.toString());
+        plugin.getLogger().info("ReceiveRequestEvent called for request: " + event);
 
         if (event.getStoreRequest() == null
                 || event.getStoreRequest().getMcaccount() == null
@@ -55,14 +55,16 @@ public class StoreListeners implements Listener {
             }
             mineCoreApi.getMinecoreRequestManager().acceptRequest(event.getStoreRequest());
         } catch (IllegalArgumentException ex) {
-            System.out.println(
-                    "Invalid request UUID: " + event.getStoreRequest().getMcaccount().getUuid());
+            plugin.getLogger()
+                    .warning(
+                            "Invalid request UUID: "
+                                    + event.getStoreRequest().getMcaccount().getUuid());
         }
     }
 
     @Subscribe
     public void receiveVoteEvent(ReceiveVoteEvent event) {
-        System.out.println("ReceiveVoteEvent called for vote: " + event.toString());
+        plugin.getLogger().info("ReceiveVoteEvent called for vote: " + event);
 
         if (event.getVote() == null
                 || event.getVote().getMcaccount() == null
@@ -80,7 +82,8 @@ public class StoreListeners implements Listener {
             }
             mineCoreApi.getMinecoreRequestManager().acceptVote(event.getVote());
         } catch (IllegalArgumentException ex) {
-            System.out.println("Invalid vote UUID: " + event.getVote().getMcaccount().getUuid());
+            plugin.getLogger()
+                    .warning("Invalid vote UUID: " + event.getVote().getMcaccount().getUuid());
         }
     }
 

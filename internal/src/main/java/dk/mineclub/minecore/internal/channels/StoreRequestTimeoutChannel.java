@@ -60,6 +60,6 @@ public class StoreRequestTimeoutChannel extends JedisPubSub {
                                                 publishReturn(parsed);
                                             });
                         },
-                        () -> System.out.println("Received invalid store message: " + message));
+                        () -> plugin.getLogger().warn("Received invalid store message: {}", message));
     }
 }

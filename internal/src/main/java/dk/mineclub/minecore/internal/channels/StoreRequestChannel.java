@@ -36,6 +36,6 @@ public class StoreRequestChannel extends JedisPubSub {
                             object.add("request", GSON.toJsonTree(parsed));
                             plugin.getJedis().publish("MINECORE:REQUEST:SEND", object.toString());
                         },
-                        () -> System.out.println("Received invalid store message: " + message));
+                        () -> plugin.getLogger().warn("Received invalid store message: {}", message));
     }
 }

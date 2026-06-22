@@ -24,11 +24,14 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import okhttp3.*;
 import okio.BufferedSink;
 import org.jspecify.annotations.Nullable;
 
 public class RequestManager {
+    private static final Logger LOGGER = Logger.getLogger(RequestManager.class.getName());
     private final MineCoreApi mineCoreApi;
     private static final @Nullable MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
     private static final RequestBody EMPTY_REQUEST_BODY =
@@ -106,9 +109,9 @@ public class RequestManager {
                 return createdRequest;
             }
 
-            System.out.println(responseBody);
+            LOGGER.warning("createRequest responded with non-success body: " + responseBody);
         } catch (Exception ex) {
-            System.out.println("Failed to create request, " + ex.getMessage());
+            LOGGER.log(Level.WARNING, "Failed to create request, " + ex.getMessage(), ex);
         }
 
         return null;
@@ -127,7 +130,7 @@ public class RequestManager {
             ResponseBody body = response.body();
             return mineCoreApi.getGson().fromJson(body.string(), RequestActionResponse.class);
         } catch (Exception ex) {
-            System.out.println("Failed to accept request, " + ex.getMessage());
+            LOGGER.log(Level.WARNING, "Failed to accept request, " + ex.getMessage(), ex);
         }
 
         return null;
@@ -146,7 +149,7 @@ public class RequestManager {
             ResponseBody body = response.body();
             return mineCoreApi.getGson().fromJson(body.string(), RequestActionResponse.class);
         } catch (Exception ex) {
-            System.out.println("Failed to cancel request, " + ex.getMessage());
+            LOGGER.log(Level.WARNING, "Failed to cancel request, " + ex.getMessage(), ex);
         }
 
         return null;
@@ -171,7 +174,7 @@ public class RequestManager {
             ResponseBody body = response.body();
             return mineCoreApi.getGson().fromJson(body.string(), RequestActionResponse.class);
         } catch (Exception ex) {
-            System.out.println("Failed to accept vote, " + ex.getMessage());
+            LOGGER.log(Level.WARNING, "Failed to accept vote, " + ex.getMessage(), ex);
         }
 
         return null;
@@ -242,7 +245,7 @@ public class RequestManager {
             // Object response (withMeta=true)
             return mineCoreApi.getGson().fromJson(element, GetRequestsResponse.class);
         } catch (Exception ex) {
-            System.out.println("Failed to get requests, " + ex.getMessage());
+            LOGGER.log(Level.WARNING, "Failed to get requests, " + ex.getMessage(), ex);
         }
 
         return null;
@@ -334,7 +337,7 @@ public class RequestManager {
             // Object response (withMeta=true)
             return mineCoreApi.getGson().fromJson(element, GetVotesResponse.class);
         } catch (Exception ex) {
-            System.out.println("Failed to get votes, " + ex.getMessage());
+            LOGGER.log(Level.WARNING, "Failed to get votes, " + ex.getMessage(), ex);
         }
 
         return null;

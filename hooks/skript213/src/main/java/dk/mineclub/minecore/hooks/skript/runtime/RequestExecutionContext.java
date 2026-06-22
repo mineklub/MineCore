@@ -5,10 +5,12 @@ import dk.mineclub.minecore.api.model.StoreProduct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 import org.jetbrains.annotations.Nullable;
 
 /** Stores per-execution MineCore data for Skript syntaxes. */
 public final class RequestExecutionContext {
+    private static final Logger LOGGER = Logger.getLogger(RequestExecutionContext.class.getName());
     private static final ThreadLocal<@Nullable StoreCreatedRequest> LAST_CREATED_REQUEST =
             ThreadLocal.withInitial(() -> null);
     private static final ThreadLocal<@Nullable List<StoreProduct>> PENDING_PRODUCTS =
@@ -44,7 +46,7 @@ public final class RequestExecutionContext {
     public static boolean addPendingProduct(StoreProduct product) {
         List<StoreProduct> current = PENDING_PRODUCTS.get();
         if (current == null) {
-            System.out.println("Attempted to add a pending product outside of a valid scope");
+            LOGGER.warning("Attempted to add a pending product outside of a valid scope");
             return false;
         }
         current.add(product);

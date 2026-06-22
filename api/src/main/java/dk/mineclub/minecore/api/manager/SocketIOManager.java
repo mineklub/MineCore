@@ -94,23 +94,23 @@ public class SocketIOManager {
                 Socket.EVENT_CONNECT,
                 ignored -> {
                     isConnected = true;
-                    System.out.println("Socket.IO connected");
+                    LOGGER.info("Socket.IO connected");
                 });
 
         socket.on(
                 Socket.EVENT_DISCONNECT,
                 ignored -> {
                     isConnected = false;
-                    System.out.println("Socket.IO disconnected");
+                    LOGGER.info("Socket.IO disconnected");
                 });
 
         socket.on(
                 Socket.EVENT_CONNECT_ERROR,
                 args -> {
                     if (args.length > 0) {
-                        System.out.println("Socket.IO connection error: " + args[0]);
+                        LOGGER.warning("Socket.IO connection error: " + args[0]);
                     } else {
-                        System.out.println("Socket.IO connection error");
+                        LOGGER.warning("Socket.IO connection error");
                     }
                 });
 
@@ -118,7 +118,7 @@ public class SocketIOManager {
                 "request",
                 args -> {
                     if (args.length == 0 || args[0] == null) {
-                        System.out.println("Socket.IO request event received without payload");
+                        LOGGER.warning("Socket.IO request event received without payload");
                         return;
                     }
 
@@ -129,30 +129,31 @@ public class SocketIOManager {
                                         .fromJson(String.valueOf(args[0]), RequestEnvelope.class);
 
                         if (envelope == null || envelope.data == null) {
-                            System.out.println("Socket.IO request event payload was empty");
+                            LOGGER.warning("Socket.IO request event payload was empty");
                             return;
                         }
 
                         if (envelope.type != null
                                 && !"accept".equalsIgnoreCase(envelope.type)
                                 && !"cancel".equalsIgnoreCase(envelope.type)) {
-                            System.out.println(
+                            LOGGER.info(
                                     "Socket.IO request event ignored for type: " + envelope.type);
                             return;
                         }
 
                         new ReceiveRequestEvent(envelope.type, envelope.data).callEvent();
                     } catch (Exception ex) {
-                        System.out.println(
-                                "Failed to parse Socket.IO request event: " + ex.getMessage());
-                        ex.printStackTrace();
+                        LOGGER.log(
+                                Level.WARNING,
+                                "Failed to parse Socket.IO request event: " + ex.getMessage(),
+                                ex);
                     }
                 });
         socket.on(
                 "vote",
                 args -> {
                     if (args.length == 0 || args[0] == null) {
-                        System.out.println("Socket.IO vote event received without payload");
+                        LOGGER.warning("Socket.IO vote event received without payload");
                         return;
                     }
 
@@ -163,20 +164,22 @@ public class SocketIOManager {
                                         .fromJson(String.valueOf(args[0]), VoteEnvelope.class);
 
                         if (envelope == null || envelope.data == null) {
-                            System.out.println("Socket.IO vote event payload was empty");
+                            LOGGER.warning("Socket.IO vote event payload was empty");
                             return;
                         }
 
                         if (envelope.type != null && !"newVote".equalsIgnoreCase(envelope.type)) {
-                            System.out.println(
+                            LOGGER.info(
                                     "Socket.IO vote event ignored for type: " + envelope.type);
                             return;
                         }
 
                         new ReceiveVoteEvent(envelope.data).callEvent();
                     } catch (Exception ex) {
-                        System.out.println(
-                                "Failed to parse Socket.IO vote event: " + ex.getMessage());
+                        LOGGER.log(
+                                Level.WARNING,
+                                "Failed to parse Socket.IO vote event: " + ex.getMessage(),
+                                ex);
                     }
                 });
     }
