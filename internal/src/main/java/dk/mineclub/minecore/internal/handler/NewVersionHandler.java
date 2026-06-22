@@ -306,5 +306,10 @@ public class NewVersionHandler {
         return pendingRequest.message();
     }
 
+    public static int cancelPendingRequestsForPlayer(InternalPlugin plugin, Player player) {
+        return plugin.cancelPendingRequestsForPlayer(
+                PENDING_REQUESTS, player, PendingRequest::message, "new-version");
+    }
+
     private record PendingRequest(StoreRequestMessage message, String token) {}
 }

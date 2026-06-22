@@ -8,6 +8,8 @@ import dk.mineclub.minecore.internal.InternalPlugin;
 import dk.mineclub.minecore.internal.channels.StoreRequestMessage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.kyori.adventure.text.Component;
@@ -20,6 +22,21 @@ import okhttp3.Response;
 
 public class OldVersionHandler {
     private static final Gson GSON = new Gson();
+    private static final Map<String, StoreRequestMessage> PENDING_REQUESTS =
+            new ConcurrentHashMap<>();
+
+    private static void cachePendingRequest(Player player, StoreRequestMessage message) {
+        PENDING_REQUESTS.put(player.getUniqueId() + ":" + message.data().id(), message);
+    }
+
+    private static void clearPendingRequest(Player player, StoreRequestMessage message) {
+        PENDING_REQUESTS.remove(player.getUniqueId() + ":" + message.data().id());
+    }
+
+    public static int cancelPendingRequestsForPlayer(InternalPlugin plugin, Player player) {
+        return plugin.cancelPendingRequestsForPlayer(
+                PENDING_REQUESTS, player, Function.identity(), "old-version");
+    }
 
     static String getAcceptErrorKey(String apiMessage) {
         if (apiMessage == null || apiMessage.isBlank()) {
@@ -112,7 +129,7 @@ public class OldVersionHandler {
         }
     }
 
-    static void publishReturn(InternalPlugin plugin, StoreRequestMessage message) {
+    public static void publishReturn(InternalPlugin plugin, StoreRequestMessage message) {
         JsonObject object = new JsonObject();
         object.addProperty("service", message.data().service().id());
         object.addProperty("mcaccount", message.data().mcaccount().uuid());
@@ -120,6 +137,8 @@ public class OldVersionHandler {
     }
 
     public static void handle(InternalPlugin plugin, Player player, StoreRequestMessage message) {
+        cachePendingRequest(player, message);
+
         Component header =
                 plugin.getLang()
                         .get(
@@ -161,6 +180,8 @@ public class OldVersionHandler {
                                                 .clickEvent(
                                                         ClickEvent.callback(
                                                                 ignored -> {
+                                                                    clearPendingRequest(
+                                                                            player, message);
                                                                     handleRequestResponse(
                                                                             plugin,
                                                                             player,
@@ -183,6 +204,8 @@ public class OldVersionHandler {
                                                 .clickEvent(
                                                         ClickEvent.callback(
                                                                 ignored -> {
+                                                                    clearPendingRequest(
+                                                                            player, message);
                                                                     handleRequestResponse(
                                                                             plugin,
                                                                             player,
