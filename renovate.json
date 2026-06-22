@@ -6,7 +6,8 @@
   "packageRules": [
     {
       "matchPackageNames": [
-        "com.github.SkriptLang:Skript"
+        "com.github.SkriptLang:Skript",
+        "io.papermc.paper:paper-api"
       ],
       "enabled": false
     },

@@ -9,11 +9,9 @@ socketclient = "2.1.2"
 lombok = "1.18.46"
 velocity = "3.5.0-SNAPSHOT"
 packetevents = "2.13.0"
-paper = "26.1.2.build.+"
 jedis = "7.5.2"
 guava = "33.6.0-jre"
 json = "20250517"
-okio = "3.17.0"
 skriptnew = "2.15.3"
 skript213 = "2.13.2"
 skript295 = "2.9.5"
@@ -32,11 +30,9 @@ socketclient = {group = "io.socket", name = "socket.io-client", version.ref = "s
 lombok = {group = "org.projectlombok", name = "lombok", version.ref = "lombok"}
 velocity = {group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity"}
 packetevents-api = {group = "com.github.retrooper", name = "packetevents-api", version.ref = "packetevents"}
-paper = {group = "io.papermc.paper", name = "paper-api", version.ref = "paper"}
 jedis = {module = "redis.clients:jedis", version.ref = "jedis"}
 guava = {group = "com.google.guava", name = "guava", version.ref = "guava"}
 json = {group = "org.json", name = "json", version.ref = "json"}
-okio = {group = "com.squareup.okio", name = "okio", version.ref = "okio"}
 skriptnew = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skriptnew"}
 skript213 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript213"}
 skript295 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript295"}

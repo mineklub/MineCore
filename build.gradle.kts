@@ -11,7 +11,7 @@ val paperApiVersion =
         when (targetJavaVersion) {
             17 -> "1.20.4-R0.1-SNAPSHOT"
             21 -> "1.21.11-R0.1-SNAPSHOT"
-            else -> "26.1.2.build.+"
+            else -> "26.2.build.+"
         }
 
 require(targetJavaVersion == 17 || targetJavaVersion == 21 || targetJavaVersion == 25) {
