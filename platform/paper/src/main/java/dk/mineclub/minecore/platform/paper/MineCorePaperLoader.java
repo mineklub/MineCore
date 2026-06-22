@@ -14,7 +14,7 @@ public class MineCorePaperLoader implements PluginLoader {
     private static final String GENERATED_RESOURCE =
             "minecore-loader-libraries-generated.properties";
     private static final String DEFAULT_MINECORE_DEPENDENCY =
-            "com.github.mineklub.MineCore:api:c4b2613be3";
+            "com.github.mineklub.MineCore:api:f8099cd";
 
     private static final int JAVA_8 = 8;
     private static final int JAVA_11 = 11;
