@@ -110,9 +110,6 @@ fun MavenPom.applyApiPomMetadata() {
 }
 
 signing {
-    val signingKeyId =
-            providers.gradleProperty("signingInMemoryKeyId")
-                    .orElse(providers.environmentVariable("SIGNING_KEY_ID"))
     val signingKey =
             providers.gradleProperty("signingInMemoryKey")
                     .orElse(providers.environmentVariable("SIGNING_KEY"))
@@ -121,7 +118,7 @@ signing {
                     .orElse(providers.environmentVariable("SIGNING_PASSWORD"))
 
     if (signingKey.isPresent && signingPassword.isPresent) {
-        useInMemoryPgpKeys(signingKeyId.orNull, signingKey.orNull, signingPassword.orNull)
+        useInMemoryPgpKeys(signingKey.orNull, signingPassword.orNull)
     } else {
         useGpgCmd()
     }
