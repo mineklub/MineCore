@@ -25,6 +25,13 @@ dependencyResolutionManagement {
         maven("https://jitpack.io") {
             name = "jitpack"
         }
+        maven("https://central.sonatype.com/repository/maven-snapshots/") {
+            name = "Central Portal Snapshots"
+            mavenContent {
+                snapshotsOnly()
+                includeGroupAndSubgroups("dk.mineclub")
+            }
+        }
     }
 }
 
