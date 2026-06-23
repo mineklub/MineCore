@@ -1,4 +1,4 @@
-group = "dk.minecore"
+group = "dk.mineclub.minecore"
 version = providers.gradleProperty("minecoreVersion").orElse("0.1.0").get()
 
 val targetJavaVersion =
