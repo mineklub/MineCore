@@ -7,6 +7,8 @@ import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.MavenPom
+import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
+import org.gradle.plugins.signing.Sign
 
 plugins {
     id("java-library")
@@ -161,4 +163,10 @@ extensions.configure<PublishingExtension> {
             }
         }
     }
+}
+
+// Add explicit dependencies from publish tasks to signMavenPublication task
+tasks.withType<PublishToMavenRepository> {
+    val signingTasks = tasks.withType<Sign>()
+    dependsOn(signingTasks)
 }
