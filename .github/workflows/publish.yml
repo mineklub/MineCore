@@ -102,10 +102,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build platform jars
-        run: ./gradlew --no-daemon :platform-bukkit:clean :platform-paper:clean :platform-bukkit:assemble :platform-paper:assemble --full-stacktrace
+        run: ./gradlew --no-daemon :platform-bukkit:clean :platform-paper:clean :platform-bukkit:assemble :platform-paper:assemble :hooks:assemble --full-stacktrace
       - name: Upload jars to release
         uses: softprops/action-gh-release@v3
         with:
           files: |
             platform/bukkit/build/libs/MineCore-bukkit-*.jar
             platform/paper/build/libs/MineCore-paper-*.jar
+            hooks/*/build/libs/*.jar
