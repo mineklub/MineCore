@@ -1,6 +1,5 @@
 package dk.mineclub.minecore.hooks.skript;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
@@ -29,8 +28,6 @@ import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
-import org.skriptlang.skript.lang.properties.Property;
-import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
@@ -153,6 +150,7 @@ final class SkriptRegistrations {
                                 ExprMineCoreRequestProductProperty.class, Object.class)
                         .addPatterns(
                                 "[the] id of %requestproduct%",
+                                "[the] name of %requestproduct%",
                                 "[the] price of %requestproduct%",
                                 "[the] quantity of %requestproduct%",
                                 "[the] created[ ]at of %requestproduct%",
@@ -192,6 +190,7 @@ final class SkriptRegistrations {
                 SyntaxInfo.Expression.builder(ExprMineCoreNewProductProperty.class, Object.class)
                         .addPatterns(
                                 "[the] id of %newproduct%",
+                                "[the] name of %newproduct%",
                                 "[the] price of %newproduct%",
                                 "[the] quantity of %newproduct%",
                                 "[the] subscription[ ]days of %newproduct%")
@@ -334,12 +333,6 @@ final class SkriptRegistrations {
                         .name("Request Product")
                         .description(
                                 "A product on an existing (created or received) MineCore request.")
-                        .property(
-                                Property.NAME,
-                                "name of product",
-                                Skript.instance(),
-                                ExpressionPropertyHandler.of(
-                                        StoreCreatedRequest.Product::getProductName, String.class))
                         .since("1.0")
                         .parser(
                                 new Parser<StoreCreatedRequest.Product>() {
@@ -368,11 +361,6 @@ final class SkriptRegistrations {
                         .name("New Product")
                         .description(
                                 "A product attached to an outgoing MineCore request before creation.")
-                        .property(
-                                Property.NAME,
-                                "name of product",
-                                Skript.instance(),
-                                ExpressionPropertyHandler.of(StoreProduct::getName, String.class))
                         .since("1.0")
                         .parser(
                                 new Parser<StoreProduct>() {

@@ -331,12 +331,6 @@ final class SkriptRegistrations {
                         .description(
                                 "A product on an existing (created or received) MineCore request.")
                         .since("1.0")
-                        .property(
-                                Property.NAME,
-                                "name of product",
-                                Skript.instance(),
-                                PropertyHandler.ExpressionPropertyHandler.of(
-                                        StoreCreatedRequest.Product::getProductName, String.class))
                         .parser(
                                 new Parser<>() {
                                     @Override
@@ -365,12 +359,6 @@ final class SkriptRegistrations {
                         .description(
                                 "A product attached to an outgoing MineCore request before creation.")
                         .since("1.0")
-                        .property(
-                                Property.NAME,
-                                "name of product",
-                                Skript.instance(),
-                                PropertyHandler.ExpressionPropertyHandler.of(
-                                        StoreProduct::getName, String.class))
                         .parser(
                                 new Parser<>() {
                                     @Override
