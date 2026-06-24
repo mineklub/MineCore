@@ -97,15 +97,15 @@ final class SkriptRegistrations {
                     "add [a] product %string% [named %-string%] [price %-number%] [quantity %-number%] [subscription[ ]days %-number%] [to [the] [minecore] request]");
             Skript.registerEffect(
                     EffMineCoreAcceptRequest.class,
-                    "accept [minecore] request %object%",
+                    "accept [minecore] request %minecore object%",
                     "accept [minecore] request [with] id %string%");
             Skript.registerEffect(
                     EffMineCoreAcceptVote.class,
-                    "accept [minecore] vote %object%",
+                    "accept [minecore] vote %minecore object%",
                     "accept [minecore] vote [with] id %string%");
             Skript.registerEffect(
                     EffMineCoreCancelRequest.class,
-                    "cancel [minecore] request %object%",
+                    "cancel [minecore] request %minecore object%",
                     "cancel [minecore] request [with] id %string%");
             Skript.registerEffect(
                     EffMineCoreCreateServerPay.class,
@@ -259,22 +259,22 @@ final class SkriptRegistrations {
                     ExprMineCoreRequestProductProperty.class,
                     Object.class,
                     ExpressionType.PROPERTY,
-                    "[the] id of %requestproduct%",
-                    "[the] name of %requestproduct%",
-                    "[the] price of %requestproduct%",
-                    "[the] quantity of %requestproduct%",
-                    "[the] created[ ]at of %requestproduct%",
-                    "[the] updated[ ]at of %requestproduct%");
+                    "[the] id of minecore %requestproduct%",
+                    "[the] name of minecore %requestproduct%",
+                    "[the] price of minecore %requestproduct%",
+                    "[the] quantity of minecore %requestproduct%",
+                    "[the] created[ ]at of minecore %requestproduct%",
+                    "[the] updated[ ]at of minecore %requestproduct%");
             Skript.registerExpression(
                     ExprMineCoreCreatedRequestProperty.class,
                     Object.class,
                     ExpressionType.PROPERTY,
-                    "[the] id of %createdrequest%",
-                    "[the] service of %createdrequest%",
-                    "[the] server status of %createdrequest%",
-                    "[the] client status of %createdrequest%",
-                    "[the] created[ ]at of %createdrequest%",
-                    "[the] updated[ ]at of %createdrequest%");
+                    "[the] id of minecore %createdrequest%",
+                    "[the] service of minecore %createdrequest%",
+                    "[the] server status of minecore %createdrequest%",
+                    "[the] client status of minecore %createdrequest%",
+                    "[the] created[ ]at of minecore %createdrequest%",
+                    "[the] updated[ ]at of minecore %createdrequest%");
             Skript.registerExpression(
                     ExprMineCoreNewRequestProducts.class,
                     StoreProduct.class,
@@ -289,20 +289,20 @@ final class SkriptRegistrations {
                     ExprMineCoreNewProductProperty.class,
                     Object.class,
                     ExpressionType.PROPERTY,
-                    "[the] id of %newproduct%",
-                    "[the] name of %newproduct%",
-                    "[the] price of %newproduct%",
-                    "[the] quantity of %newproduct%",
-                    "[the] subscription[ ]days of %newproduct%");
+                    "[the] id of minecore %newproduct%",
+                    "[the] name of minecore %newproduct%",
+                    "[the] price of minecore %newproduct%",
+                    "[the] quantity of minecore %newproduct%",
+                    "[the] subscription[ ]days of minecore %newproduct%");
             Skript.registerExpression(
                     ExprMineCoreMappedVoteProperty.class,
                     Object.class,
                     ExpressionType.PROPERTY,
-                    "[the] id of %mappedvote%",
-                    "[the] status of %mappedvote%",
-                    "[the] created[ ]at of %mappedvote%",
-                    "[the] updated[ ]at of %mappedvote%",
-                    "[the] offlineplayer of %mappedvote%");
+                    "[the] id of minecore %mappedvote%",
+                    "[the] status of minecore %mappedvote%",
+                    "[the] created[ ]at of minecore %mappedvote%",
+                    "[the] updated[ ]at of minecore %mappedvote%",
+                    "[the] offlineplayer of minecore %mappedvote%");
         } catch (Exception e) {
             Skript.error("Failed to register MineCore expressions: " + e.getMessage());
         }

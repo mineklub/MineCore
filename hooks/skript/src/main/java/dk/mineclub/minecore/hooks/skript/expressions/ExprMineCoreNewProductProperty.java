@@ -39,7 +39,7 @@ public class ExprMineCoreNewProductProperty extends SimpleExpression<Object> {
         Object value =
                 switch (property) {
                     case 0 -> product.getId();
-                    case 1  -> product.getName();
+                    case 1 -> product.getName();
                     case 2 -> product.getPrice();
                     case 3 -> product.getQuantity();
                     case 4 -> product.getSubscriptionDays();

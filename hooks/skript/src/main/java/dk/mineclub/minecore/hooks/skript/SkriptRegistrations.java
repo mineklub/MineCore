@@ -99,7 +99,7 @@ final class SkriptRegistrations {
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffMineCoreAcceptRequest.class)
                         .addPatterns(
-                                "accept [minecore] request %object%",
+                                "accept [minecore] request %minecore object%",
                                 "accept [minecore] request [with] id %string%")
                         .build());
 
@@ -107,7 +107,7 @@ final class SkriptRegistrations {
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffMineCoreAcceptVote.class)
                         .addPatterns(
-                                "accept [minecore] vote %object%",
+                                "accept [minecore] vote %minecore object%",
                                 "accept [minecore] vote [with] id %string%")
                         .build());
 
@@ -115,7 +115,7 @@ final class SkriptRegistrations {
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffMineCoreCancelRequest.class)
                         .addPatterns(
-                                "cancel [minecore] request %object%",
+                                "cancel [minecore] request %minecore object%",
                                 "cancel [minecore] request [with] id %string%")
                         .build());
 
@@ -149,12 +149,12 @@ final class SkriptRegistrations {
                 SyntaxInfo.Expression.builder(
                                 ExprMineCoreRequestProductProperty.class, Object.class)
                         .addPatterns(
-                                "[the] id of %requestproduct%",
-                                "[the] name of %requestproduct%",
-                                "[the] price of %requestproduct%",
-                                "[the] quantity of %requestproduct%",
-                                "[the] created[ ]at of %requestproduct%",
-                                "[the] updated[ ]at of %requestproduct%")
+                                "[the] id of minecore %requestproduct%",
+                                "[the] name of minecore %requestproduct%",
+                                "[the] price of minecore %requestproduct%",
+                                "[the] quantity of minecore %requestproduct%",
+                                "[the] created[ ]at of minecore %requestproduct%",
+                                "[the] updated[ ]at of minecore %requestproduct%")
                         .build());
 
         syntaxRegistry.register(
@@ -162,12 +162,12 @@ final class SkriptRegistrations {
                 SyntaxInfo.Expression.builder(
                                 ExprMineCoreCreatedRequestProperty.class, Object.class)
                         .addPatterns(
-                                "[the] id of %createdrequest%",
-                                "[the] service of %createdrequest%",
-                                "[the] server status of %createdrequest%",
-                                "[the] client status of %createdrequest%",
-                                "[the] created[ ]at of %createdrequest%",
-                                "[the] updated[ ]at of %createdrequest%")
+                                "[the] id of minecore %createdrequest%",
+                                "[the] service of minecore %createdrequest%",
+                                "[the] server status of minecore %createdrequest%",
+                                "[the] client status of minecore %createdrequest%",
+                                "[the] created[ ]at of minecore %createdrequest%",
+                                "[the] updated[ ]at of minecore %createdrequest%")
                         .build());
 
         syntaxRegistry.register(
@@ -189,22 +189,22 @@ final class SkriptRegistrations {
                 SyntaxRegistry.EXPRESSION,
                 SyntaxInfo.Expression.builder(ExprMineCoreNewProductProperty.class, Object.class)
                         .addPatterns(
-                                "[the] id of %newproduct%",
-                                "[the] name of %newproduct%",
-                                "[the] price of %newproduct%",
-                                "[the] quantity of %newproduct%",
-                                "[the] subscription[ ]days of %newproduct%")
+                                "[the] id of minecore %newproduct%",
+                                "[the] name of minecore %newproduct%",
+                                "[the] price of minecore %newproduct%",
+                                "[the] quantity of minecore %newproduct%",
+                                "[the] subscription[ ]days of minecore %newproduct%")
                         .build());
 
         syntaxRegistry.register(
                 SyntaxRegistry.EXPRESSION,
                 SyntaxInfo.Expression.builder(ExprMineCoreMappedVoteProperty.class, Object.class)
                         .addPatterns(
-                                "[the] id of %mappedvote%",
-                                "[the] status of %mappedvote%",
-                                "[the] created[ ]at of %mappedvote%",
-                                "[the] updated[ ]at of %mappedvote%",
-                                "[the] offlineplayer of %mappedvote%")
+                                "[the] id of minecore %mappedvote%",
+                                "[the] status of minecore %mappedvote%",
+                                "[the] created[ ]at of minecore %mappedvote%",
+                                "[the] updated[ ]at of minecore %mappedvote%",
+                                "[the] offlineplayer of minecore %mappedvote%")
                         .build());
     }
 
