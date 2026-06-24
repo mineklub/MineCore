@@ -34,10 +34,10 @@ public abstract class SkriptHookDownloader {
         // Maps hook versions to their supported version ranges and Java versions
         hookVersionRanges.add(
                 new HookVersionRange(
-                        "skript22dev36", "2.2", "2.6.999", new int[] {8, 11, 17, 21, 25}));
+                        "skript22dev36", "2.2", "2.5.999", new int[] {8, 11, 17, 21, 25}));
         hookVersionRanges.add(
                 new HookVersionRange(
-                        "skript295", "2.9", "2.12.999", new int[] {8, 11, 17, 21, 25}));
+                        "skript295", "2.6.4", "2.12.999", new int[] {8, 11, 17, 21, 25}));
         hookVersionRanges.add(
                 new HookVersionRange("skript213", "2.13", "2.14.999", new int[] {17, 21, 25}));
         hookVersionRanges.add(
@@ -52,14 +52,14 @@ public abstract class SkriptHookDownloader {
      */
     public void downloadIfNeeded(Path hooksDir) {
         int javaVersion = detectJavaFeatureVersion();
-        String classifier = getClassifierForJavaVersion(javaVersion);
+        String classifier = getJvmClassifier(javaVersion);
 
         if (classifier == null) {
             plugin.getLogger()
                     .warning(
                             "Skript hook not available for Java version "
                                     + javaVersion
-                                    + ". Supported versions: 8, 11, 17, 21, 25");
+                                    + ". Supported Java versions: 8, 11, 17, 21, 25");
             return;
         }
 
@@ -234,6 +234,7 @@ public abstract class SkriptHookDownloader {
         }
     }
 
+    // TODO: No Skript version available for Java 16. Supported Java versions: 8, 11, 17, 21, 25
     private static int detectJavaFeatureVersion() {
         String specVersion = System.getProperty("java.specification.version", "").trim();
         if (specVersion.isEmpty()) {
@@ -251,27 +252,22 @@ public abstract class SkriptHookDownloader {
         }
     }
 
-    /**
-     * Maps Java version to classifier string. If exact version is not supported, falls back to the
-     * nearest lower supported version. E.g., Java 16 falls back to jvm11, Java 26 falls back to
-     * jvm25.
-     *
-     * @param javaVersion the Java major version (e.g., 8, 17, 21)
-     * @return the classifier or null if no compatible version found
-     */
-    private String getClassifierForJavaVersion(int javaVersion) {
-        // Supported Java versions with their classifiers, in descending order
-        int[] supportedVersions = {25, 21, 17, 11, 8};
-        String[] classifiers = {"jvm25", "jvm21", "jvm17", "jvm11", "jvm8"};
-
-        // Find the highest supported version that is <= requested version
-        for (int i = 0; i < supportedVersions.length; i++) {
-            if (javaVersion >= supportedVersions[i]) {
-                return classifiers[i];
-            }
+    private static String getJvmClassifier(int javaFeature) {
+        if (javaFeature >= 25) {
+            return "jvm25";
         }
-
-        // No supported version is available for this Java version
+        if (javaFeature >= 21) {
+            return "jvm21";
+        }
+        if (javaFeature >= 17) {
+            return "jvm17";
+        }
+        if (javaFeature >= 11) {
+            return "jvm11";
+        }
+        if (javaFeature >= 8) {
+            return "jvm8";
+        }
         return null;
     }
 

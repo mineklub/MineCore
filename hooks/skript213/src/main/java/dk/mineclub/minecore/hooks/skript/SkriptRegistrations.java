@@ -101,7 +101,7 @@ final class SkriptRegistrations {
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffMineCoreAcceptRequest.class)
                         .addPatterns(
-                                "accept [minecore] request %minecore object%",
+                                "accept [minecore] request %object%",
                                 "accept [minecore] request [with] id %string%")
                         .build());
 
@@ -109,7 +109,7 @@ final class SkriptRegistrations {
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffMineCoreAcceptVote.class)
                         .addPatterns(
-                                "accept [minecore] vote %minecore object%",
+                                "accept [minecore] vote %object%",
                                 "accept [minecore] vote [with] id %string%")
                         .build());
 
@@ -117,7 +117,7 @@ final class SkriptRegistrations {
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffMineCoreCancelRequest.class)
                         .addPatterns(
-                                "cancel [minecore] request %minecore object%",
+                                "cancel [minecore] request %object%",
                                 "cancel [minecore] request [with] id %string%")
                         .build());
 

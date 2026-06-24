@@ -86,15 +86,15 @@ final class SkriptRegistrations {
                     "add [a] product %string% [named %-string%] [price %-number%] [quantity %-number%] [subscription[ ]days %-number%] [to [the] [minecore] request]");
             Skript.registerEffect(
                     EffMineCoreAcceptRequest.class,
-                    "accept [minecore] request %minecore object%",
+                    "accept [minecore] request %object%",
                     "accept [minecore] request [with] id %string%");
             Skript.registerEffect(
                     EffMineCoreAcceptVote.class,
-                    "accept [minecore] vote %minecore object%",
+                    "accept [minecore] vote %object%",
                     "accept [minecore] vote [with] id %string%");
             Skript.registerEffect(
                     EffMineCoreCancelRequest.class,
-                    "cancel [minecore] request %minecore object%",
+                    "cancel [minecore] request %object%",
                     "cancel [minecore] request [with] id %string%");
             Skript.registerEffect(
                     EffMineCoreCreateServerPay.class,

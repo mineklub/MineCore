@@ -109,4 +109,3 @@ jobs:
           files: |
             platform/bukkit/build/libs/MineCore-bukkit-*.jar
             platform/paper/build/libs/MineCore-paper-*.jar
-            hooks/*/build/libs/*.jar
