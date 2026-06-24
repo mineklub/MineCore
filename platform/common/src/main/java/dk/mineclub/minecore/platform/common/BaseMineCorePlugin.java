@@ -3,6 +3,7 @@ package dk.mineclub.minecore.platform.common;
 import dk.mineclub.minecore.api.MineCoreApi;
 import dk.mineclub.minecore.platform.common.bridge.CommonEventBridge;
 import dk.mineclub.minecore.platform.common.hooks.CommonHookLoader;
+import dk.mineclub.minecore.platform.common.hooks.SkriptHookDownloader;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /** Shared plugin lifecycle for Bukkit-compatible platform modules. */
@@ -12,6 +13,8 @@ public abstract class BaseMineCorePlugin extends JavaPlugin {
     private CommonHookLoader hookLoader;
 
     protected abstract String platformName();
+
+    protected abstract SkriptHookDownloader createSkriptDownloader();
 
     public MineCoreApi getApi() {
         return api;
@@ -28,8 +31,11 @@ public abstract class BaseMineCorePlugin extends JavaPlugin {
         this.api = new MineCoreApi(null, token);
         this.eventBridge = new CommonEventBridge(this);
         this.api.getAsyncEventBus().register(eventBridge);
-        this.hookLoader = new CommonHookLoader(this);
-        this.hookLoader.enable();
+
+        // Load hooks with optional Skript auto-install
+        boolean autoInstallSkript = getConfig().getBoolean("hooks.auto-install-skript", true);
+        this.hookLoader = new CommonHookLoader(this, createSkriptDownloader());
+        this.hookLoader.enable(autoInstallSkript);
 
         getLogger().info("MineCore " + platformName() + " plugin enabled");
     }

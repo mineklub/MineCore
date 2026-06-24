@@ -20,13 +20,20 @@ public final class CommonHookLoader {
     private static final String METADATA_RESOURCE = "minecore-hook.properties";
 
     private final Plugin plugin;
+    private final SkriptHookDownloader skriptDownloader;
     private final List<LoadedHook> loadedHooks = new ArrayList<>();
 
-    public CommonHookLoader(Plugin plugin) {
+    public CommonHookLoader(Plugin plugin, SkriptHookDownloader skriptDownloader) {
         this.plugin = plugin;
+        this.skriptDownloader = skriptDownloader;
     }
 
-    public void enable() {
+    /**
+     * Enables hook loading and optionally auto-installs Skript hook.
+     *
+     * @param autoInstallSkript if true, auto-downloads Skript hook if needed
+     */
+    public void enable(boolean autoInstallSkript) {
         Path hooksDir = plugin.getDataFolder().toPath().resolve("hooks");
         try {
             Files.createDirectories(hooksDir);
@@ -35,6 +42,15 @@ public final class CommonHookLoader {
             return;
         }
 
+        // Download Skript hook if needed and enabled
+        if (autoInstallSkript) {
+            skriptDownloader.downloadIfNeeded(hooksDir);
+        }
+
+        loadHooksFromDirectory(hooksDir);
+    }
+
+    private void loadHooksFromDirectory(Path hooksDir) {
         List<Path> jars = new ArrayList<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(hooksDir, "*.jar")) {
             for (Path path : stream) {

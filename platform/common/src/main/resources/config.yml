@@ -1,1 +1,6 @@
 token: ""
+
+# Hooks configuration
+hooks:
+    # Whether to automatically install Skript hooks on startup (default: true)
+    auto-install-skript: true

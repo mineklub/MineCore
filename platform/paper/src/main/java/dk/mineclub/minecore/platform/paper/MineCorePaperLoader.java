@@ -14,7 +14,7 @@ public class MineCorePaperLoader implements PluginLoader {
     private static final String GENERATED_RESOURCE =
             "minecore-loader-libraries-generated.properties";
     private static final String DEFAULT_MINECORE_DEPENDENCY =
-            "com.github.mineklub.MineCore:api:f8099cd";
+            "dk.mineclub.minecore:api:0.1.0-SNAPSHOT";
 
     private static final int JAVA_8 = 8;
     private static final int JAVA_11 = 11;
@@ -31,8 +31,6 @@ public class MineCorePaperLoader implements PluginLoader {
                                 "default",
                                 "https://maven-central.storage-download.googleapis.com/maven2")
                         .build());
-        resolver.addRepository(
-                new RemoteRepository.Builder("jitpack", "default", "https://jitpack.io").build());
         resolver.addRepository(
                 new RemoteRepository.Builder(
                                 "paper",

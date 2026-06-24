@@ -17,6 +17,7 @@ dependencies {
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
+    compileOnly(libs.okhttp)
 }
 
 java {

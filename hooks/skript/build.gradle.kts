@@ -63,6 +63,8 @@ additionalHookClassifiersByJavaVersion.forEach { (javaVersion, classifier) ->
 
     tasks.register<Jar>("jarJava$javaVersion") {
         description = "Builds hooks jar targeting Java $javaVersion."
+        archiveBaseName.set("skript")
+        archiveVersion.set("")
         archiveClassifier.set(classifier)
         from(compileTask.flatMap { it.destinationDirectory })
         from(tasks.named("processResources"))
