@@ -144,16 +144,6 @@ mavenPublishing {
 }
 
 extensions.configure<PublishingExtension> {
-    val variantSourcesJar = tasks.register<Jar>("variantSourcesJar") {
-        archiveClassifier.set("sources")
-        from(sourceSets.main.get().allSource)
-    }
-    val variantJavadocJar = tasks.register<Jar>("variantJavadocJar") {
-        archiveClassifier.set("javadoc")
-        from(tasks.named("javadoc"))
-        dependsOn(tasks.named("javadoc"))
-    }
-
     publications.withType(MavenPublication::class.java).configureEach {
         if (name == "maven") {
             additionalApiArtifacts.forEach { artifact(it.jarTask) }
@@ -168,10 +158,10 @@ extensions.configure<PublishingExtension> {
             artifact(variant.jarTask) {
                 classifier = null
             }
-            artifact(variantSourcesJar) {
+            artifact(tasks.named("sourcesJar")) {
                 classifier = "sources"
             }
-            artifact(variantJavadocJar) {
+            artifact(tasks.named("plainJavadocJar")) {
                 classifier = "javadoc"
             }
             pom {
