@@ -7,9 +7,9 @@ import ch.njol.util.Kleenean;
 import dk.mineclub.minecore.api.manager.RequestManager;
 import dk.mineclub.minecore.api.model.ServerPayRequest;
 import dk.mineclub.minecore.api.model.ServerPayResponse;
-import dk.mineclub.minecore.hooks.skript.runtime.MineCoreSkriptApi;
 import dk.mineclub.minecore.hooks.skript.events.MineCoreServerPayFailedEvent;
 import dk.mineclub.minecore.hooks.skript.events.MineCoreServerPaySuccessEvent;
+import dk.mineclub.minecore.hooks.skript.runtime.MineCoreSkriptApi;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
@@ -57,7 +57,9 @@ public class EffMineCoreCreateServerPay extends Effect {
                                 .build());
         if (response != null && response.isSuccess()) {
             Double serviceBalance =
-                    response.getPayment() == null ? null : response.getPayment().getServiceBalance();
+                    response.getPayment() == null
+                            ? null
+                            : response.getPayment().getServiceBalance();
             Bukkit.getPluginManager()
                     .callEvent(
                             new MineCoreServerPaySuccessEvent(
