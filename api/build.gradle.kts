@@ -182,6 +182,10 @@ extensions.configure<PublishingExtension> {
 }
 
 // Add explicit dependencies from publish tasks to signMavenPublication task
+tasks.withType<Sign>().configureEach {
+    dependsOn(tasks.named("plainJavadocJar"), tasks.named("sourcesJar"))
+}
+
 tasks.withType<PublishToMavenRepository> {
     val signingTasks = tasks.withType<Sign>()
     dependsOn(signingTasks)
