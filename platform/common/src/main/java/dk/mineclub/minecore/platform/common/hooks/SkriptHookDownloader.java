@@ -52,9 +52,9 @@ public abstract class SkriptHookDownloader {
      */
     public void downloadIfNeeded(Path hooksDir) {
         int javaVersion = detectJavaFeatureVersion();
-        String classifier = getJvmClassifier(javaVersion);
+        int classifier = getJvmClassifier(javaVersion);
 
-        if (classifier == null) {
+        if (classifier == 1) {
             plugin.getLogger()
                     .warning(
                             "Skript hook not available for Java version "
@@ -70,7 +70,7 @@ public abstract class SkriptHookDownloader {
             return;
         }
 
-        String bestSkriptVersion = findBestSkriptVersion(javaVersion, skriptPluginVersion);
+        String bestSkriptVersion = findBestSkriptVersion(classifier, skriptPluginVersion);
 
         if (bestSkriptVersion == null) {
             plugin.getLogger()
@@ -190,11 +190,11 @@ public abstract class SkriptHookDownloader {
         }
     }
 
-    private void downloadHook(String skriptVersion, String classifier, Path targetPath) {
+    private void downloadHook(String skriptVersion, int classifier, Path targetPath) {
         String downloadUrl =
                 DOWNLOAD_URL_BASE
                         .replace("{skriptVersion}", skriptVersion)
-                        .replace("{classifier}", classifier);
+                        .replace("{classifier}", "jvm" + classifier);
 
         try {
             plugin.getLogger()
@@ -234,7 +234,6 @@ public abstract class SkriptHookDownloader {
         }
     }
 
-    // TODO: No Skript version available for Java 16. Supported Java versions: 8, 11, 17, 21, 25
     private static int detectJavaFeatureVersion() {
         String specVersion = System.getProperty("java.specification.version", "").trim();
         if (specVersion.isEmpty()) {
@@ -252,23 +251,23 @@ public abstract class SkriptHookDownloader {
         }
     }
 
-    private static String getJvmClassifier(int javaFeature) {
+    private static int getJvmClassifier(int javaFeature) {
         if (javaFeature >= 25) {
-            return "jvm25";
+            return 25;
         }
         if (javaFeature >= 21) {
-            return "jvm21";
+            return 21;
         }
         if (javaFeature >= 17) {
-            return "jvm17";
+            return 17;
         }
         if (javaFeature >= 11) {
-            return "jvm11";
+            return 11;
         }
         if (javaFeature >= 8) {
-            return "jvm8";
+            return 8;
         }
-        return null;
+        return 1;
     }
 
     /** Internal class representing a hook version range with supported Java versions. */
