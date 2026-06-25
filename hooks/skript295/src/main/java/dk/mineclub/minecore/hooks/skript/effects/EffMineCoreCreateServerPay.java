@@ -6,7 +6,11 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import dk.mineclub.minecore.api.manager.RequestManager;
 import dk.mineclub.minecore.api.model.ServerPayRequest;
+import dk.mineclub.minecore.api.model.ServerPayResponse;
 import dk.mineclub.minecore.hooks.skript.runtime.MineCoreSkriptApi;
+import dk.mineclub.minecore.hooks.skript.events.MineCoreServerPayFailedEvent;
+import dk.mineclub.minecore.hooks.skript.events.MineCoreServerPaySuccessEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -45,11 +49,30 @@ public class EffMineCoreCreateServerPay extends Effect {
             return;
         }
 
-        requestManager.createServerPay(
-                ServerPayRequest.builder()
-                        .mcaccount(mcaccountValue.getUniqueId().toString())
-                        .amount(payAmount)
-                        .build());
+        ServerPayResponse response =
+                requestManager.createServerPay(
+                        ServerPayRequest.builder()
+                                .mcaccount(mcaccountValue.getUniqueId().toString())
+                                .amount(payAmount)
+                                .build());
+        if (response != null && response.isSuccess()) {
+            Double serviceBalance =
+                    response.getPayment() == null ? null : response.getPayment().getServiceBalance();
+            Bukkit.getPluginManager()
+                    .callEvent(
+                            new MineCoreServerPaySuccessEvent(
+                                    mcaccountValue,
+                                    payAmount,
+                                    response.getMessage(),
+                                    serviceBalance));
+        } else {
+            Bukkit.getPluginManager()
+                    .callEvent(
+                            new MineCoreServerPayFailedEvent(
+                                    mcaccountValue,
+                                    payAmount,
+                                    response == null ? null : response.getMessage()));
+        }
     }
 
     @Override

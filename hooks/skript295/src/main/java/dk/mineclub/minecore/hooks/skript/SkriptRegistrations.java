@@ -17,10 +17,14 @@ import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreAcceptVote;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreAddProduct;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreCancelRequest;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreCreateServerPay;
+import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreServerPayFailed;
+import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreServerPaySuccess;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCorePostCreateRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCorePreCreateRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreReceiveRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreReceiveVote;
+import dk.mineclub.minecore.hooks.skript.events.MineCoreServerPayFailedEvent;
+import dk.mineclub.minecore.hooks.skript.events.MineCoreServerPaySuccessEvent;
 import dk.mineclub.minecore.hooks.skript.expressions.ExprMineCoreCreatedRequest;
 import dk.mineclub.minecore.hooks.skript.expressions.ExprMineCoreCreatedRequestProducts;
 import dk.mineclub.minecore.hooks.skript.expressions.ExprMineCoreCreatedRequestProperty;
@@ -75,6 +79,16 @@ final class SkriptRegistrations {
                     EvtMineCoreReceiveVote.class,
                     MineCoreReceiveVoteEvent.class,
                     "minecore receive vote");
+            Skript.registerEvent(
+                    "MineCore Server Pay Failed",
+                    EvtMineCoreServerPayFailed.class,
+                    MineCoreServerPayFailedEvent.class,
+                    "minecore server pay failed");
+            Skript.registerEvent(
+                    "MineCore Server Pay Success",
+                    EvtMineCoreServerPaySuccess.class,
+                    MineCoreServerPaySuccessEvent.class,
+                    "minecore server pay success");
         } catch (Exception e) {
             Skript.error("Failed to register MineCore events: " + e.getMessage());
         }
@@ -393,6 +407,68 @@ final class SkriptRegistrations {
                     @Override
                     public OfflinePlayer get(MineCoreReceiveVoteEvent e) {
                         return e.getOfflinePlayer();
+                    }
+                },
+                EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(
+                MineCoreServerPayFailedEvent.class,
+                OfflinePlayer.class,
+                new Getter<OfflinePlayer, MineCoreServerPayFailedEvent>() {
+                    @Override
+                    public OfflinePlayer get(MineCoreServerPayFailedEvent e) {
+                        return e.getOfflinePlayer();
+                    }
+                },
+                EventValues.TIME_NOW);
+        EventValues.registerEventValue(
+                MineCoreServerPayFailedEvent.class,
+                Double.class,
+                new Getter<Double, MineCoreServerPayFailedEvent>() {
+                    @Override
+                    public Double get(MineCoreServerPayFailedEvent e) {
+                        return e.getAmount();
+                    }
+                },
+                EventValues.TIME_NOW);
+        EventValues.registerEventValue(
+                MineCoreServerPayFailedEvent.class,
+                String.class,
+                new Getter<String, MineCoreServerPayFailedEvent>() {
+                    @Override
+                    public String get(MineCoreServerPayFailedEvent e) {
+                        return e.getMessage();
+                    }
+                },
+                EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(
+                MineCoreServerPaySuccessEvent.class,
+                OfflinePlayer.class,
+                new Getter<OfflinePlayer, MineCoreServerPaySuccessEvent>() {
+                    @Override
+                    public OfflinePlayer get(MineCoreServerPaySuccessEvent e) {
+                        return e.getOfflinePlayer();
+                    }
+                },
+                EventValues.TIME_NOW);
+        EventValues.registerEventValue(
+                MineCoreServerPaySuccessEvent.class,
+                Number.class,
+                new Getter<Number, MineCoreServerPaySuccessEvent>() {
+                    @Override
+                    public Number get(MineCoreServerPaySuccessEvent e) {
+                        return e.getAmount();
+                    }
+                },
+                EventValues.TIME_NOW);
+        EventValues.registerEventValue(
+                MineCoreServerPaySuccessEvent.class,
+                String.class,
+                new Getter<String, MineCoreServerPaySuccessEvent>() {
+                    @Override
+                    public String get(MineCoreServerPaySuccessEvent e) {
+                        return e.getMessage();
                     }
                 },
                 EventValues.TIME_NOW);

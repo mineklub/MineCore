@@ -14,10 +14,14 @@ import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreAcceptVote;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreAddProduct;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreCancelRequest;
 import dk.mineclub.minecore.hooks.skript.effects.EffMineCoreCreateServerPay;
+import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreServerPayFailed;
+import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreServerPaySuccess;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCorePostCreateRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCorePreCreateRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreReceiveRequest;
 import dk.mineclub.minecore.hooks.skript.events.EvtMineCoreReceiveVote;
+import dk.mineclub.minecore.hooks.skript.events.MineCoreServerPayFailedEvent;
+import dk.mineclub.minecore.hooks.skript.events.MineCoreServerPaySuccessEvent;
 import dk.mineclub.minecore.hooks.skript.expressions.*;
 import dk.mineclub.minecore.hooks.skript.runtime.MineCoreSkriptApi;
 import dk.mineclub.minecore.hooks.skript.sections.SecMineCoreCreateRequest;
@@ -78,6 +82,20 @@ final class SkriptRegistrations {
                                 EvtMineCoreReceiveVote.class, "MineCore Receive Vote")
                         .addPatterns("minecore receive vote")
                         .addEvent(MineCoreReceiveVoteEvent.class)
+                        .build());
+        syntaxRegistry.register(
+                eventKey,
+                BukkitSyntaxInfos.Event.builder(
+                                EvtMineCoreServerPayFailed.class, "MineCore Server Pay Failed")
+                        .addPatterns("minecore server pay failed")
+                        .addEvent(MineCoreServerPayFailedEvent.class)
+                        .build());
+        syntaxRegistry.register(
+                eventKey,
+                BukkitSyntaxInfos.Event.builder(
+                                EvtMineCoreServerPaySuccess.class, "MineCore Server Pay Success")
+                        .addPatterns("minecore server pay success")
+                        .addEvent(MineCoreServerPaySuccessEvent.class)
                         .build());
     }
 
@@ -215,6 +233,7 @@ final class SkriptRegistrations {
         registerPostCreateRequestValues();
         registerReceiveRequestValues();
         registerReceiveVoteValues();
+        registerServerPayValues();
     }
 
     private static void registerPreCreateRequestValues() {
@@ -263,6 +282,34 @@ final class SkriptRegistrations {
                 MineCoreReceiveVoteEvent.class,
                 MappedVote.class,
                 MineCoreReceiveVoteEvent::getVote);
+    }
+
+    private static void registerServerPayValues() {
+        EventValues.registerEventValue(
+                MineCoreServerPayFailedEvent.class,
+                OfflinePlayer.class,
+                MineCoreServerPayFailedEvent::getOfflinePlayer);
+        EventValues.registerEventValue(
+                MineCoreServerPayFailedEvent.class,
+                Number.class,
+                MineCoreServerPayFailedEvent::getAmount);
+        EventValues.registerEventValue(
+                MineCoreServerPayFailedEvent.class,
+                String.class,
+                MineCoreServerPayFailedEvent::getMessage);
+
+        EventValues.registerEventValue(
+                MineCoreServerPaySuccessEvent.class,
+                OfflinePlayer.class,
+                MineCoreServerPaySuccessEvent::getOfflinePlayer);
+        EventValues.registerEventValue(
+                MineCoreServerPaySuccessEvent.class,
+                Number.class,
+                MineCoreServerPaySuccessEvent::getAmount);
+        EventValues.registerEventValue(
+                MineCoreServerPaySuccessEvent.class,
+                String.class,
+                MineCoreServerPaySuccessEvent::getMessage);
     }
 
     private static void registerClasses() {
