@@ -53,6 +53,7 @@ additionalClassifiersByJavaVersion.forEach { (javaVersion, classifier) ->
     tasks.register<ShadowJar>("shadowJarJava$javaVersion") {
         description = "Builds platform-paper shaded jar targeting Java $javaVersion."
         archiveClassifier.set("$classifier-all")
+        archiveVersion.set("")
         from(compileTask.flatMap { it.destinationDirectory })
         from({ zipTree(hooksJarTaskForJavaVersion.get().archiveFile.get().asFile) })
         from({ zipTree(commonJarTaskForJavaVersion.get().archiveFile.get().asFile) })
