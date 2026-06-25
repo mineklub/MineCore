@@ -105,6 +105,7 @@ jobs:
         run: ./gradlew --no-daemon :platform-bukkit:clean :platform-paper:clean :platform-bukkit:assemble :platform-paper:assemble :hooks:assemble --full-stacktrace
       - name: Upload jars to release
         uses: softprops/action-gh-release@v3
+        if: github.ref_type == 'tag'
         with:
           files: |
             platform/bukkit/build/libs/MineCore-bukkit-*.jar
