@@ -31,12 +31,6 @@ public class SocketIOManager {
         this.socketUrl = socketUrl != null ? socketUrl : "https://api.mineclub.dk";
     }
 
-    /** Connects to the Socket.IO server with authentication token from environment */
-    public void connect() {
-        String token = System.getenv("TOKEN");
-        connect(token);
-    }
-
     /**
      * Connects to the Socket.IO server with authentication token
      *
@@ -50,8 +44,8 @@ public class SocketIOManager {
         try {
             IO.Options options = new IO.Options();
             options.reconnection = true;
-            options.reconnectionAttempts = 5;
-            options.reconnectionDelay = 1000;
+            options.reconnectionAttempts = Integer.MAX_VALUE;
+            options.reconnectionDelay = 5000;
 
             if (token != null) {
                 options.auth =
