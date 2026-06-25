@@ -1,5 +1,5 @@
 group = "dk.mineclub.minecore"
-version = providers.gradleProperty("minecoreVersion").orElse("0.1.0").get()
+version = providers.gradleProperty("minecoreVersion").orElse("0.1.1").get()
 
 val targetJavaVersion =
         providers.gradleProperty("minepayJavaVersion")

@@ -13,8 +13,7 @@ import org.eclipse.aether.repository.RemoteRepository;
 public class MineCorePaperLoader implements PluginLoader {
     private static final String GENERATED_RESOURCE =
             "minecore-loader-libraries-generated.properties";
-    private static final String DEFAULT_MINECORE_DEPENDENCY =
-            "dk.mineclub.minecore:api:0.1.0-SNAPSHOT";
+    private static final String DEFAULT_MINECORE_DEPENDENCY = "dk.mineclub.minecore:api:0.1.1";
 
     private static final int JAVA_8 = 8;
     private static final int JAVA_11 = 11;
@@ -65,14 +64,8 @@ public class MineCorePaperLoader implements PluginLoader {
                         .forEach(coordinates -> addDependency(resolver, coordinates));
             }
 
-            String minecoreDependency =
-                    properties
-                            .getProperty("minecoreDependency", DEFAULT_MINECORE_DEPENDENCY)
-                            .trim();
-            if (minecoreDependency.isEmpty()) {
-                minecoreDependency = DEFAULT_MINECORE_DEPENDENCY;
-            }
-            addDependency(resolver, resolveMineCoreDependencyForRuntime(minecoreDependency));
+            addDependency(
+                    resolver, resolveMineCoreDependencyForRuntime(DEFAULT_MINECORE_DEPENDENCY));
         } catch (Exception ex) {
             throw new RuntimeException(
                     "Failed to load libraries from resource: " + GENERATED_RESOURCE, ex);

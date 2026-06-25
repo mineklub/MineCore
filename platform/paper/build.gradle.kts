@@ -21,15 +21,6 @@ val loaderLibrariesCsv =
                         "org.json:json:${libs.versions.json.get()}")
                 .joinToString(",")
 
-val minecoreVersion =
-        providers.gradleProperty("minecoreVersion").orElse(rootProject.version.toString()).get()
-val minecoreSnapshotVersion =
-        if (minecoreVersion.endsWith("-SNAPSHOT")) {
-            minecoreVersion
-        } else {
-            "${minecoreVersion}-SNAPSHOT"
-        }
-
 val generateLoaderLibrariesProperties =
         tasks.register<WriteProperties>("generateLoaderLibrariesProperties") {
             destinationFile =
@@ -39,9 +30,6 @@ val generateLoaderLibrariesProperties =
                             .asFile
             encoding = "UTF-8"
             property("libraries", loaderLibrariesCsv)
-            property(
-                    "minecoreDependency",
-                    "dk.mineclub.minecore:api:$minecoreSnapshotVersion")
         }
 
 tasks.processResources {
