@@ -123,7 +123,7 @@ final class SkriptRegistrations {
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffMineCoreCreateServerPay.class)
                         .addPatterns(
-                                "create [a] [minecore] server pay for %string% with amount %number%")
+                                "create [a] [minecore] server pay for %offlineplayer% with amount %number%")
                         .build());
     }
 

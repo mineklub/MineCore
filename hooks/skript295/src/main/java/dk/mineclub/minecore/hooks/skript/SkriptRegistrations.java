@@ -109,7 +109,7 @@ final class SkriptRegistrations {
                     "cancel [minecore] request [with] id %string%");
             Skript.registerEffect(
                     EffMineCoreCreateServerPay.class,
-                    "create [a] [minecore] server pay for %string% with amount %number%");
+                    "create [a] [minecore] server pay for %offlineplayer% with amount %number%");
         } catch (Exception e) {
             Skript.error("Failed to register MineCore effects: " + e.getMessage());
         }
