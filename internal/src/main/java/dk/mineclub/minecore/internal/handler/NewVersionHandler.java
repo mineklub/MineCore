@@ -149,7 +149,7 @@ public class NewVersionHandler {
                                     product.quantity() > 1
                                             ? "request.product-quantity"
                                             : "request.product",
-                                    Placeholder.unparsed("name", product.productName()),
+                                    Placeholder.parsed("name", product.productName()),
                                     Formatter.number(
                                             "price",
                                             Double.parseDouble(product.price().numberDecimal())),

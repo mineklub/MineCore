@@ -4,6 +4,7 @@ import dk.mineclub.minecore.platform.common.hooks.SkriptHookDownloader;
 import java.nio.file.Path;
 import org.bukkit.plugin.Plugin;
 
+/** Bukkit implementation of SkriptHookDownloader using standard plugin manager. */
 public final class BukkitSkriptHookDownloader extends SkriptHookDownloader {
 
     public BukkitSkriptHookDownloader(Plugin plugin) {

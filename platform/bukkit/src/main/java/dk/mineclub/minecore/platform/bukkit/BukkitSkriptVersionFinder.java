@@ -4,10 +4,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 @SuppressWarnings("deprecation")
+/** Finds Skript plugin version using Bukkit's plugin manager. */
 public final class BukkitSkriptVersionFinder {
 
     private BukkitSkriptVersionFinder() {}
 
+    /**
+     * Finds the Skript plugin version using Bukkit's plugin manager.
+     *
+     * @param plugin the plugin instance for logging
+     * @return the Skript version (e.g., "2.14.3") or null if not found
+     */
     public static String findSkriptPluginVersion(Plugin plugin) {
         try {
             Plugin skriptPlugin = Bukkit.getPluginManager().getPlugin("Skript");
@@ -22,6 +29,7 @@ public final class BukkitSkriptVersionFinder {
                 return version;
             }
         } catch (Exception ignored) {
+            // Continue without version detection
         }
         return null;
     }

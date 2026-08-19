@@ -2,7 +2,6 @@ package dk.mineclub.minecore.api.manager;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import dk.mineclub.minecore.api.MineCoreApi;
 import dk.mineclub.minecore.api.events.PostCreateRequestEvent;
@@ -371,63 +370,5 @@ public class RequestManager {
         }
 
         return null;
-    }
-
-    /**
-     * Sender en chat-, join- eller quit-haendelse til staff-panelets live-feed.
-     *
-     * <p>Kaldet er fire-and-forget: chatten i spillet maa aldrig vente paa netvaerket, saa fejl
-     * logges og ignoreres.
-     *
-     * @param type "chat", "join" eller "quit"
-     * @param rank spillerens rang, eller null for en almindelig spiller
-     * @param message selve beskeden — kun ved "chat"
-     */
-    public void sendFeedEvent(
-            String type,
-            String username,
-            @Nullable String uuid,
-            @Nullable String rank,
-            @Nullable String message) {
-        String token = mineCoreApi.getToken();
-        if (token == null || token.isEmpty()) {
-            return;
-        }
-
-        JsonObject payload = new JsonObject();
-        payload.addProperty("type", type);
-        payload.addProperty("username", username);
-        if (uuid != null) {
-            payload.addProperty("uuid", uuid);
-        }
-        if (rank != null) {
-            payload.addProperty("rank", rank);
-        }
-        if (message != null) {
-            payload.addProperty("message", message);
-        }
-
-        Request request =
-                new Request.Builder()
-                        .url(baseUrl + "/server/feed")
-                        .post(createJsonRequestBody(payload.toString()))
-                        .header("Authorization", "Bearer " + token)
-                        .build();
-
-        client.newCall(request)
-                .enqueue(
-                        new Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException ex) {
-                                LOGGER.log(
-                                        Level.FINE,
-                                        "Feed-event kunne ikke sendes: " + ex.getMessage());
-                            }
-
-                            @Override
-                            public void onResponse(Call call, Response response) {
-                                response.close();
-                            }
-                        });
     }
 }
