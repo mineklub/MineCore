@@ -14,4 +14,16 @@ public class MineCoreBukkitPlugin extends BaseMineCorePlugin {
     protected SkriptHookDownloader createSkriptDownloader() {
         return new BukkitSkriptHookDownloader(this);
     }
+
+    @Override
+    public void onEnable() {
+        super.onEnable();
+
+        if (getApi() == null) {
+            return;
+        }
+
+        getServer().getPluginManager().registerEvents(new StaffFeedListener(getApi()), this);
+        StaffCommandBridge.register(this, getApi());
+    }
 }

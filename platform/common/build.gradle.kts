@@ -18,7 +18,6 @@ dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
     compileOnly(libs.okhttp)
-    compileOnly(libs.socketclient)
 }
 
 java {

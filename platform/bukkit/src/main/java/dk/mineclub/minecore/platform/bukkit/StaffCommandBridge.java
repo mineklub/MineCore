@@ -1,4 +1,4 @@
-package dk.mineclub.minecore.platform.common.staff;
+package dk.mineclub.minecore.platform.bukkit;
 
 import dk.mineclub.minecore.api.MineCoreApi;
 import io.socket.client.Socket;
