@@ -18,12 +18,5 @@ public class MineCoreBukkitPlugin extends BaseMineCorePlugin {
     @Override
     public void onEnable() {
         super.onEnable();
-
-        if (getApi() == null) {
-            return;
-        }
-
-        getServer().getPluginManager().registerEvents(new StaffFeedListener(getApi()), this);
-        StaffCommandBridge.register(this, getApi());
     }
 }
