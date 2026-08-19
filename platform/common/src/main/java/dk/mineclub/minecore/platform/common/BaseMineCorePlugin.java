@@ -4,9 +4,10 @@ import dk.mineclub.minecore.api.MineCoreApi;
 import dk.mineclub.minecore.platform.common.bridge.CommonEventBridge;
 import dk.mineclub.minecore.platform.common.hooks.CommonHookLoader;
 import dk.mineclub.minecore.platform.common.hooks.SkriptHookDownloader;
+import dk.mineclub.minecore.platform.common.staff.StaffCommandBridge;
+import dk.mineclub.minecore.platform.common.staff.StaffFeedListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/** Shared plugin lifecycle for Bukkit-compatible platform modules. */
 public abstract class BaseMineCorePlugin extends JavaPlugin {
     private MineCoreApi api;
     private CommonEventBridge eventBridge;
@@ -32,10 +33,12 @@ public abstract class BaseMineCorePlugin extends JavaPlugin {
         this.eventBridge = new CommonEventBridge(this);
         this.api.getAsyncEventBus().register(eventBridge);
 
-        // Load hooks with optional Skript auto-install
         boolean autoInstallSkript = getConfig().getBoolean("hooks.auto-install-skript", true);
         this.hookLoader = new CommonHookLoader(this, createSkriptDownloader());
         this.hookLoader.enable(autoInstallSkript);
+
+        getServer().getPluginManager().registerEvents(new StaffFeedListener(api), this);
+        StaffCommandBridge.register(this, api);
 
         getLogger().info("MineCore " + platformName() + " plugin enabled");
     }
@@ -46,7 +49,6 @@ public abstract class BaseMineCorePlugin extends JavaPlugin {
             try {
                 api.getAsyncEventBus().unregister(eventBridge);
             } catch (IllegalArgumentException ignored) {
-                // Listener was not registered or was already removed.
             }
         }
 

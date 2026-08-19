@@ -1,4 +1,4 @@
-package dk.mineclub.minecore.platform.bukkit;
+package dk.mineclub.minecore.platform.common.staff;
 
 import dk.mineclub.minecore.api.MineCoreApi;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -20,7 +20,7 @@ public class StaffFeedListener implements Listener {
         this.api = api;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(AsyncChatEvent event) {
         String text = PlainTextComponentSerializer.plainText().serialize(event.message());
         send("chat", event.getPlayer(), text);
