@@ -46,8 +46,11 @@ project(":example").projectDir = file("example")
 include("hooks")
 project(":hooks").projectDir = file("hooks")
 
-include("hooks:skript")
-project(":hooks:skript").projectDir = file("hooks/skript")
+include("hooks:skrip215")
+project(":hooks:skrip215").projectDir = file("hooks/skrip215")
+
+include("hooks:skript216")
+project(":hooks:skript216").projectDir = file("hooks/skript216")
 
 include("hooks:skript213")
 project(":hooks:skript213").projectDir = file("hooks/skript213")

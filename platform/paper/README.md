@@ -12,7 +12,7 @@ cd C:\Users\mhoff\Documents\GitHub\MinePay
 ## Startup
 
 The Paper plugin starts the shared API directly.
-Optional integrations are split into separate hook modules, such as `hooks:skript`, and are loaded from `plugins/MineCore/hooks/`.
+Optional integrations are split into separate hook modules, such as `hooks:skrip215` and `hooks:skript216`, and are loaded from `plugins/MineCore/hooks/`.
 Each hook jar must include `minecore-hook.properties` with its bootstrap class.
 
 ### Optional token

@@ -1,7 +1,7 @@
 # Hooks Module
 
 This module contains the shared hooks API used by MineCore hook submodules.
-Individual hook implementations live in child modules such as `hooks/skript`.
+Individual hook implementations live in child modules such as `hooks/skrip215` and `hooks/skript216`.
 
 ## Build
 

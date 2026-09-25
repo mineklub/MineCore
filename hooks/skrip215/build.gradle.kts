@@ -14,7 +14,7 @@ dependencies {
     compileOnly(project(":api"))
     compileOnly(project(":platform-common"))
     compileOnly("io.papermc.paper:paper-api:$paperApiVersion")
-    compileOnly(libs.skriptnew)
+    compileOnly(libs.skrip215)
 }
 
 java {
@@ -63,7 +63,7 @@ additionalHookClassifiersByJavaVersion.forEach { (javaVersion, classifier) ->
 
     tasks.register<Jar>("jarJava$javaVersion") {
         description = "Builds hooks jar targeting Java $javaVersion."
-        archiveBaseName.set("skript")
+        archiveBaseName.set("skrip215")
         archiveVersion.set("")
         archiveClassifier.set(classifier)
         from(compileTask.flatMap { it.destinationDirectory })
