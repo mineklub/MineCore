@@ -1,5 +1,5 @@
 [versions]
-spotless = "8.10.3"
+spotless = "8.10.4"
 shadow = "9.6.1"
 mavenPublish = "0.37.0"
 resourceFactoryVelocity = "1.4.0"
