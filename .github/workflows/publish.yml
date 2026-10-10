@@ -8,6 +8,10 @@ on:
       - "v*"
   workflow_dispatch:
     inputs:
+      version:
+        description: "Release version, e.g. 0.1.2 (required for releases from a branch)"
+        type: string
+        required: false
       publish-api:
         description: "Publish :api to Maven Central"
         type: boolean
@@ -24,10 +28,54 @@ on:
         required: true
         default: false
 
+concurrency:
+  group: minecore-publish
+  cancel-in-progress: false
+
 jobs:
+  release-version:
+    name: Validate release version
+    if: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && (inputs['publish-api'] || inputs['publish-platform-jars'])) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${INPUT_VERSION#v}"
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            TAG_VERSION="${GITHUB_REF_NAME#v}"
+            [[ -z "$VERSION" || "$VERSION" == "$TAG_VERSION" ]] || { echo 'Input version differs from tag'; exit 1; }
+            VERSION="$TAG_VERSION"
+          fi
+          [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || { echo 'Supply a stable version such as 0.1.2'; exit 1; }
+          TAG="v$VERSION"
+          if git show-ref --verify --quiet "refs/tags/$TAG"; then
+            [[ "$(git rev-parse "$TAG^{commit}")" == "$(git rev-parse HEAD)" ]] || { echo 'Tag points to another commit'; exit 1; }
+          fi
+          RELEASES=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100")
+          if jq -e --arg tag "$TAG" '.[] | select(.tag_name == $tag and .draft == false)' <<< "$RELEASES" >/dev/null; then
+            echo 'This release is already published. Choose a new version.'
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
   publish-api:
     name: Publish API to Maven Central
     if: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs['publish-api']) }}
+    needs: release-version
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -36,6 +84,7 @@ jobs:
       ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
       SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
       SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+      RELEASE_VERSION: ${{ needs.release-version.outputs.version }}
     steps:
       - uses: actions/checkout@v7
       - uses: gradle/actions/setup-gradle@v6
@@ -48,11 +97,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Publish and release API
-        run: ./gradlew --no-daemon :api:publishAndReleaseToMavenCentral --full-stacktrace
+        run: ./gradlew --no-daemon :api:publishAndReleaseToMavenCentral -PminecoreVersion="$RELEASE_VERSION" --full-stacktrace
 
   publish-api-snapshot:
     name: Publish API snapshot
-    if: ${{ github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && inputs['publish-api-snapshot']) }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/dev') || (github.event_name == 'workflow_dispatch' && inputs['publish-api-snapshot']) }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -86,8 +135,13 @@ jobs:
 
   publish-platform-jars:
     name: Publish platform jars to GitHub Release
-    if: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs['publish-platform-jars']) }}
+    needs: [release-version, publish-api]
+    if: ${{ !cancelled() && needs.release-version.result == 'success' && (needs.publish-api.result == 'success' || needs.publish-api.result == 'skipped') && (startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs['publish-platform-jars'])) }}
     runs-on: ubuntu-latest
+    env:
+      RELEASE_VERSION: ${{ needs.release-version.outputs.version }}
+      RELEASE_TAG: ${{ needs.release-version.outputs.tag }}
+      GH_TOKEN: ${{ github.token }}
     permissions:
       contents: write
     steps:
@@ -102,11 +156,45 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build platform jars
-        run: ./gradlew --no-daemon :platform-bukkit:clean :platform-paper:clean :platform-bukkit:assemble :platform-paper:assemble :hooks:assemble --full-stacktrace
-      - name: Upload jars to release
-        uses: softprops/action-gh-release@v3
-        if: github.ref_type == 'tag'
-        with:
-          files: |
-            platform/bukkit/build/libs/MineCore-bukkit-*.jar
-            platform/paper/build/libs/MineCore-paper-*.jar
+        run: ./gradlew --no-daemon :platform-bukkit:clean :platform-paper:clean :platform-bukkit:assemble :platform-paper:assemble :hooks:assemble -PminecoreVersion="$RELEASE_VERSION" --full-stacktrace
+      - name: Collect Winggo artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          for platform in bukkit paper; do
+            for java in 8 11 17 21 25; do
+              source="platform/$platform/build/libs/MineCore-$platform-jvm$java-all.jar"
+              test -s "$source"
+              cp "$source" "release/MineCore-$platform-jvm$java-all.jar"
+            done
+          done
+      - name: Wait for Paper API dependencies on Maven Central
+        timeout-minutes: 35
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in {1..60}; do
+            ready=true
+            for java in 8 11 17 21 25; do
+              base="https://maven-central.storage-download.googleapis.com/maven2/dk/mineclub/minecore/api-jvm$java/$RELEASE_VERSION/api-jvm$java-$RELEASE_VERSION"
+              for extension in pom jar; do
+                curl --fail --silent --head --max-time 10 "$base.$extension" >/dev/null || ready=false
+              done
+            done
+            if $ready; then exit 0; fi
+            sleep 20
+          done
+          echo 'API artifacts are not available yet; rerun with publish-api disabled once Central has propagated.'
+          exit 1
+      - name: Publish complete release for Jarvester
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft > release-state.txt; then
+            [[ "$(cat release-state.txt)" == true ]] || { echo 'Refusing to overwrite a published release'; exit 1; }
+            gh release upload "$RELEASE_TAG" release/*.jar --clobber
+          else
+            gh release create "$RELEASE_TAG" release/*.jar --target "$GITHUB_SHA" --title "MineCore $RELEASE_VERSION" --generate-notes --draft
+          fi
+          gh release edit "$RELEASE_TAG" --draft=false --latest

@@ -30,6 +30,7 @@ val generateLoaderLibrariesProperties =
                             .asFile
             encoding = "UTF-8"
             property("libraries", loaderLibrariesCsv)
+            property("minecore", "${rootProject.group}:api:${rootProject.version}")
         }
 
 tasks.processResources {
