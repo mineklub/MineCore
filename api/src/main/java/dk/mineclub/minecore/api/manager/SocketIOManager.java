@@ -7,8 +7,13 @@ import dk.mineclub.minecore.api.model.MappedVote;
 import dk.mineclub.minecore.api.model.StoreCreatedRequest;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.thread.EventThread;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -69,13 +74,34 @@ public class SocketIOManager {
     }
 
     public void disconnect() {
-        if (socket != null) {
-            socket.disconnect();
-            socket.close();
-            socket = null;
+        Socket currentSocket = socket;
+        socket = null;
+        if (currentSocket == null) {
+            isConnected = false;
+            return;
         }
 
-        isConnected = false;
+        // disconnect() aliases close() and normally only queues work. Run it on the event
+        // thread and wait so plugin disable cannot unload its classes before that work runs.
+        FutureTask<Void> disconnectTask =
+                new FutureTask<>(
+                        () -> {
+                            currentSocket.off();
+                            currentSocket.disconnect();
+                            return null;
+                        });
+        EventThread.exec(disconnectTask);
+        try {
+            // EventThread.exec runs inline when called from an event listener, avoiding deadlock.
+            disconnectTask.get(5, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            LOGGER.log(Level.WARNING, "Interrupted while disconnecting Socket.IO", ex);
+        } catch (ExecutionException | TimeoutException ex) {
+            LOGGER.log(Level.WARNING, "Failed to finish Socket.IO disconnect before shutdown", ex);
+        } finally {
+            isConnected = false;
+        }
     }
 
     /** Sets up default listeners for connection events */
