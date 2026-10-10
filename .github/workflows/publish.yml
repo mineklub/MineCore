@@ -175,14 +175,19 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in {1..60}; do
+            echo "Checking Maven Central for $RELEASE_VERSION (attempt $attempt/60)"
             ready=true
             for java in 8 11 17 21 25; do
-              base="https://maven-central.storage-download.googleapis.com/maven2/dk/mineclub/minecore/api-jvm$java/$RELEASE_VERSION/api-jvm$java-$RELEASE_VERSION"
+              base="https://repo.maven.apache.org/maven2/dk/mineclub/minecore/api-jvm$java/$RELEASE_VERSION/api-jvm$java-$RELEASE_VERSION"
               for extension in pom jar; do
-                curl --fail --silent --head --max-time 10 "$base.$extension" >/dev/null || ready=false
+                status=$(curl --silent --show-error --head --output /dev/null --write-out '%{http_code}' --max-time 10 "$base.$extension") || status=000
+                if [[ "$status" != 200 ]]; then
+                  echo "Not ready: $base.$extension (HTTP $status)"
+                  ready=false
+                fi
               done
             done
-            if $ready; then exit 0; fi
+            if $ready; then echo 'All Paper API dependencies are available.'; exit 0; fi
             sleep 20
           done
           echo 'API artifacts are not available yet; rerun with publish-api disabled once Central has propagated.'

@@ -29,6 +29,11 @@ public class MineCorePaperLoader implements PluginLoader {
                                 "default",
                                 "https://maven-central.storage-download.googleapis.com/maven2")
                         .build());
+        // New releases can reach Maven Central before the Google mirror has synchronized.
+        resolver.addRepository(
+                new RemoteRepository.Builder(
+                                "central-direct", "default", "https://repo.maven.apache.org/maven2")
+                        .build());
         resolver.addRepository(
                 new RemoteRepository.Builder(
                                 "paper",
