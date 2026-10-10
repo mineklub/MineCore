@@ -13,7 +13,7 @@ val targetJavaVersion = rootProject.extra["targetJavaVersion"] as Int
 val paperApiVersion = rootProject.extra["paperApiVersion"] as String
 
 dependencies {
-    implementation("dk.mineclub.minecore:api-jvm25:0.1.1")
+    implementation("dk.mineclub.minecore:api-jvm25:0.1.2")
     compileOnly("io.papermc.paper:paper-api:$paperApiVersion")
 }
 
