@@ -74,3 +74,9 @@ additionalCommonClassifiersByJavaVersion.forEach { (javaVersion, classifier) ->
 tasks.named("assemble") {
     dependsOn(additionalCommonClassifiersByJavaVersion.keys.map { "jarJava$it" })
 }
+
+dependencies {
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.papermc.paper:paper-api:$paperApiVersion")
+    testImplementation(libs.okhttp)
+}

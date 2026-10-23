@@ -44,6 +44,8 @@ public abstract class SkriptHookDownloader {
                 new HookVersionRange("skrip215", "2.15", "2.15.999", new int[] {17, 21, 25}));
         hookVersionRanges.add(
                 new HookVersionRange("skript216", "2.16", "2.16.999", new int[] {17, 21, 25}));
+        hookVersionRanges.add(
+                new HookVersionRange("skript217", "2.17", "2.17.999", new int[] {17, 21, 25}));
     }
 
     /**

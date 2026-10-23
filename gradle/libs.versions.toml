@@ -14,6 +14,7 @@ guava = "33.7.2-jre"
 json = "20250517"
 skrip215 = "2.15.4"
 skript216 = "2.16.2"
+skript217 = "2.17.1"
 skript213 = "2.13.2"
 skript295 = "2.9.5"
 skript22dev36 = "dev36"
@@ -39,3 +40,5 @@ skript216 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "sk
 skript213 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript213"}
 skript295 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript295"}
 skript22dev36 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript22dev36"}
+
+skript217 = {group = "com.github.SkriptLang", name = "Skript", version.ref = "skript217"}

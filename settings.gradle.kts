@@ -68,3 +68,6 @@ sequenceOf("common", "paper", "bukkit").forEach {
         project(":$name").projectDir = file("platform/$it")
     }
 }
+
+include("hooks:skript217")
+project(":hooks:skript217").projectDir = file("hooks/skript217")
