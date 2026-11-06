@@ -56,7 +56,8 @@ public class StoreRequestTimeoutChannel extends JedisPubSub {
                                     .ifPresent(
                                             player -> {
                                                 player.sendMessage(
-                                                        plugin.getLang().get("request.timeout"));
+                                                        plugin.getLang()
+                                                                .get(player, "request.timeout"));
                                                 publishReturn(parsed);
                                             });
                         },

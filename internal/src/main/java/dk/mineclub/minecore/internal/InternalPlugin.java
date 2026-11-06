@@ -97,6 +97,7 @@ public class InternalPlugin {
 
     @Subscribe
     public void onServerConnected(ServerConnectedEvent event) {
+        dk.mineclub.minecore.internal.i18n.PlayerLanguages.refresh(event.getPlayer().getUniqueId());
         event.getPreviousServer()
                 .ifPresent(
                         previousServer -> {
@@ -111,6 +112,7 @@ public class InternalPlugin {
 
     @Subscribe
     public void onDisconnect(DisconnectEvent event) {
+        dk.mineclub.minecore.internal.i18n.PlayerLanguages.forget(event.getPlayer().getUniqueId());
         event.getPlayer()
                 .getCurrentServer()
                 .ifPresent(
@@ -182,6 +184,31 @@ public class InternalPlugin {
         }
 
         return cancelled;
+    }
+
+    public dk.mineclub.minecore.internal.i18n.Language getLanguage(java.util.UUID uuid) {
+        Request request =
+                new Request.Builder()
+                        .url("https://api.mineclub.dk/v2/language/player/" + uuid)
+                        .header("Authorization", environmentFile.getToken())
+                        .build();
+        okhttp3.Call call = client.newCall(request);
+        call.timeout().timeout(5, TimeUnit.SECONDS);
+        try (Response response = call.execute()) {
+            if (!response.isSuccessful() || response.body() == null)
+                throw new IllegalStateException("Language unavailable");
+            String locale =
+                    com.google.gson.JsonParser.parseString(response.body().string())
+                            .getAsJsonObject()
+                            .getAsJsonObject("data")
+                            .get("locale")
+                            .getAsString();
+            if (!locale.equals("en") && !locale.equals("da"))
+                throw new IllegalStateException("Invalid language");
+            return dk.mineclub.minecore.internal.i18n.Language.from(locale);
+        } catch (java.io.IOException error) {
+            throw new IllegalStateException("Language unavailable", error);
+        }
     }
 
     public Response acceptRequest(String id) {

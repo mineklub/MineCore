@@ -1,0 +1,72 @@
+request:
+    header:
+        - "<b><gradient:#FFA259:#F9FF7A>MINECORE</gradient></b>"
+        - "<gray>You are shopping on <white><b><server></b>"
+        - " "
+    product:
+        - "<#707070>• <white><bold><name></bold> <gray>(<#ffe97a>⛃<price:'en-GB':'#,##0.00'><gray>)"
+    product-quantity:
+        - "<#707070>• <white><bold><name></bold> <gray><u>x<quantity></u> (<#ffe97a>⛃<price:'en-GB':'#,##0.00'><gray>)"
+    footer:
+        - " "
+        - "<gray>Total price = <u><#ffe97a>⛃<total:'en-GB':'#,##0.00'><gray></u>"
+        - "<gray>Current balance = <yellow>⛃<balance:'en-GB':'#,##0.00'><gray>"
+        - " "
+        - "<accept> <gray>- <deny>"
+    dialog-footer:
+        - " "
+        - "<gray>Total price = <u><#ffe97a>⛃<total:'en-GB':'#,##0.00'><gray></u>"
+        - " "
+        - "<gray>Current balance = <yellow>⛃<balance:'en-GB':'#,##0.00'><gray>"
+    accept-button: "<#beff69><b>[Accept]</b> "
+    deny-button: "<#ff6969><b>[Decline]</b>"
+    timeout:
+        - " "
+        - "<red>You did not accept your purchase in time, so it has been cancelled."
+        - " "
+    banned:
+        temp:
+            - "<red>You are banned from the lobby and cannot use your coins until you are unbanned."
+            - "<red>Expires: <expiry:'dd-MM-yyyy HH:mm:ss'>"
+            - "<red>Reason: <reason>"
+        perm:
+            - "<red>You are banned from the lobby and cannot use your coins until you are unbanned."
+            - "<red>Reason: <reason>"
+    accept-errors:
+        request-not-found:
+            - "<red>Your purchase request was not found. Please try again shortly."
+        mcaccount-not-found:
+            - "<red>Your account was not found. Contact an administrator if this continues."
+        request-already-accepted:
+            - "<red>This purchase request has already been accepted."
+        cannot-accept-cancelled-request:
+            - "<red>This purchase cannot be accepted because it was already declined."
+        player-not-online:
+            - "<red>You must be online to complete the purchase."
+        distribution-not-found:
+            - "<red>The purchase could not be completed because its distribution was not found."
+        insufficient-balance:
+            - "<red>You do not have enough coins to complete this purchase."
+        network:
+            - "<red>Could not contact the shop. Please try again shortly."
+        unexpected:
+            - "<red>An unexpected error occurred while accepting your purchase."
+        unknown:
+            - "<red>An error occurred while accepting your purchase."
+            - "<red>Error: <error>"
+    cancel-errors:
+        request-not-found:
+            - "<red>Your purchase request was not found."
+        mcaccount-not-found:
+            - "<red>Your account was not found. Contact an administrator if this continues."
+        cannot-cancel-accepted-request:
+            - "<red>This purchase cannot be declined because it was already accepted."
+        request-already-cancelled:
+            - "<red>This purchase request has already been declined."
+        network:
+            - "<red>Could not contact the shop to decline your purchase. Please try again shortly."
+        unexpected:
+            - "<red>An unexpected error occurred while declining your purchase."
+        unknown:
+            - "<red>An error occurred while declining your purchase."
+            - "<red>Error: <error>"

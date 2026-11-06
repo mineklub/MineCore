@@ -1,105 +1,54 @@
 package dk.mineclub.minecore.internal;
 
 import com.velocitypowered.api.command.CommandSource;
-import java.io.BufferedReader;
+import com.velocitypowered.api.proxy.Player;
+import dk.mineclub.minecore.internal.i18n.*;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.UUID;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.JoinConfiguration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 public class Lang {
-    private ConfigurationNode node;
+    private MessageCatalog catalog;
 
-    public void send(CommandSource player, String key, TagResolver... args) {
-        Component message = get(key, args);
-        if (message == null) {
-            return;
-        }
-        if (message.equals(Component.empty())) {
-            return;
-        }
-        player.sendMessage(message);
+    public void load() throws IOException {
+        catalog =
+                new MessageCatalog(
+                        getClass().getResourceAsStream("/language/en.yml"),
+                        getClass().getResourceAsStream("/language/da.yml"));
     }
 
-    public List<Component> getList(String key, TagResolver... args) {
-        String[] nodes = key.split("\\.");
-        ConfigurationNode node = this.node;
-        for (String subNode : nodes) {
-            node = node.node(subNode);
-        }
-        List<Component> translations = new ArrayList<>();
-        try {
-            List<String> strings = node.getList(String.class);
-            assert strings != null;
-            for (String s : strings) {
-                translations.add(MiniMessage.miniMessage().deserialize(s, args));
-            }
-        } catch (SerializationException e) {
-            throw new RuntimeException(e);
-        }
-        if (translations.isEmpty()) {
-            translations.add(
-                    MiniMessage.miniMessage()
-                            .deserialize("<red>Missing translation for <yellow>" + key));
-        }
-        return translations;
-    }
-
-    public String getString(String key) {
-        return splitNode(key);
+    public void send(CommandSource source, String key, TagResolver... args) {
+        source.sendMessage(
+                source instanceof Player player ? get(player, key, args) : get(key, args));
     }
 
     public Component get(String key) {
-        if (!getList(key).isEmpty()) {
-            return Component.join(JoinConfiguration.newlines(), getList(key));
-        }
-        String translation = splitNode(key);
-        return MiniMessage.miniMessage().deserialize(translation);
-    }
-
-    private String splitNode(String key) {
-        String[] nodes = key.split("\\.");
-        ConfigurationNode node = this.node;
-        for (String subNode : nodes) {
-            node = node.node(subNode);
-        }
-        String translation = node.getString();
-        if (translation == null) {
-            translation = "<red>Missing translation for <yellow>" + key;
-        }
-        return translation;
+        return get(key, new TagResolver[0]);
     }
 
     public Component get(String key, TagResolver... args) {
-        if (!getList(key, args).isEmpty()) {
-            return Component.join(JoinConfiguration.newlines(), getList(key, args));
-        }
-        String translation = splitNode(key);
-        return MiniMessage.miniMessage().deserialize(translation, args);
+        return catalog.get(Language.ENGLISH, key, args);
     }
 
-    public void load() throws IOException {
-        final InputStream lang =
-                InternalPlugin.getInstance()
-                        .getClass()
-                        .getClassLoader()
-                        .getResourceAsStream("lang.yml");
-        if (lang == null) {
-            throw new IOException("lang.yml not found");
-        }
-        Callable<BufferedReader> source = () -> new BufferedReader(new InputStreamReader(lang));
-        final YamlConfigurationLoader loader =
-                YamlConfigurationLoader.builder().source(source).build();
-        this.node = loader.load();
-        // Convert the InputStream to a ConfigurationNode
+    public Component get(Player player, String key, TagResolver... args) {
+        return get(player.getUniqueId(), key, args);
+    }
+
+    public Component get(UUID player, String key, TagResolver... args) {
+        return catalog.get(PlayerLanguages.get(player), key, args);
+    }
+
+    public List<Component> getList(String key, TagResolver... args) {
+        return catalog.list(Language.ENGLISH, key, args);
+    }
+
+    public List<Component> getList(UUID player, String key, TagResolver... args) {
+        return catalog.list(PlayerLanguages.get(player), key, args);
+    }
+
+    public String getString(String key) {
+        return String.join("\n", catalog.strings(Language.ENGLISH, key));
     }
 }

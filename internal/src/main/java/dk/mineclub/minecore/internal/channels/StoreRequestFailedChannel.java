@@ -48,7 +48,8 @@ public class StoreRequestFailedChannel extends JedisPubSub {
                                 case "ban" -> handleBan(player, json);
                                 case "connection" -> {
                                     player.sendMessage(
-                                            plugin.getLang().get("request.accept-errors.network"));
+                                            plugin.getLang()
+                                                    .get(player, "request.accept-errors.network"));
                                     cancelRequestIfPresent(json);
                                 }
                                 default -> {}
@@ -68,7 +69,10 @@ public class StoreRequestFailedChannel extends JedisPubSub {
         if (permanent) {
             player.sendMessage(
                     plugin.getLang()
-                            .get("request.banned.perm", Placeholder.unparsed("reason", reason)));
+                            .get(
+                                    player,
+                                    "request.banned.perm",
+                                    Placeholder.unparsed("reason", reason)));
             cancelRequestIfPresent(json);
             return;
         }
@@ -77,6 +81,7 @@ public class StoreRequestFailedChannel extends JedisPubSub {
         player.sendMessage(
                 plugin.getLang()
                         .get(
+                                player,
                                 "request.banned.temp",
                                 Placeholder.unparsed("reason", reason),
                                 Placeholder.unparsed("expiry", expiry)));

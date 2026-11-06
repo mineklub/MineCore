@@ -41,6 +41,12 @@ public class NewVersionHandler {
     private static volatile boolean packetEventsWarningLogged;
 
     public static void handle(InternalPlugin plugin, Player player, StoreRequestMessage message) {
+        dk.mineclub.minecore.internal.i18n.PlayerLanguages.refresh(player.getUniqueId())
+                .thenRun(() -> handleTranslated(plugin, player, message));
+    }
+
+    private static void handleTranslated(
+            InternalPlugin plugin, Player player, StoreRequestMessage message) {
         if (!isPacketEventsReady(plugin)) {
             OldVersionHandler.handle(plugin, player, message);
             return;
@@ -92,7 +98,10 @@ public class NewVersionHandler {
         ActionButton acceptButton =
                 new ActionButton(
                         new CommonButtonData(
-                                plugin.getLang().get("request.accept-button"),
+                                plugin.getLang()
+                                        .get(
+                                                UUID.fromString(message.data().mcaccount().uuid()),
+                                                "request.accept-button"),
                                 Component.empty(),
                                 130),
                         new StaticAction(
@@ -105,7 +114,10 @@ public class NewVersionHandler {
         ActionButton denyButton =
                 new ActionButton(
                         new CommonButtonData(
-                                plugin.getLang().get("request.deny-button"),
+                                plugin.getLang()
+                                        .get(
+                                                UUID.fromString(message.data().mcaccount().uuid()),
+                                                "request.deny-button"),
                                 Component.empty(),
                                 130),
                         new StaticAction(
@@ -123,6 +135,7 @@ public class NewVersionHandler {
         List<Component> headerLines =
                 plugin.getLang()
                         .getList(
+                                UUID.fromString(message.data().mcaccount().uuid()),
                                 "request.header",
                                 Placeholder.unparsed(
                                         "server", message.data().service().nicename()));
@@ -134,6 +147,7 @@ public class NewVersionHandler {
         List<Component> headerLines =
                 plugin.getLang()
                         .getList(
+                                UUID.fromString(message.data().mcaccount().uuid()),
                                 "request.header",
                                 Placeholder.unparsed(
                                         "server", message.data().service().nicename()));
@@ -146,10 +160,11 @@ public class NewVersionHandler {
             lines.add(
                     plugin.getLang()
                             .get(
+                                    UUID.fromString(message.data().mcaccount().uuid()),
                                     product.quantity() > 1
                                             ? "request.product-quantity"
                                             : "request.product",
-                                    Placeholder.parsed("name", product.productName()),
+                                    Placeholder.unparsed("name", product.productName()),
                                     Formatter.number(
                                             "price",
                                             Double.parseDouble(product.price().numberDecimal())),
@@ -159,12 +174,23 @@ public class NewVersionHandler {
         lines.add(
                 plugin.getLang()
                         .get(
+                                UUID.fromString(message.data().mcaccount().uuid()),
                                 "request.dialog-footer",
                                 Formatter.number("total", calculateTotal(message)),
                                 Placeholder.component(
-                                        "accept", plugin.getLang().get("request.accept-button")),
+                                        "accept",
+                                        plugin.getLang()
+                                                .get(
+                                                        UUID.fromString(
+                                                                message.data().mcaccount().uuid()),
+                                                        "request.accept-button")),
                                 Placeholder.component(
-                                        "deny", plugin.getLang().get("request.deny-button")),
+                                        "deny",
+                                        plugin.getLang()
+                                                .get(
+                                                        UUID.fromString(
+                                                                message.data().mcaccount().uuid()),
+                                                        "request.deny-button")),
                                 Formatter.number("balance", message.data().mcaccount().balance())));
 
         return Component.join(JoinConfiguration.newlines(), lines);

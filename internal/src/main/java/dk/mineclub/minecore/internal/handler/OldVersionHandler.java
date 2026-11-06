@@ -95,6 +95,7 @@ public class OldVersionHandler {
         player.sendMessage(
                 plugin.getLang()
                         .get(
+                                player,
                                 unknownKey,
                                 Placeholder.unparsed(
                                         "error", apiMessage == null ? "Unknown" : apiMessage)));
@@ -110,7 +111,7 @@ public class OldVersionHandler {
             String unknownKey) {
         try (Response response = action.get()) {
             if (response == null) {
-                player.sendMessage(plugin.getLang().get(networkKey));
+                player.sendMessage(plugin.getLang().get(player, networkKey));
                 return;
             }
 
@@ -121,11 +122,11 @@ public class OldVersionHandler {
                 if (unknownKey.equals(errorKey)) {
                     sendUnknownError(plugin, player, unknownKey, apiMessage);
                 } else {
-                    player.sendMessage(plugin.getLang().get(errorKey));
+                    player.sendMessage(plugin.getLang().get(player, errorKey));
                 }
             }
         } catch (Exception ignored) {
-            player.sendMessage(plugin.getLang().get(unexpectedKey));
+            player.sendMessage(plugin.getLang().get(player, unexpectedKey));
         }
     }
 
@@ -137,11 +138,18 @@ public class OldVersionHandler {
     }
 
     public static void handle(InternalPlugin plugin, Player player, StoreRequestMessage message) {
+        dk.mineclub.minecore.internal.i18n.PlayerLanguages.refresh(player.getUniqueId())
+                .thenRun(() -> handleTranslated(plugin, player, message));
+    }
+
+    private static void handleTranslated(
+            InternalPlugin plugin, Player player, StoreRequestMessage message) {
         cachePendingRequest(player, message);
 
         Component header =
                 plugin.getLang()
                         .get(
+                                player,
                                 "request.header",
                                 Placeholder.unparsed(
                                         "server", message.data().service().nicename()));
@@ -150,6 +158,7 @@ public class OldVersionHandler {
             Component productComp =
                     plugin.getLang()
                             .get(
+                                    player,
                                     product.quantity() > 1
                                             ? "request.product-quantity"
                                             : "request.product",
@@ -163,6 +172,7 @@ public class OldVersionHandler {
         Component footer =
                 plugin.getLang()
                         .get(
+                                player,
                                 "request.footer",
                                 Formatter.number(
                                         "total",
@@ -176,7 +186,7 @@ public class OldVersionHandler {
                                 Placeholder.component(
                                         "accept",
                                         plugin.getLang()
-                                                .get("request.accept-button")
+                                                .get(player, "request.accept-button")
                                                 .clickEvent(
                                                         ClickEvent.callback(
                                                                 ignored -> {
@@ -200,7 +210,7 @@ public class OldVersionHandler {
                                 Placeholder.component(
                                         "deny",
                                         plugin.getLang()
-                                                .get("request.deny-button")
+                                                .get(player, "request.deny-button")
                                                 .clickEvent(
                                                         ClickEvent.callback(
                                                                 ignored -> {
